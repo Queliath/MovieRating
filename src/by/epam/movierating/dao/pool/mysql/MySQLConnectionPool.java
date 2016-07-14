@@ -50,7 +50,7 @@ public class MySQLConnectionPool {
         }
     }
 
-    public Connection getConnection() throws SQLException, InterruptedException {
+    public Connection getConnection() throws InterruptedException {
         lock.lock();
         try {
             while (availableConnections.isEmpty()){
