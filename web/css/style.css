@@ -1,0 +1,67 @@
+.clearfix::after{
+    content: '';
+    display: block;
+    clear: both;
+}
+.jumbotron img{
+    float: left;
+    width: 200px;
+    height: auto;
+    margin: 0 10px 10px 0;
+}
+.jumbotron ul{
+    list-style: none;
+    padding-left: 0;
+    clear: both;
+}
+.jumbotron .well ul{
+    clear: none;
+}
+@media screen and (min-width: 500px){
+    .jumbotron ul{
+        clear: none;
+        padding-left: 220px;
+    }
+}
+.jumbotron p{
+    font-size: 16px;
+}
+#star-rating .glyphicon{
+    font-size: 20px;
+}
+@media screen and (min-width: 500px){
+    #star-rating .glyphicon{
+        font-size: 30px;
+    }
+}
+.well{
+    padding: 8px;
+}
+@media screen and (min-width: 767px){
+    .well{
+        padding: 19px;
+    }
+}
+.well a img{
+    float: left;
+    width: 100px;
+    height: auto;
+    margin: 0 10px 10px 0;
+}
+.well h3{
+    font-size: 18px;
+    margin-top: 0;
+}
+.well ul{
+    list-style: none;
+    padding-left: 110px;
+}
+footer{
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    min-height: 50px;
+    border: 1px solid #e7e7e7;
+}
+footer p{
+    margin-top: 10px;
+}
