@@ -3,6 +3,7 @@ package by.epam.movierating.dao.impl.mysql;
 import by.epam.movierating.dao.interfaces.RatingDAO;
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.pool.mysql.MySQLConnectionPool;
+import by.epam.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 import by.epam.movierating.domain.Rating;
 
 import java.sql.Connection;
@@ -18,9 +19,21 @@ import java.util.List;
 public class MySQLRatingDAO implements RatingDAO {
     @Override
     public void addRating(Rating rating) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = null;
         try {
-            MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-            Connection connection = mySQLConnectionPool.getConnection();
+            mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
+            throw new DAOException("Cannot create a Connection Pool", e);
+        }
+
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO rating " +
                     "(movie_id, user_id, value) VALUES (?, ?, ?)");
             statement.setInt(1, rating.getMovieId());
@@ -28,19 +41,34 @@ public class MySQLRatingDAO implements RatingDAO {
             statement.setInt(3, rating.getValue());
 
             statement.executeUpdate();
-
-            mySQLConnectionPool.freeConnection(connection);
-
-        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when adding rating", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
         }
     }
 
     @Override
     public void updateRating(Rating rating) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = null;
         try {
-            MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-            Connection connection = mySQLConnectionPool.getConnection();
+            mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
+            throw new DAOException("Cannot create a Connection Pool", e);
+        }
+
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
             PreparedStatement statement = connection.prepareStatement("UPDATE rating " +
                     "SET value = ? WHERE movie_id = ? AND user_id = ?");
             statement.setInt(1, rating.getValue());
@@ -48,43 +76,71 @@ public class MySQLRatingDAO implements RatingDAO {
             statement.setInt(3, rating.getUserId());
 
             statement.executeUpdate();
-
-            mySQLConnectionPool.freeConnection(connection);
-
-        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when updating rating", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
         }
     }
 
     @Override
     public void deleteRating(int movieId, int userId) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = null;
         try {
-            MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-            Connection connection = mySQLConnectionPool.getConnection();
+            mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
+            throw new DAOException("Cannot create a Connection Pool", e);
+        }
+
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM rating WHERE movie_id = ? AND user_id = ?");
             statement.setInt(1, movieId);
             statement.setInt(2, userId);
 
             statement.executeUpdate();
-
-            mySQLConnectionPool.freeConnection(connection);
-
-        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when deleting rating", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
         }
     }
 
     @Override
     public Rating getRatingByMovieAndUser(int movieId, int userId) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = null;
         try {
-            MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-            Connection connection = mySQLConnectionPool.getConnection();
+            mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
+            throw new DAOException("Cannot create a Connection Pool", e);
+        }
+
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM rating WHERE movie_id = ? AND user_id = ?");
             statement.setInt(1, movieId);
             statement.setInt(2, userId);
             ResultSet resultSet = statement.executeQuery();
-
-            mySQLConnectionPool.freeConnection(connection);
 
             Rating rating = null;
             if(resultSet.next()){
@@ -94,22 +150,37 @@ public class MySQLRatingDAO implements RatingDAO {
                 rating.setValue(resultSet.getInt(3));
             }
             return rating;
-
-        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when getting rating", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
         }
     }
 
     @Override
     public List<Rating> getRatingsByMovie(int movieId) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = null;
         try {
-            MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-            Connection connection = mySQLConnectionPool.getConnection();
+            mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
+            throw new DAOException("Cannot create a Connection Pool", e);
+        }
+
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM rating WHERE movie_id = ?");
             statement.setInt(1, movieId);
             ResultSet resultSet = statement.executeQuery();
-
-            mySQLConnectionPool.freeConnection(connection);
 
             List<Rating> ratingsByMovie = new ArrayList<>();
             while(resultSet.next()){
@@ -121,22 +192,37 @@ public class MySQLRatingDAO implements RatingDAO {
                 ratingsByMovie.add(rating);
             }
             return ratingsByMovie;
-
-        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when getting rating", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
         }
     }
 
     @Override
     public List<Rating> getRatingsByUser(int userId) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = null;
         try {
-            MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-            Connection connection = mySQLConnectionPool.getConnection();
+            mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
+            throw new DAOException("Cannot create a Connection Pool", e);
+        }
+
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM rating WHERE user_id = ?");
             statement.setInt(1, userId);
             ResultSet resultSet = statement.executeQuery();
-
-            mySQLConnectionPool.freeConnection(connection);
 
             List<Rating> ratingsByUser = new ArrayList<>();
             while(resultSet.next()){
@@ -148,9 +234,14 @@ public class MySQLRatingDAO implements RatingDAO {
                 ratingsByUser.add(rating);
             }
             return ratingsByUser;
-
-        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when getting rating", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
         }
     }
 }
