@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -29,11 +30,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">КиноРейтинг</a>
+                <a class="navbar-brand" href="Controller?command=welcome">КиноРейтинг</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="index.html">Главная</a></li>
+                    <li class="active"><a href="Controller?command=welcome">Главная</a></li>
                     <li><a href="catalog.html">Каталог</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -52,17 +53,21 @@
         <div class="col-sm-6">
             <h2>Поиск фильма по жанру</h2>
             <div class="list-group">
-                <a href="catalog.html" class="list-group-item">Триллер</a>
-                <a href="catalog.html" class="list-group-item">Драма</a>
-                <a href="catalog.html" class="list-group-item">Комедия</a>
+                <c:if test="${requestScope.genres != null}">
+                    <c:forEach items="${requestScope.genres}" var="genre">
+                        <a href="#" class="list-group-item">${genre.name}</a>
+                    </c:forEach>
+                </c:if>
             </div>
         </div>
         <div class="col-sm-6">
             <h2>Поиск фильма по стране</h2>
             <div class="list-group">
-                <a href="catalog.html" class="list-group-item">США</a>
-                <a href="catalog.html" class="list-group-item">Германия</a>
-                <a href="catalog.html" class="list-group-item">Великобритания</a>
+                <c:if test="${requestScope.countries != null}">
+                    <c:forEach items="${requestScope.countries}" var="country">
+                        <a href="#" class="list-group-item">${country.name}</a>
+                    </c:forEach>
+                </c:if>
             </div>
         </div>
     </div>
