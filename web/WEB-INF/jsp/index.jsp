@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>КиноРейтинг</title>
+    <title>${requestScope.siteName}</title>
     <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>-->
     <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
@@ -30,17 +30,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="Controller?command=welcome">КиноРейтинг</a>
+                <a class="navbar-brand" href="Controller?command=welcome">${requestScope.siteName}</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="Controller?command=welcome">Главная</a></li>
-                    <li><a href="catalog.html">Каталог</a></li>
+                    <li class="active"><a href="Controller?command=welcome">${requestScope.mainPageName}</a></li>
+                    <li><a href="catalog.html">${requestScope.catalogPageName}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="profile.html"><span class="glyphicon glyphicon-user"></span> Профиль</a></li>
-                    <li><a href="registration.html"><span class="glyphicon glyphicon-user"></span> Регистрация</a></li>
-                    <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> Вход</a></li>
+                    <li><a href="profile.html"><span class="glyphicon glyphicon-user"></span> ${requestScope.profilePageName}</a></li>
+                    <li><a href="registration.html"><span class="glyphicon glyphicon-user"></span> ${requestScope.registrationPageName}</a></li>
+                    <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> ${requestScope.loginPageName}</a></li>
                     <li class="active"><a href="#">RU</a></li>
                     <li><a href="#">EN</a></li>
                 </ul>
@@ -51,7 +51,7 @@
 <main class="container">
     <div class="row">
         <div class="col-sm-6">
-            <h2>Поиск фильма по жанру</h2>
+            <h2>${requestScope.searchMovieByGenre}</h2>
             <div class="list-group">
                 <c:if test="${requestScope.genres != null}">
                     <c:forEach items="${requestScope.genres}" var="genre">
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div class="col-sm-6">
-            <h2>Поиск фильма по стране</h2>
+            <h2>${requestScope.searchMovieByCountry}</h2>
             <div class="list-group">
                 <c:if test="${requestScope.countries != null}">
                     <c:forEach items="${requestScope.countries}" var="country">
@@ -74,15 +74,15 @@
     <div class="jumbotron">
         <form role="form">
             <div class="form-group">
-                <label for="keyword">Найдите фильм, который вам нужен:</label>
-                <input type="text" class="form-control" id="keyword" placeholder="Введите название фильма...">
+                <label for="keyword">${requestScope.findYourMovie}:</label>
+                <input type="text" class="form-control" id="keyword" placeholder="${requestScope.enterMovieName}">
             </div>
-            <button type="submit" class="btn btn-default">Найти</button>
+            <button type="submit" class="btn btn-default">${requestScope.findButton}</button>
         </form>
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <h2>Новинки</h2>
+            <h2>${requestScope.localeRecentMovies}</h2>
             <c:if test="${requestScope.movies != null}">
                 <c:forEach items="${requestScope.movies}" var="movie">
                     <div class="well clearfix">
@@ -91,14 +91,14 @@
                         </a>
                         <a href="#"><h3>${movie.name}</h3></a>
                         <ul>
-                            <li>Страна: <a href="#">США</a>, <a href="#">Германия</a></li>
-                            <li>Жанр: <a href="#">Триллер</a>, <a href="#">Драма</a></li>
-                            <li>Режиссер: <a href="#">Дэвид Финчер</a></li>
-                            <li>Год: ${movie.year}</li>
-                            <li>Бюджет: ${movie.budget} $</li>
-                            <li>Премьера: ${movie.premiere}</li>
-                            <li>Время: ${movie.lasting} мин.</li>
-                            <li>Рейтинг: 8.7</li>
+                            <li>${requestScope.localeCountry}: <a href="#">США</a>, <a href="#">Германия</a></li>
+                            <li>${requestScope.localeGenre}: <a href="#">Триллер</a>, <a href="#">Драма</a></li>
+                            <li>${requestScope.localeDirector}: <a href="#">Дэвид Финчер</a></li>
+                            <li>${requestScope.localeYear}: ${movie.year}</li>
+                            <li>${requestScope.localeBudget}: ${movie.budget} $</li>
+                            <li>${requestScope.localePremiere}: ${movie.premiere}</li>
+                            <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
+                            <li>${requestScope.localeRating}: 8.7</li>
                         </ul>
                         <p>${movie.annotation}</p>
                     </div>
@@ -106,13 +106,13 @@
             </c:if>
         </div>
         <div class="col-sm-6">
-            <h2>Последние отзывы</h2>
+            <h2>${requestScope.localeRecentComments}</h2>
             <div class="well clearfix">
                 <a href="user.html">
                     <img src="img/arinafedosova@gmail.com.jpg" class="img-circle" alt="Арина Федосова">
                 </a>
                 <h3>Lorem ipsum dolor sit amet</h3>
-                <p><a href="user.html">Арина Федосова</a> к фильму <a href="movie.html">Бойцовский клуб</a></p>
+                <p><a href="user.html">Арина Федосова</a> ${requestScope.localeToMovie} <a href="movie.html">Бойцовский клуб</a></p>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sollicitudin, dolor in porta consectetur, dolor mauris ultricies nulla, et lacinia arcu nibh eu quam. Curabitur in malesuada nisi. Etiam vulputate, mauris nec tristique euismod, leo massa tincidunt justo, malesuada varius nulla nulla non enim. Nunc nisl purus, tincidunt eu est interdum, faucibus ultricies odio. Aenean pharetra porttitor mollis. In neque dolor, aliquet ac condimentum et, malesuada vel sem.</p>
             </div>
             <div class="well clearfix">
