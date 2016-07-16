@@ -83,57 +83,27 @@
     <div class="row">
         <div class="col-sm-6">
             <h2>Новинки</h2>
-            <div class="well clearfix">
-                <a href="movie.html">
-                    <img src="img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-                </a>
-                <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-                <ul>
-                    <li>Страна: <a href="catalog.html">США</a>, <a href="catalog.html">Германия</a></li>
-                    <li>Жанр: <a href="catalog.html">Триллер</a>, <a href="catalog.html">Драма</a></li>
-                    <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-                    <li>Год: 1999</li>
-                    <li>Бюджет: 63 000 000 $</li>
-                    <li>Премьера: 10 сен 1999</li>
-                    <li>Время: 131 мин.</li>
-                    <li>Рейтинг: 8.7</li>
-                </ul>
-                <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-            </div>
-            <div class="well clearfix">
-                <a href="movie.html">
-                    <img src="img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-                </a>
-                <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-                <ul>
-                    <li>Страна: <a href="catalog.html">США</a>, <a href="catalog.html">Германия</a></li>
-                    <li>Жанр: <a href="catalog.html">Триллер</a>, <a href="catalog.html">Драма</a></li>
-                    <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-                    <li>Год: 1999</li>
-                    <li>Бюджет: 63 000 000 $</li>
-                    <li>Премьера: 10 сен 1999</li>
-                    <li>Время: 131 мин.</li>
-                    <li>Рейтинг: 8.7</li>
-                </ul>
-                <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-            </div>
-            <div class="well clearfix">
-                <a href="movie.html">
-                    <img src="img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-                </a>
-                <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-                <ul>
-                    <li>Страна: <a href="catalog.html">США</a>, <a href="catalog.html">Германия</a></li>
-                    <li>Жанр: <a href="catalog.html">Триллер</a>, <a href="catalog.html">Драма</a></li>
-                    <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-                    <li>Год: 1999</li>
-                    <li>Бюджет: 63 000 000 $</li>
-                    <li>Премьера: 10 сен 1999</li>
-                    <li>Время: 131 мин.</li>
-                    <li>Рейтинг: 8.7</li>
-                </ul>
-                <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-            </div>
+            <c:if test="${requestScope.movies != null}">
+                <c:forEach items="${requestScope.movies}" var="movie">
+                    <div class="well clearfix">
+                        <a href="#">
+                            <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
+                        </a>
+                        <a href="#"><h3>${movie.name}</h3></a>
+                        <ul>
+                            <li>Страна: <a href="#">США</a>, <a href="#">Германия</a></li>
+                            <li>Жанр: <a href="#">Триллер</a>, <a href="#">Драма</a></li>
+                            <li>Режиссер: <a href="#">Дэвид Финчер</a></li>
+                            <li>Год: ${movie.year}</li>
+                            <li>Бюджет: ${movie.budget} $</li>
+                            <li>Премьера: ${movie.premiere}</li>
+                            <li>Время: ${movie.lasting} мин.</li>
+                            <li>Рейтинг: 8.7</li>
+                        </ul>
+                        <p>${movie.annotation}</p>
+                    </div>
+                </c:forEach>
+            </c:if>
         </div>
         <div class="col-sm-6">
             <h2>Последние отзывы</h2>
