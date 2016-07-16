@@ -32,7 +32,7 @@ public class WelcomeCommand implements Command {
             request.setAttribute("genres", genres);
 
             CountryService countryService = serviceFactory.getCountryService();
-            List<Country> countries = countryService.getAllCountries();
+            List<Country> countries = countryService.getAllCountries(languageId);
             request.setAttribute("countries", countries);
 
             MovieService movieService = serviceFactory.getMovieService();

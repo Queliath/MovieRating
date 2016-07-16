@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class CountryServiceImpl implements CountryService {
     @Override
-    public List<Country> getAllCountries() throws ServiceException {
+    public List<Country> getAllCountries(String languageId) throws ServiceException {
         try {
             CountryDAO countryDAO = DAOFactory.getInstance().getCountryDAO();
-            List<Country> countries = countryDAO.getAllCountries();
+            List<Country> countries = countryDAO.getAllCountries(languageId);
             return countries;
         } catch (DAOException e) {
             throw new ServiceException("Service layer: cannot get all countries", e);

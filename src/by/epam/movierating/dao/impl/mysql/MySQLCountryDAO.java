@@ -14,8 +14,10 @@ import java.util.List;
  * Created by Владислав on 18.06.2016.
  */
 public class MySQLCountryDAO implements CountryDAO {
+    private static final String DEFAULT_LANGUAGE_ID = "EN";
+
     @Override
-    public void addCountry(Country country) throws DAOException {
+    public void addCountry(Country country, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -31,10 +33,20 @@ public class MySQLCountryDAO implements CountryDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO country " +
-                    "(name, icon) VALUES (?, ?)");
-            statement.setString(1, country.getName());
-            statement.setString(2, country.getIcon());
+            PreparedStatement statement = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                statement = connection.prepareStatement("INSERT INTO country " +
+                        "(name, icon) VALUES (?, ?)");
+                statement.setString(1, country.getName());
+                statement.setString(2, country.getIcon());
+            }
+            else {
+                statement = connection.prepareStatement("INSERT INTO tcountry " +
+                        "(language_id, id, name) VALUES (?, ?, ?)");
+                statement.setString(1, languageId);
+                statement.setInt(2, country.getId());
+                statement.setString(3, country.getName());
+            }
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -49,7 +61,7 @@ public class MySQLCountryDAO implements CountryDAO {
     }
 
     @Override
-    public void updateCountry(Country country) throws DAOException {
+    public void updateCountry(Country country, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -65,11 +77,21 @@ public class MySQLCountryDAO implements CountryDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE country " +
-                    "SET name = ?, icon = ? WHERE id = ?");
-            statement.setString(1, country.getName());
-            statement.setString(2, country.getIcon());
-            statement.setInt(3, country.getId());
+            PreparedStatement statement = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                statement = connection.prepareStatement("UPDATE country " +
+                        "SET name = ?, icon = ? WHERE id = ?");
+                statement.setString(1, country.getName());
+                statement.setString(2, country.getIcon());
+                statement.setInt(3, country.getId());
+            }
+            else {
+                statement = connection.prepareStatement("UPDATE tcountry " +
+                        "SET name = ? WHERE id = ? AND language_id = ?");
+                statement.setString(1, country.getName());
+                statement.setInt(2, country.getId());
+                statement.setString(3, languageId);
+            }
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -116,7 +138,7 @@ public class MySQLCountryDAO implements CountryDAO {
     }
 
     @Override
-    public List<Country> getAllCountries() throws DAOException {
+    public List<Country> getAllCountries(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -132,8 +154,18 @@ public class MySQLCountryDAO implements CountryDAO {
         }
 
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM country");
+            ResultSet resultSet = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                Statement statement = connection.createStatement();
+                resultSet = statement.executeQuery("SELECT * FROM country");
+            }
+            else {
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id, " +
+                        "coalesce(t.name, c.name), c.icon FROM country AS c LEFT JOIN " +
+                        "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id)");
+                preparedStatement.setString(1, languageId);
+                resultSet = preparedStatement.executeQuery();
+            }
 
             List<Country> allCountries = new ArrayList<>();
             while (resultSet.next()){
@@ -158,7 +190,7 @@ public class MySQLCountryDAO implements CountryDAO {
     }
 
     @Override
-    public Country getCountryById(int id) throws DAOException {
+    public Country getCountryById(int id, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -174,8 +206,18 @@ public class MySQLCountryDAO implements CountryDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM country WHERE id = ?");
-            statement.setInt(1, id);
+            PreparedStatement statement = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                statement = connection.prepareStatement("SELECT * FROM country WHERE id = ?");
+                statement.setInt(1, id);
+            }
+            else {
+                statement = connection.prepareStatement("SELECT c.id, " +
+                        "coalesce(t.name, c.name), c.icon FROM country AS c LEFT JOIN " +
+                        "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) WHERE c.id = ?");
+                statement.setString(1, languageId);
+                statement.setInt(2, id);
+            }
             ResultSet resultSet = statement.executeQuery();
 
             Country country = null;
@@ -199,7 +241,7 @@ public class MySQLCountryDAO implements CountryDAO {
     }
 
     @Override
-    public List<Country> getCountriesByMovie(int movieId) throws DAOException {
+    public List<Country> getCountriesByMovie(int movieId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -215,10 +257,20 @@ public class MySQLCountryDAO implements CountryDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT country.* FROM country " +
-                    "INNER JOIN movie_country ON country.id = movie_country.country_id " +
-                    "WHERE movie_country.movie_id = ?");
-            statement.setInt(1, movieId);
+            PreparedStatement statement = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                statement = connection.prepareStatement("SELECT country.* FROM country " +
+                        "INNER JOIN movie_country ON country.id = movie_country.country_id " +
+                        "WHERE movie_country.movie_id = ?");
+                statement.setInt(1, movieId);
+            }
+            else {
+                statement = connection.prepareStatement("SELECT c.id, coalesce(t.name, c.name), " +
+                        "c.icon FROM country AS c INNER JOIN movie_country AS mc ON c.id = mc.country_id " +
+                        "JOIN (SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) WHERE mc.movie_id = ?");
+                statement.setString(1, languageId);
+                statement.setInt(2, movieId);
+            }
             ResultSet resultSet = statement.executeQuery();
 
             List<Country> countriesByMovie = new ArrayList<>();
