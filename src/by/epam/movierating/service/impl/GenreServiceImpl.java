@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class GenreServiceImpl implements GenreService {
     @Override
-    public List<Genre> getAllGenres() throws ServiceException {
+    public List<Genre> getAllGenres(String languageId) throws ServiceException {
         try {
             GenreDAO genreDAO = DAOFactory.getInstance().getGenreDAO();
-            List<Genre> genres = genreDAO.getAllGenres();
+            List<Genre> genres = genreDAO.getAllGenres(languageId);
             return genres;
         } catch (DAOException e) {
             throw new ServiceException("Service layer: cannot get all genres", e);

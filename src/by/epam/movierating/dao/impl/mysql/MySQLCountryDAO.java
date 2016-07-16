@@ -87,10 +87,10 @@ public class MySQLCountryDAO implements CountryDAO {
             }
             else {
                 statement = connection.prepareStatement("UPDATE tcountry " +
-                        "SET name = ? WHERE id = ? AND language_id = ?");
+                        "SET name = ? WHERE language_id = ? AND id = ?");
                 statement.setString(1, country.getName());
-                statement.setInt(2, country.getId());
-                statement.setString(3, languageId);
+                statement.setString(2, languageId);
+                statement.setInt(3, country.getId());
             }
 
             statement.executeUpdate();
@@ -267,7 +267,7 @@ public class MySQLCountryDAO implements CountryDAO {
             else {
                 statement = connection.prepareStatement("SELECT c.id, coalesce(t.name, c.name), " +
                         "c.icon FROM country AS c INNER JOIN movie_country AS mc ON c.id = mc.country_id " +
-                        "JOIN (SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) WHERE mc.movie_id = ?");
+                        "LEFT JOIN (SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) WHERE mc.movie_id = ?");
                 statement.setString(1, languageId);
                 statement.setInt(2, movieId);
             }

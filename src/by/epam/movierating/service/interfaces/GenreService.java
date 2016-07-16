@@ -9,5 +9,5 @@ import java.util.List;
  * Created by Владислав on 15.07.2016.
  */
 public interface GenreService {
-    List<Genre> getAllGenres() throws ServiceException;
+    List<Genre> getAllGenres(String languageId) throws ServiceException;
 }

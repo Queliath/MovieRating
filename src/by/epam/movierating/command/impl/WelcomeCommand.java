@@ -28,7 +28,7 @@ public class WelcomeCommand implements Command {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
 
             GenreService genreService = serviceFactory.getGenreService();
-            List<Genre> genres = genreService.getAllGenres();
+            List<Genre> genres = genreService.getAllGenres(languageId);
             request.setAttribute("genres", genres);
 
             CountryService countryService = serviceFactory.getCountryService();

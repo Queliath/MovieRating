@@ -14,8 +14,10 @@ import java.util.List;
  * Created by Владислав on 11.06.2016.
  */
 public class MySQLGenreDAO implements GenreDAO {
+    private static final String DEFAULT_LANGUAGE_ID = "EN";
+
     @Override
-    public void addGenre(Genre genre) throws DAOException {
+    public void addGenre(Genre genre, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -31,10 +33,21 @@ public class MySQLGenreDAO implements GenreDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO genre " +
-                    "(name, description) VALUES (?, ?)");
-            statement.setString(1, genre.getName());
-            statement.setString(2, genre.getDescription());
+            PreparedStatement statement = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                statement = connection.prepareStatement("INSERT INTO genre " +
+                        "(name, description) VALUES (?, ?)");
+                statement.setString(1, genre.getName());
+                statement.setString(2, genre.getDescription());
+            }
+            else {
+                statement = connection.prepareStatement("INSERT INTO tgenre " +
+                        "(language_id, id, name, description) VALUES (?, ?, ?, ?)");
+                statement.setString(1, languageId);
+                statement.setInt(2, genre.getId());
+                statement.setString(3, genre.getName());
+                statement.setString(4, genre.getDescription());
+            }
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -49,7 +62,7 @@ public class MySQLGenreDAO implements GenreDAO {
     }
 
     @Override
-    public void updateGenre(Genre genre) throws DAOException {
+    public void updateGenre(Genre genre, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -65,11 +78,22 @@ public class MySQLGenreDAO implements GenreDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE genre " +
-                    "SET name = ?, description = ? WHERE id = ?");
-            statement.setString(1, genre.getName());
-            statement.setString(2, genre.getDescription());
-            statement.setInt(3, genre.getId());
+            PreparedStatement statement = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                statement = connection.prepareStatement("UPDATE genre " +
+                        "SET name = ?, description = ? WHERE id = ?");
+                statement.setString(1, genre.getName());
+                statement.setString(2, genre.getDescription());
+                statement.setInt(3, genre.getId());
+            }
+            else {
+                statement = connection.prepareStatement("UPDATE tgenre " +
+                        "SET name = ?, description = ? WHERE language_id = ? AND id = ?");
+                statement.setString(1, genre.getName());
+                statement.setString(2, genre.getDescription());
+                statement.setString(3, languageId);
+                statement.setInt(4, genre.getId());
+            }
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -116,7 +140,7 @@ public class MySQLGenreDAO implements GenreDAO {
     }
 
     @Override
-    public List<Genre> getAllGenres() throws DAOException {
+    public List<Genre> getAllGenres(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -132,8 +156,18 @@ public class MySQLGenreDAO implements GenreDAO {
         }
 
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM genre");
+            ResultSet resultSet = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                Statement statement = connection.createStatement();
+                resultSet = statement.executeQuery("SELECT * FROM genre");
+            }
+            else {
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT g.id, " +
+                        "coalesce(t.name, g.name), coalesce(t.description, g.description) FROM genre AS g " +
+                        "LEFT JOIN (SELECT * FROM tgenre WHERE language_id = ?) AS t USING(id)");
+                preparedStatement.setString(1, languageId);
+                resultSet = preparedStatement.executeQuery();
+            }
 
             List<Genre> allGenres = new ArrayList<>();
             while (resultSet.next()){
@@ -157,7 +191,7 @@ public class MySQLGenreDAO implements GenreDAO {
     }
 
     @Override
-    public Genre getGenreById(int id) throws DAOException {
+    public Genre getGenreById(int id, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -173,8 +207,18 @@ public class MySQLGenreDAO implements GenreDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM genre WHERE id = ?");
-            statement.setInt(1, id);
+            PreparedStatement statement = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                statement = connection.prepareStatement("SELECT * FROM genre WHERE id = ?");
+                statement.setInt(1, id);
+            }
+            else {
+                statement = connection.prepareStatement("SELECT g.id, coalesce(t.name, g.name), " +
+                        "coalesce(t.description, g.description) FROM genre AS g LEFT JOIN " +
+                        "(SELECT * FROM tgenre WHERE language_id = ?) AS t USING(id) WHERE g.id = ?");
+                statement.setString(1, languageId);
+                statement.setInt(2, id);
+            }
             ResultSet resultSet = statement.executeQuery();
 
             Genre genre = null;
@@ -197,7 +241,7 @@ public class MySQLGenreDAO implements GenreDAO {
     }
 
     @Override
-    public List<Genre> getGenresByMovie(int movieId) throws DAOException {
+    public List<Genre> getGenresByMovie(int movieId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -213,10 +257,21 @@ public class MySQLGenreDAO implements GenreDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT genre.* FROM genre " +
-                    "INNER JOIN movie_genre ON genre.id = movie_genre.genre_id " +
-                    "WHERE movie_genre.movie_id = ?");
-            statement.setInt(1, movieId);
+            PreparedStatement statement = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                statement = connection.prepareStatement("SELECT genre.* FROM genre " +
+                        "INNER JOIN movie_genre ON genre.id = movie_genre.genre_id " +
+                        "WHERE movie_genre.movie_id = ?");
+                statement.setInt(1, movieId);
+            }
+            else {
+                statement = connection.prepareStatement("SELECT g.id, coalesce(t.name, g.name), " +
+                        "coalesce(t.description, g.description) FROM genre AS g INNER JOIN movie_genre AS mg " +
+                        "ON g.id = mg.genre_id LEFT JOIN (SELECT * FROM tgenre WHERE language_id = ?) AS t " +
+                        "USING(id) WHERE mg.movie_id = ?");
+                statement.setString(1, languageId);
+                statement.setInt(2, movieId);
+            }
             ResultSet resultSet = statement.executeQuery();
 
             List<Genre> genresByMovie = new ArrayList<>();

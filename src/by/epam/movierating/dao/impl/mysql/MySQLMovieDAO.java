@@ -304,7 +304,7 @@ public class MySQLMovieDAO implements MovieDAO {
                         "coalesce(t.tagline, m.tagline), m.budget, m.premiere, m.lasting, " +
                         "coalesce(t.annotation, m.annotation), coalesce(t.image, m.image) " +
                         "FROM movie AS m INNER JOIN movie_genre AS mg ON m.id = mg.movie_id " +
-                        "JOIN (SELECT * FROM tmovie WHERE language_id = ?) AS t USING(id) " +
+                        "LEFT JOIN (SELECT * FROM tmovie WHERE language_id = ?) AS t USING(id) " +
                         "WHERE mg.genre_id = ?");
                 statement.setString(1, languageId);
                 statement.setInt(2, genreId);
@@ -367,7 +367,7 @@ public class MySQLMovieDAO implements MovieDAO {
                         "coalesce(t.tagline, m.tagline), m.budget, m.premiere, m.lasting, " +
                         "coalesce(t.annotation, m.annotation), coalesce(t.image, m.image) " +
                         "FROM movie AS m INNER JOIN movie_country AS mc ON m.id = mc.movie_id " +
-                        "JOIN (SELECT * FROM tmovie WHERE language_id = ?) AS t USING(id) " +
+                        "LEFT JOIN (SELECT * FROM tmovie WHERE language_id = ?) AS t USING(id) " +
                         "WHERE mc.country_id = ?;");
                 statement.setString(1, languageId);
                 statement.setInt(2, countryId);
@@ -432,7 +432,7 @@ public class MySQLMovieDAO implements MovieDAO {
                         "coalesce(t.tagline, m.tagline), m.budget, m.premiere, m.lasting, " +
                         "coalesce(t.annotation, m.annotation), coalesce(t.image, m.image) " +
                         "FROM movie AS m INNER JOIN movie_person_relation AS mpr ON m.id = mpr.movie_id " +
-                        "JOIN (SELECT * FROM tmovie WHERE language_id = ?) AS t USING(id) " +
+                        "LEFT JOIN (SELECT * FROM tmovie WHERE language_id = ?) AS t USING(id) " +
                         "WHERE mpr.person_id = ? AND mpr.relation_type = ?;");
                 statement.setString(1, languageId);
                 statement.setInt(2, personId);
