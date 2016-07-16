@@ -8,7 +8,6 @@ import java.util.Date;
 public class Movie {
     private int id;
     private String name;
-    private String originalName;
     private int year;
     private String tagline;
     private int budget;
@@ -20,10 +19,9 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(String name, String originalName, int year, String tagline,
+    public Movie(String name, int year, String tagline,
                  int budget, Date premiere, int lasting, String annotation, String image) {
         this.name = name;
-        this.originalName = originalName;
         this.year = year;
         this.tagline = tagline;
         this.budget = budget;
@@ -47,14 +45,6 @@ public class Movie {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getOriginalName() {
-        return originalName;
-    }
-
-    public void setOriginalName(String originalName) {
-        this.originalName = originalName;
     }
 
     public int getYear() {
@@ -125,7 +115,6 @@ public class Movie {
         if (budget != movie.budget) return false;
         if (lasting != movie.lasting) return false;
         if (name != null ? !name.equals(movie.name) : movie.name != null) return false;
-        if (originalName != null ? !originalName.equals(movie.originalName) : movie.originalName != null) return false;
         if (tagline != null ? !tagline.equals(movie.tagline) : movie.tagline != null) return false;
         if (premiere != null ? !premiere.equals(movie.premiere) : movie.premiere != null) return false;
         if (annotation != null ? !annotation.equals(movie.annotation) : movie.annotation != null) return false;
@@ -137,7 +126,6 @@ public class Movie {
     public int hashCode() {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (originalName != null ? originalName.hashCode() : 0);
         result = 31 * result + year;
         result = 31 * result + (tagline != null ? tagline.hashCode() : 0);
         result = 31 * result + budget;
@@ -153,7 +141,6 @@ public class Movie {
         return "Movie{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", originalName='" + originalName + '\'' +
                 ", year=" + year +
                 ", tagline='" + tagline + '\'' +
                 ", budget=" + budget +
