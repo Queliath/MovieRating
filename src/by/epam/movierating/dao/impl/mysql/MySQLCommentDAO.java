@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class MySQLCommentDAO implements CommentDAO {
     @Override
-    public void addComment(Comment comment) throws DAOException {
+    public void addComment(Comment comment, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -32,13 +32,14 @@ public class MySQLCommentDAO implements CommentDAO {
 
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO " +
-                    "comment (movie_id, user_id, title, content, date_of_publication) " +
-                    "VALUES (?, ?, ?, ?, ?)");
+                    "comment (movie_id, user_id, title, content, date_of_publication, language_id) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)");
             statement.setInt(1, comment.getMovieId());
             statement.setInt(2, comment.getUserId());
             statement.setString(3, comment.getTitle());
             statement.setString(4, comment.getContent());
             statement.setDate(5, new Date(comment.getDateOfPublication().getTime()));
+            statement.setString(6, languageId);
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -123,7 +124,7 @@ public class MySQLCommentDAO implements CommentDAO {
     }
 
     @Override
-    public List<Comment> getAllComments() throws DAOException {
+    public List<Comment> getAllComments(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -139,8 +140,9 @@ public class MySQLCommentDAO implements CommentDAO {
         }
 
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM comment");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM comment WHERE language_id = ?");
+            statement.setString(1, languageId);
+            ResultSet resultSet = statement.executeQuery();
 
             List<Comment> allComments = new ArrayList<>();
             while (resultSet.next()){
@@ -210,7 +212,7 @@ public class MySQLCommentDAO implements CommentDAO {
     }
 
     @Override
-    public List<Comment> getCommentsByMovie(int movieId) throws DAOException {
+    public List<Comment> getCommentsByMovie(int movieId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -226,8 +228,10 @@ public class MySQLCommentDAO implements CommentDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM comment WHERE movie_id = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM comment WHERE movie_id = ? " +
+                    "AND language_id = ?");
             statement.setInt(1, movieId);
+            statement.setString(2, languageId);
             ResultSet resultSet = statement.executeQuery();
 
             List<Comment> commentsByMovie = new ArrayList<>();
@@ -255,7 +259,7 @@ public class MySQLCommentDAO implements CommentDAO {
     }
 
     @Override
-    public List<Comment> getCommentsByUser(int userId) throws DAOException {
+    public List<Comment> getCommentsByUser(int userId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -271,8 +275,10 @@ public class MySQLCommentDAO implements CommentDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM comment WHERE user_id = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM comment WHERE user_id = ? " +
+                    "AND language_id = ?");
             statement.setInt(1, userId);
+            statement.setString(2, languageId);
             ResultSet resultSet = statement.executeQuery();
 
             List<Comment> commentsByUser = new ArrayList<>();
