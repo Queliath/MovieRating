@@ -9,10 +9,10 @@ import java.util.List;
  * Created by Владислав on 11.06.2016.
  */
 public interface PersonDAO {
-    void addPerson(Person person) throws DAOException;
-    void updatePerson(Person person) throws DAOException;
+    void addPerson(Person person, String languageId) throws DAOException;
+    void updatePerson(Person person, String languageId) throws DAOException;
     void deletePerson(int id) throws DAOException;
-    List<Person> getAllPersons() throws DAOException;
-    Person getPersonById(int id) throws DAOException;
-    List<Person> getPersonsByMovieAndRelationType(int movieId, int relationType) throws DAOException;
+    List<Person> getAllPersons(String languageId) throws DAOException;
+    Person getPersonById(int id, String languageId) throws DAOException;
+    List<Person> getPersonsByMovieAndRelationType(int movieId, int relationType, String languageId) throws DAOException;
 }
