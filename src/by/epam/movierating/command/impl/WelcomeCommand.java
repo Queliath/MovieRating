@@ -62,6 +62,11 @@ public class WelcomeCommand implements Command {
         request.setAttribute("loginPageName", resourceBundle.getString("locale.loginPageName"));
         request.setAttribute("profilePageName", resourceBundle.getString("locale.profilePageName"));
         request.setAttribute("logoutName", resourceBundle.getString("locale.logoutName"));
+        request.setAttribute("personsPageName", resourceBundle.getString("locale.personsPageName"));
+        request.setAttribute("usersPageName", resourceBundle.getString("locale.usersPageName"));
+        request.setAttribute("localeOther", resourceBundle.getString("locale.other"));
+        request.setAttribute("genresPageName", resourceBundle.getString("locale.genresPageName"));
+        request.setAttribute("countriesPageName", resourceBundle.getString("locale.countriesPageName"));
         request.setAttribute("searchMovieByGenre", resourceBundle.getString("locale.searchMovieByGenre"));
         request.setAttribute("searchMovieByCountry", resourceBundle.getString("locale.searchMovieByCountry"));
         request.setAttribute("findYourMovie", resourceBundle.getString("locale.findYourMovie"));

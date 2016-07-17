@@ -34,6 +34,7 @@ public class LoginCommand implements Command {
                 User user = siteService.login(loginFormEmail, loginFormPassword);
                 HttpSession session = request.getSession(true);
                 session.setAttribute("userId", user.getId());
+                session.setAttribute("userStatus", user.getStatus());
                 response.sendRedirect("/Controller?command=welcome");
             } catch (ServiceWrongEmailException e) {
                 String languageId = LanguageUtil.getLanguageId(request);

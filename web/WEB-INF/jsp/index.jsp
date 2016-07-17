@@ -37,6 +37,19 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="Controller?command=welcome">${requestScope.mainPageName}</a></li>
                     <li><a href="#">${requestScope.catalogPageName}</a></li>
+                    <c:if test="${sessionScope.userId != null}">
+                        <c:if test='${sessionScope.userStatus eq "admin"}'>
+                            <li><a href="#">${requestScope.personsPageName}</a></li>
+                            <li><a href="#">${requestScope.usersPageName}</a></li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">${requestScope.localeOther} <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">${requestScope.genresPageName}</a></li>
+                                    <li><a href="#">${requestScope.countriesPageName}</a></li>
+                                </ul>
+                            </li>
+                        </c:if>
+                    </c:if>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <c:if test="${sessionScope.userId != null}">
