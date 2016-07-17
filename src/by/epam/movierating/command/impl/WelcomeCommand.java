@@ -82,5 +82,7 @@ public class WelcomeCommand implements Command {
         request.setAttribute("localeMinute", resourceBundle.getString("locale.minute"));
         request.setAttribute("localeRating", resourceBundle.getString("locale.rating"));
         request.setAttribute("localeToMovie", resourceBundle.getString("locale.toMovie"));
+
+        request.setAttribute("selectedLanguage", languageId);
     }
 }

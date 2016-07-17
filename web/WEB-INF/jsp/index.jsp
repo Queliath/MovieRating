@@ -42,8 +42,8 @@
                     <li><a href="profile.html"><span class="glyphicon glyphicon-user"></span> ${requestScope.profilePageName}</a></li>
                     <li><a href="registration.html"><span class="glyphicon glyphicon-user"></span> ${requestScope.registrationPageName}</a></li>
                     <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> ${requestScope.loginPageName}</a></li>
-                    <li><form id="change-language-ru" action="" method="post"><input type="hidden" name="changeLanguageId" value="RU"><a href="#" onclick="document.getElementById('change-language-ru').submit()">RU</a></form></li>
-                    <li><form id="change-language-en" action="" method="post"><input type="hidden" name="changeLanguageId" value="EN"><a href="#" onclick="document.getElementById('change-language-en').submit()">EN</a></form></li>
+                    <li <c:if test='${requestScope.selectedLanguage eq "RU"}'>class="active"</c:if>><form id="change-language-ru" action="" method="post"><input type="hidden" name="changeLanguageId" value="RU"><a href="#" onclick="document.getElementById('change-language-ru').submit()">RU</a></form></li>
+                    <li <c:if test='${requestScope.selectedLanguage eq "EN"}'>class="active"</c:if>><form id="change-language-en" action="" method="post"><input type="hidden" name="changeLanguageId" value="EN"><a href="#" onclick="document.getElementById('change-language-en').submit()">EN</a></form></li>
                 </ul>
             </div>
         </div>
