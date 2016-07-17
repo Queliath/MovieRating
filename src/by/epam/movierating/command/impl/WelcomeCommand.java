@@ -1,6 +1,8 @@
 package by.epam.movierating.command.impl;
 
 import by.epam.movierating.command.Command;
+import by.epam.movierating.command.util.LanguageUtil;
+import by.epam.movierating.command.util.QueryUtil;
 import by.epam.movierating.domain.Country;
 import by.epam.movierating.domain.Genre;
 import by.epam.movierating.domain.Movie;
@@ -23,15 +25,10 @@ import java.util.ResourceBundle;
  * Created by Владислав on 15.07.2016.
  */
 public class WelcomeCommand implements Command {
-    private static final String SESSION_LANGUAGE_ID = "languageId";
-
-    private static final String DEFAULT_LANGUAGE_ID = "EN";
-
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        String sessionLanguageId = (session == null) ? DEFAULT_LANGUAGE_ID : (String) session.getAttribute(SESSION_LANGUAGE_ID);
-        String languageId = (sessionLanguageId == null) ? DEFAULT_LANGUAGE_ID : sessionLanguageId;
+        QueryUtil.saveCurrentQueryToSession(request);
+        String languageId = LanguageUtil.getLanguageId(request);
 
         setLocaleAttributes(request, languageId);
 

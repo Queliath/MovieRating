@@ -1,6 +1,7 @@
 package by.epam.movierating.controller;
 
 import by.epam.movierating.command.Command;
+import by.epam.movierating.command.impl.ChangeLanguageCommand;
 import by.epam.movierating.command.impl.LoginCommand;
 import by.epam.movierating.command.impl.RegistrationCommand;
 import by.epam.movierating.command.impl.WelcomeCommand;
@@ -21,6 +22,7 @@ public class CommandHelper {
         commands.put(CommandName.WELCOME, new WelcomeCommand());
         commands.put(CommandName.LOGIN, new LoginCommand());
         commands.put(CommandName.REGISTRATION, new RegistrationCommand());
+        commands.put(CommandName.CHANGE_LANGUAGE, new ChangeLanguageCommand());
     }
 
     public Command getCommand(String name) throws CommandNotFoundException {
