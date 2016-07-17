@@ -25,8 +25,35 @@ public class WelcomeCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String languageId = request.getParameter("lang");
+        if(languageId == null){
+            languageId = "EN";
+        }
 
+        setLocaleAttributes(request, languageId);
+
+        try {
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+
+            GenreService genreService = serviceFactory.getGenreService();
+            List<Genre> genres = genreService.getAllGenres(languageId);
+            request.setAttribute("genres", genres);
+
+            CountryService countryService = serviceFactory.getCountryService();
+            List<Country> countries = countryService.getAllCountries(languageId);
+            request.setAttribute("countries", countries);
+
+            MovieService movieService = serviceFactory.getMovieService();
+            List<Movie> movies = movieService.getAllMovies(languageId);
+            request.setAttribute("movies", movies);
+        } catch (ServiceException e) {
+            request.setAttribute("errorMessage", "Ошибка загрузки данных.");
+        }
+        request.getRequestDispatcher("WEB-INF/jsp/index.jsp").forward(request, response);
+    }
+
+    private void setLocaleAttributes(HttpServletRequest request, String languageId) {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("locale", new Locale(languageId));
+
         request.setAttribute("siteName", resourceBundle.getString("locale.siteName"));
         request.setAttribute("mainPageName", resourceBundle.getString("locale.mainPageName"));
         request.setAttribute("catalogPageName", resourceBundle.getString("locale.catalogPageName"));
@@ -51,24 +78,5 @@ public class WelcomeCommand implements Command {
         request.setAttribute("localeMinute", resourceBundle.getString("locale.minute"));
         request.setAttribute("localeRating", resourceBundle.getString("locale.rating"));
         request.setAttribute("localeToMovie", resourceBundle.getString("locale.toMovie"));
-
-        try {
-            ServiceFactory serviceFactory = ServiceFactory.getInstance();
-
-            GenreService genreService = serviceFactory.getGenreService();
-            List<Genre> genres = genreService.getAllGenres(languageId);
-            request.setAttribute("genres", genres);
-
-            CountryService countryService = serviceFactory.getCountryService();
-            List<Country> countries = countryService.getAllCountries(languageId);
-            request.setAttribute("countries", countries);
-
-            MovieService movieService = serviceFactory.getMovieService();
-            List<Movie> movies = movieService.getAllMovies(languageId);
-            request.setAttribute("movies", movies);
-        } catch (ServiceException e) {
-            request.setAttribute("errorMessage", "Ошибка загрузки данных.");
-        }
-        request.getRequestDispatcher("WEB-INF/jsp/index.jsp").forward(request, response);
     }
 }

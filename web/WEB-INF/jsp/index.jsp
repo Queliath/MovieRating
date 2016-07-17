@@ -91,9 +91,9 @@
                         </a>
                         <a href="#"><h3>${movie.name}</h3></a>
                         <ul>
-                            <li>${requestScope.localeCountry}: <a href="#">США</a>, <a href="#">Германия</a></li>
-                            <li>${requestScope.localeGenre}: <a href="#">Триллер</a>, <a href="#">Драма</a></li>
-                            <li>${requestScope.localeDirector}: <a href="#">Дэвид Финчер</a></li>
+                            <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="#">${country.name}</a> </c:forEach></li>
+                            <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="#">${genre.name}</a> </c:forEach></li>
+                            <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="#">${director.name}</a> </c:forEach></li>
                             <li>${requestScope.localeYear}: ${movie.year}</li>
                             <li>${requestScope.localeBudget}: ${movie.budget} $</li>
                             <li>${requestScope.localePremiere}: ${movie.premiere}</li>

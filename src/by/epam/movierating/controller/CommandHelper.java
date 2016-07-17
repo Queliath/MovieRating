@@ -4,6 +4,7 @@ import by.epam.movierating.command.Command;
 import by.epam.movierating.command.impl.LoginCommand;
 import by.epam.movierating.command.impl.RegistrationCommand;
 import by.epam.movierating.command.impl.WelcomeCommand;
+import by.epam.movierating.controller.exception.CommandNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,13 +23,16 @@ public class CommandHelper {
         commands.put(CommandName.REGISTRATION, new RegistrationCommand());
     }
 
-    public Command getCommand(String name) {
+    public Command getCommand(String name) throws CommandNotFoundException {
         name = name.replace('-', '_');
-        CommandName commandName = CommandName.valueOf(name.toUpperCase());
 
-        Command command = commands.get(commandName);
-
-        return command;
+        try {
+            CommandName commandName = CommandName.valueOf(name.toUpperCase());
+            Command command = commands.get(commandName);
+            return command;
+        } catch (IllegalArgumentException | NullPointerException e) {
+            throw new CommandNotFoundException("Wrong or empty command name", e);
+        }
     }
 
     public static CommandHelper getInstance() {

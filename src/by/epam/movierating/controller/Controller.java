@@ -1,6 +1,7 @@
 package by.epam.movierating.controller;
 
 import by.epam.movierating.command.Command;
+import by.epam.movierating.controller.exception.CommandNotFoundException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,15 +15,35 @@ import java.io.IOException;
 public class Controller extends HttpServlet {
     private static final String COMMAND = "command";
 
+    private static final int PAGE_NOT_FOUND_ERROR = 404;
+
+    private static final String DEFAULT_COMMAND = "WELCOME";
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String commandName = request.getParameter(COMMAND);
-        Command command  = CommandHelper.getInstance().getCommand(commandName);
-        command.execute(request, response);
+        if(commandName == null){
+            commandName = DEFAULT_COMMAND;
+        }
+
+        try {
+            Command command = CommandHelper.getInstance().getCommand(commandName);
+            command.execute(request, response);
+        } catch (CommandNotFoundException e) {
+            response.sendError(PAGE_NOT_FOUND_ERROR);
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String commandName = request.getParameter(COMMAND);
-        Command command  = CommandHelper.getInstance().getCommand(commandName);
-        command.execute(request, response);
+        if(commandName == null){
+            commandName = DEFAULT_COMMAND;
+        }
+
+        try {
+            Command command = CommandHelper.getInstance().getCommand(commandName);
+            command.execute(request, response);
+        } catch (CommandNotFoundException e) {
+            response.sendError(PAGE_NOT_FOUND_ERROR);
+        }
     }
 }

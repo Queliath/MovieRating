@@ -1,6 +1,7 @@
 package by.epam.movierating.domain;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Владислав on 11.06.2016.
@@ -15,6 +16,17 @@ public class Movie {
     private int lasting;
     private String annotation;
     private String image;
+
+    private List<Country> countries;
+    private List<Genre> genres;
+    private List<Person> actors;
+    private List<Person> directors;
+    private List<Person> producers;
+    private List<Person> writers;
+    private List<Person> operators;
+    private List<Person> painters;
+    private List<Person> editors;
+    private List<Person> composers;
 
     public Movie() {
     }
@@ -101,6 +113,86 @@ public class Movie {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<Country> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(List<Country> countries) {
+        this.countries = countries;
+    }
+
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public List<Person> getActors() {
+        return actors;
+    }
+
+    public void setActors(List<Person> actors) {
+        this.actors = actors;
+    }
+
+    public List<Person> getDirectors() {
+        return directors;
+    }
+
+    public void setDirectors(List<Person> directors) {
+        this.directors = directors;
+    }
+
+    public List<Person> getProducers() {
+        return producers;
+    }
+
+    public void setProducers(List<Person> producers) {
+        this.producers = producers;
+    }
+
+    public List<Person> getWriters() {
+        return writers;
+    }
+
+    public void setWriters(List<Person> writers) {
+        this.writers = writers;
+    }
+
+    public List<Person> getOperators() {
+        return operators;
+    }
+
+    public void setOperators(List<Person> operators) {
+        this.operators = operators;
+    }
+
+    public List<Person> getPainters() {
+        return painters;
+    }
+
+    public void setPainters(List<Person> painters) {
+        this.painters = painters;
+    }
+
+    public List<Person> getEditors() {
+        return editors;
+    }
+
+    public void setEditors(List<Person> editors) {
+        this.editors = editors;
+    }
+
+    public List<Person> getComposers() {
+        return composers;
+    }
+
+    public void setComposers(List<Person> composers) {
+        this.composers = composers;
     }
 
     @Override
