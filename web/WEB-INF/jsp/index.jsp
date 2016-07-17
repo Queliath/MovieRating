@@ -36,12 +36,17 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="Controller?command=welcome">${requestScope.mainPageName}</a></li>
-                    <li><a href="catalog.html">${requestScope.catalogPageName}</a></li>
+                    <li><a href="#">${requestScope.catalogPageName}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="profile.html"><span class="glyphicon glyphicon-user"></span> ${requestScope.profilePageName}</a></li>
-                    <li><a href="registration.html"><span class="glyphicon glyphicon-user"></span> ${requestScope.registrationPageName}</a></li>
-                    <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> ${requestScope.loginPageName}</a></li>
+                    <c:if test="${sessionScope.userId != null}">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> ${requestScope.profilePageName}</a></li>
+                        <li><a href="Controller?command=logout"><span class="glyphicon glyphicon-log-out"></span> ${requestScope.logoutName}</a></li>
+                    </c:if>
+                    <c:if test="${sessionScope.userId == null}">
+                        <li><a href="Controller?command=registration"><span class="glyphicon glyphicon-user"></span> ${requestScope.registrationPageName}</a></li>
+                        <li><a href="Controller?command=login"><span class="glyphicon glyphicon-log-in"></span> ${requestScope.loginPageName}</a></li>
+                    </c:if>
                     <li <c:if test='${requestScope.selectedLanguage eq "RU"}'>class="active"</c:if>><form id="change-language-ru" action="Controller?command=change-language" method="post"><input type="hidden" name="changeLanguageId" value="RU"><a href="#" onclick="document.getElementById('change-language-ru').submit()">RU</a></form></li>
                     <li <c:if test='${requestScope.selectedLanguage eq "EN"}'>class="active"</c:if>><form id="change-language-en" action="Controller?command=change-language" method="post"><input type="hidden" name="changeLanguageId" value="EN"><a href="#" onclick="document.getElementById('change-language-en').submit()">EN</a></form></li>
                 </ul>

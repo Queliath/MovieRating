@@ -1,10 +1,7 @@
 package by.epam.movierating.controller;
 
 import by.epam.movierating.command.Command;
-import by.epam.movierating.command.impl.ChangeLanguageCommand;
-import by.epam.movierating.command.impl.LoginCommand;
-import by.epam.movierating.command.impl.RegistrationCommand;
-import by.epam.movierating.command.impl.WelcomeCommand;
+import by.epam.movierating.command.impl.*;
 import by.epam.movierating.controller.exception.CommandNotFoundException;
 
 import java.util.HashMap;
@@ -21,6 +18,7 @@ public class CommandHelper {
     private CommandHelper(){
         commands.put(CommandName.WELCOME, new WelcomeCommand());
         commands.put(CommandName.LOGIN, new LoginCommand());
+        commands.put(CommandName.LOGOUT, new LogoutCommand());
         commands.put(CommandName.REGISTRATION, new RegistrationCommand());
         commands.put(CommandName.CHANGE_LANGUAGE, new ChangeLanguageCommand());
     }
