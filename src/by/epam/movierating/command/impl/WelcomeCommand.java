@@ -13,6 +13,7 @@ import by.epam.movierating.service.interfaces.MovieService;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -22,12 +23,15 @@ import java.util.ResourceBundle;
  * Created by Владислав on 15.07.2016.
  */
 public class WelcomeCommand implements Command {
+    private static final String SESSION_LANGUAGE_ID = "languageId";
+
+    private static final String DEFAULT_LANGUAGE_ID = "EN";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String languageId = request.getParameter("lang");
-        if(languageId == null){
-            languageId = "EN";
-        }
+        HttpSession session = request.getSession(false);
+        String sessionLanguageId = (session == null) ? DEFAULT_LANGUAGE_ID : (String) session.getAttribute(SESSION_LANGUAGE_ID);
+        String languageId = (sessionLanguageId == null) ? DEFAULT_LANGUAGE_ID : sessionLanguageId;
 
         setLocaleAttributes(request, languageId);
 

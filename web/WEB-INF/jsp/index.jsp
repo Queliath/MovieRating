@@ -15,6 +15,7 @@
     <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>-->
     <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
+    <link rel="shortcut icon" href="img/movie-roll.png" type="image/png">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/jquery.min.js"></script>
@@ -41,8 +42,8 @@
                     <li><a href="profile.html"><span class="glyphicon glyphicon-user"></span> ${requestScope.profilePageName}</a></li>
                     <li><a href="registration.html"><span class="glyphicon glyphicon-user"></span> ${requestScope.registrationPageName}</a></li>
                     <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> ${requestScope.loginPageName}</a></li>
-                    <li class="active"><a href="#">RU</a></li>
-                    <li><a href="#">EN</a></li>
+                    <li><form id="change-language-ru" action="" method="post"><input type="hidden" name="changeLanguageId" value="RU"><a href="#" onclick="document.getElementById('change-language-ru').submit()">RU</a></form></li>
+                    <li><form id="change-language-en" action="" method="post"><input type="hidden" name="changeLanguageId" value="EN"><a href="#" onclick="document.getElementById('change-language-en').submit()">EN</a></form></li>
                 </ul>
             </div>
         </div>

@@ -3,6 +3,23 @@
     display: block;
     clear: both;
 }
+.nav li form{
+    margin: 0;
+}
+.nav li form a{
+    color: #777;
+    padding: 10px 15px;
+    line-height: 20px;
+    position: relative;
+    display: block;
+    text-decoration: none;
+}
+@media screen and (min-width: 768px){
+    .nav li form a{
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+}
 .jumbotron img{
     float: left;
     width: 200px;
