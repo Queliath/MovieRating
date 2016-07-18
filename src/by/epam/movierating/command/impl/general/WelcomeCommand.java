@@ -1,4 +1,4 @@
-package by.epam.movierating.command.impl;
+package by.epam.movierating.command.impl.general;
 
 import by.epam.movierating.command.Command;
 import by.epam.movierating.command.util.LanguageUtil;

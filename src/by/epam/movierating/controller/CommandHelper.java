@@ -1,7 +1,9 @@
 package by.epam.movierating.controller;
 
 import by.epam.movierating.command.Command;
-import by.epam.movierating.command.impl.*;
+import by.epam.movierating.command.impl.general.*;
+import by.epam.movierating.command.impl.movie.MovieCommand;
+import by.epam.movierating.command.impl.movie.MoviesCommand;
 import by.epam.movierating.controller.exception.CommandNotFoundException;
 
 import java.util.HashMap;
@@ -21,6 +23,9 @@ public class CommandHelper {
         commands.put(CommandName.LOGOUT, new LogoutCommand());
         commands.put(CommandName.REGISTRATION, new RegistrationCommand());
         commands.put(CommandName.CHANGE_LANGUAGE, new ChangeLanguageCommand());
+
+        commands.put(CommandName.MOVIES, new MoviesCommand());
+        commands.put(CommandName.MOVIE, new MovieCommand());
     }
 
     public Command getCommand(String name) throws CommandNotFoundException {
