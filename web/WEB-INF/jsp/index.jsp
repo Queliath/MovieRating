@@ -117,7 +117,7 @@
                             <li>${requestScope.localeBudget}: ${movie.budget} $</li>
                             <li>${requestScope.localePremiere}: ${movie.premiere}</li>
                             <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
-                            <li>${requestScope.localeRating}: 8.7</li>
+                            <li>${requestScope.localeRating}: ${movie.averageRating}</li>
                         </ul>
                         <p>${movie.annotation}</p>
                     </div>

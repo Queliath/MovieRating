@@ -2,10 +2,7 @@ package by.epam.movierating.service.impl;
 
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.factory.DAOFactory;
-import by.epam.movierating.dao.interfaces.CountryDAO;
-import by.epam.movierating.dao.interfaces.GenreDAO;
-import by.epam.movierating.dao.interfaces.MovieDAO;
-import by.epam.movierating.dao.interfaces.PersonDAO;
+import by.epam.movierating.dao.interfaces.*;
 import by.epam.movierating.domain.Country;
 import by.epam.movierating.domain.Genre;
 import by.epam.movierating.domain.Movie;
@@ -32,6 +29,7 @@ public class MovieServiceImpl implements MovieService {
             CountryDAO countryDAO = daoFactory.getCountryDAO();
             GenreDAO genreDAO = daoFactory.getGenreDAO();
             PersonDAO personDAO = daoFactory.getPersonDAO();
+            RatingDAO ratingDAO = daoFactory.getRatingDAO();
             for(Movie movie : movies){
                 List<Country> countries = countryDAO.getCountriesByMovie(movie.getId(), languageId);
                 movie.setCountries(countries);
@@ -41,6 +39,9 @@ public class MovieServiceImpl implements MovieService {
 
                 List<Person> directors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), DIRECTOR, languageId);
                 movie.setDirectors(directors);
+
+                double averageRating = ratingDAO.getAverageRatingByMovie(movie.getId());
+                movie.setAverageRating(averageRating);
             }
             return movies;
         } catch (DAOException e) {

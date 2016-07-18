@@ -19,6 +19,7 @@ public class Movie {
 
     private List<Country> countries;
     private List<Genre> genres;
+
     private List<Person> actors;
     private List<Person> directors;
     private List<Person> producers;
@@ -27,6 +28,9 @@ public class Movie {
     private List<Person> painters;
     private List<Person> editors;
     private List<Person> composers;
+
+    private double averageRating;
+    private List<Comment> comments;
 
     public Movie() {
     }
@@ -193,6 +197,22 @@ public class Movie {
 
     public void setComposers(List<Person> composers) {
         this.composers = composers;
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override

@@ -162,7 +162,7 @@ public class MySQLRatingDAO implements RatingDAO {
     }
 
     @Override
-    public List<Rating> getRatingsByMovie(int movieId) throws DAOException {
+    public double getAverageRatingByMovie(int movieId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = null;
         try {
             mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -178,20 +178,16 @@ public class MySQLRatingDAO implements RatingDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM rating WHERE movie_id = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT AVG(value) " +
+                    "FROM rating WHERE movie_id = ? GROUP BY movie_id");
             statement.setInt(1, movieId);
             ResultSet resultSet = statement.executeQuery();
 
-            List<Rating> ratingsByMovie = new ArrayList<>();
-            while(resultSet.next()){
-                Rating rating = new Rating();
-                rating.setMovieId(resultSet.getInt(1));
-                rating.setUserId(resultSet.getInt(2));
-                rating.setValue(resultSet.getInt(3));
-
-                ratingsByMovie.add(rating);
+            double averageRating = 0.0;
+            if(resultSet.next()){
+                averageRating = resultSet.getDouble(1);
             }
-            return ratingsByMovie;
+            return averageRating;
         } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when getting rating", e);
         } finally {
