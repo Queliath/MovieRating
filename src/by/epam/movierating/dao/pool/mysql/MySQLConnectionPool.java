@@ -58,9 +58,11 @@ public class MySQLConnectionPool {
             for(int i = 0; i < Integer.parseInt(numberOfConnectionsStr); i++){
                 Connection newConnection = DriverManager.getConnection(hostConnectionString +
                         databaseName, userLogin, userPassword);
-                availableConnections.add(newConnection);
 
+                lock.lock();
+                availableConnections.add(newConnection);
                 isAvailable = true;
+                lock.unlock();
             }
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
             throw new MySQLConnectionPoolException("Cannot init a pool", e);
