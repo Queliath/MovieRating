@@ -30,6 +30,9 @@
     height: auto;
     margin: 0 10px 10px 0;
 }
+.jumbotron img.img-circle{
+    height: 200px;
+}
 .jumbotron ul{
     list-style: none;
     padding-left: 0;
@@ -68,6 +71,9 @@
     width: 100px;
     height: auto;
     margin: 0 10px 10px 0;
+}
+.well a img.img-circle{
+    height: 100px;
 }
 .well h3{
     font-size: 18px;

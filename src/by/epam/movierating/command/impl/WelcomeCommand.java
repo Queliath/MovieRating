@@ -3,11 +3,13 @@ package by.epam.movierating.command.impl;
 import by.epam.movierating.command.Command;
 import by.epam.movierating.command.util.LanguageUtil;
 import by.epam.movierating.command.util.QueryUtil;
+import by.epam.movierating.domain.Comment;
 import by.epam.movierating.domain.Country;
 import by.epam.movierating.domain.Genre;
 import by.epam.movierating.domain.Movie;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.factory.ServiceFactory;
+import by.epam.movierating.service.interfaces.CommentService;
 import by.epam.movierating.service.interfaces.CountryService;
 import by.epam.movierating.service.interfaces.GenreService;
 import by.epam.movierating.service.interfaces.MovieService;
@@ -29,7 +31,6 @@ public class WelcomeCommand implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-
         setLocaleAttributes(request, languageId);
 
         try {
@@ -46,6 +47,10 @@ public class WelcomeCommand implements Command {
             MovieService movieService = serviceFactory.getMovieService();
             List<Movie> movies = movieService.getAllMovies(languageId);
             request.setAttribute("movies", movies);
+
+            CommentService commentService = serviceFactory.getCommentService();
+            List<Comment> comments = commentService.getAllComments(languageId);
+            request.setAttribute("comments", comments);
         } catch (ServiceException e) {
             request.setAttribute("errorMessage", "Ошибка загрузки данных.");
         }

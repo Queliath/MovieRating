@@ -126,30 +126,18 @@
         </div>
         <div class="col-sm-6">
             <h2>${requestScope.localeRecentComments}</h2>
-            <div class="well clearfix">
-                <a href="user.html">
-                    <img src="img/arinafedosova@gmail.com.jpg" class="img-circle" alt="Арина Федосова">
-                </a>
-                <h3>Lorem ipsum dolor sit amet</h3>
-                <p><a href="user.html">Арина Федосова</a> ${requestScope.localeToMovie} <a href="movie.html">Бойцовский клуб</a></p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sollicitudin, dolor in porta consectetur, dolor mauris ultricies nulla, et lacinia arcu nibh eu quam. Curabitur in malesuada nisi. Etiam vulputate, mauris nec tristique euismod, leo massa tincidunt justo, malesuada varius nulla nulla non enim. Nunc nisl purus, tincidunt eu est interdum, faucibus ultricies odio. Aenean pharetra porttitor mollis. In neque dolor, aliquet ac condimentum et, malesuada vel sem.</p>
-            </div>
-            <div class="well clearfix">
-                <a href="user.html">
-                    <img src="img/arinafedosova@gmail.com.jpg" class="img-circle" alt="Арина Федосова">
-                </a>
-                <h3>Lorem ipsum dolor sit amet</h3>
-                <p><a href="user.html">Арина Федосова</a> к фильму <a href="movie.html">Бойцовский клуб</a></p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sollicitudin, dolor in porta consectetur, dolor mauris ultricies nulla, et lacinia arcu nibh eu quam. Curabitur in malesuada nisi. Etiam vulputate, mauris nec tristique euismod, leo massa tincidunt justo, malesuada varius nulla nulla non enim. Nunc nisl purus, tincidunt eu est interdum, faucibus ultricies odio. Aenean pharetra porttitor mollis. In neque dolor, aliquet ac condimentum et, malesuada vel sem.</p>
-            </div>
-            <div class="well clearfix">
-                <a href="user.html">
-                    <img src="img/arinafedosova@gmail.com.jpg" class="img-circle" alt="Арина Федосова">
-                </a>
-                <h3>Lorem ipsum dolor sit amet</h3>
-                <p><a href="user.html">Арина Федосова</a> к фильму <a href="movie.html">Бойцовский клуб</a></p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sollicitudin, dolor in porta consectetur, dolor mauris ultricies nulla, et lacinia arcu nibh eu quam. Curabitur in malesuada nisi. Etiam vulputate, mauris nec tristique euismod, leo massa tincidunt justo, malesuada varius nulla nulla non enim. Nunc nisl purus, tincidunt eu est interdum, faucibus ultricies odio. Aenean pharetra porttitor mollis. In neque dolor, aliquet ac condimentum et, malesuada vel sem.</p>
-            </div>
+            <c:if test="${requestScope.comments != null}">
+                <c:forEach items="${requestScope.comments}" var="comment">
+                    <div class="well clearfix">
+                        <a href="#">
+                            <img src="img/${comment.user.photo}" class="img-circle" alt="${comment.user.firstName} ${comment.user.lastName}">
+                        </a>
+                        <h3>${comment.title}</h3>
+                        <p><a href="#">${comment.user.firstName} ${comment.user.lastName}</a> ${requestScope.localeToMovie} <a href="#">${comment.movie.name}</a></p>
+                        <p>${comment.content}</p>
+                    </div>
+                </c:forEach>
+            </c:if>
         </div>
     </div>
 </main>

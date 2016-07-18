@@ -13,6 +13,9 @@ public class Comment {
     private int userId;
     private int movieId;
 
+    private User user;
+    private Movie movie;
+
     public Comment() {
     }
 
@@ -70,6 +73,22 @@ public class Comment {
 
     public void setMovieId(int movieId) {
         this.movieId = movieId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
     }
 
     @Override
