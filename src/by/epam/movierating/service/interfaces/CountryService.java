@@ -9,5 +9,5 @@ import java.util.List;
  * Created by Владислав on 15.07.2016.
  */
 public interface CountryService {
-    List<Country> getAllCountries(String languageId) throws ServiceException;
+    List<Country> getTopPositionCountries(int amount, String languageId) throws ServiceException;
 }

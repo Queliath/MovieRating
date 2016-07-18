@@ -7,6 +7,7 @@ public class Country {
     private int id;
     private String name;
     private String icon;
+    private int position;
 
     public Country() {
     }
@@ -38,6 +39,14 @@ public class Country {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     @Override

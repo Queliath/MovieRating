@@ -29,6 +29,8 @@ import java.util.ResourceBundle;
 public class WelcomeCommand implements Command {
     private static final int AMOUNT_OF_RECENT_ADDED_MOVIES = 3;
     private static final int AMOUNT_OF_RECENT_ADDED_COMMENTS = 3;
+    private static final int AMOUNT_OF_TOP_POSITION_COUNTRIES = 5;
+    private static final int AMOUNT_OF_TOP_POSITION_GENRES = 5;
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -40,11 +42,11 @@ public class WelcomeCommand implements Command {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
 
             GenreService genreService = serviceFactory.getGenreService();
-            List<Genre> genres = genreService.getAllGenres(languageId);
+            List<Genre> genres = genreService.getTopPositionGenres(AMOUNT_OF_TOP_POSITION_GENRES, languageId);
             request.setAttribute("genres", genres);
 
             CountryService countryService = serviceFactory.getCountryService();
-            List<Country> countries = countryService.getAllCountries(languageId);
+            List<Country> countries = countryService.getTopPositionCountries(AMOUNT_OF_TOP_POSITION_COUNTRIES, languageId);
             request.setAttribute("countries", countries);
 
             MovieService movieService = serviceFactory.getMovieService();
