@@ -27,6 +27,9 @@ import java.util.ResourceBundle;
  * Created by Владислав on 15.07.2016.
  */
 public class WelcomeCommand implements Command {
+    private static final int AMOUNT_OF_RECENT_ADDED_MOVIES = 3;
+    private static final int AMOUNT_OF_RECENT_ADDED_COMMENTS = 3;
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
@@ -45,11 +48,11 @@ public class WelcomeCommand implements Command {
             request.setAttribute("countries", countries);
 
             MovieService movieService = serviceFactory.getMovieService();
-            List<Movie> movies = movieService.getAllMovies(languageId);
+            List<Movie> movies = movieService.getRecentAddedMovies(AMOUNT_OF_RECENT_ADDED_MOVIES, languageId);
             request.setAttribute("movies", movies);
 
             CommentService commentService = serviceFactory.getCommentService();
-            List<Comment> comments = commentService.getAllComments(languageId);
+            List<Comment> comments = commentService.getRecentAddedComments(AMOUNT_OF_RECENT_ADDED_COMMENTS, languageId);
             request.setAttribute("comments", comments);
         } catch (ServiceException e) {
             request.setAttribute("errorMessage", "Ошибка загрузки данных.");

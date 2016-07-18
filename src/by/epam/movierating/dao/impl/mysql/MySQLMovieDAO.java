@@ -468,4 +468,64 @@ public class MySQLMovieDAO implements MovieDAO {
         }
     }
 
+    @Override
+    public List<Movie> getRecentAddedMovies(int amount, String languageId) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = null;
+        try {
+            mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
+            throw new DAOException("Cannot create a Connection Pool", e);
+        }
+
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
+            ResultSet resultSet = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                Statement statement = connection.createStatement();
+                resultSet = statement.executeQuery("SELECT * FROM movie ORDER BY id DESC LIMIT " + amount);
+            }
+            else {
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT m.id, " +
+                        "coalesce(t.name, m.name), m.year, coalesce(t.tagline, m.tagline), " +
+                        "m.budget, m.premiere, m.lasting, coalesce(t.annotation, m.annotation), " +
+                        "coalesce(t.image, m.image) FROM movie AS m LEFT JOIN (SELECT * FROM tmovie " +
+                        "WHERE language_id = ?) AS t USING(id) ORDER BY id DESC LIMIT " + amount);
+                preparedStatement.setString(1, languageId);
+                resultSet = preparedStatement.executeQuery();
+            }
+
+            List<Movie> allMovies = new ArrayList<>();
+            while (resultSet.next()){
+                Movie movie = new Movie();
+                movie.setId(resultSet.getInt(1));
+                movie.setName(resultSet.getString(2));
+                movie.setYear(resultSet.getInt(3));
+                movie.setTagline(resultSet.getString(4));
+                movie.setBudget(resultSet.getInt(5));
+                movie.setPremiere(resultSet.getDate(6));
+                movie.setLasting(resultSet.getInt(7));
+                movie.setAnnotation(resultSet.getString(8));
+                movie.setImage(resultSet.getString(9));
+
+                allMovies.add(movie);
+            }
+
+            return allMovies;
+        } catch (SQLException e) {
+            throw new DAOException("Error in DAO layer when getting all movies", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
+        }
+    }
+
 }

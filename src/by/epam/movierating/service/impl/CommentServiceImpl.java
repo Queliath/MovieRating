@@ -18,11 +18,11 @@ import java.util.List;
  */
 public class CommentServiceImpl implements CommentService {
     @Override
-    public List<Comment> getAllComments(String languageId) throws ServiceException {
+    public List<Comment> getRecentAddedComments(int amount, String languageId) throws ServiceException {
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             CommentDAO commentDAO = daoFactory.getCommentDAO();
-            List<Comment> comments = commentDAO.getAllComments(languageId);
+            List<Comment> comments = commentDAO.getRecentAddedComments(amount, languageId);
 
             UserDAO userDAO = daoFactory.getUserDAO();
             MovieDAO movieDAO = daoFactory.getMovieDAO();

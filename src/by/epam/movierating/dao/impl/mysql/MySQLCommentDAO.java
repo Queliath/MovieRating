@@ -304,4 +304,50 @@ public class MySQLCommentDAO implements CommentDAO {
             }
         }
     }
+
+    @Override
+    public List<Comment> getRecentAddedComments(int amount, String languageId) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = null;
+        try {
+            mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
+            throw new DAOException("Cannot create a Connection Pool", e);
+        }
+
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM comment " +
+                    "WHERE language_id = ? ORDER BY id DESC LIMIT " + amount);
+            statement.setString(1, languageId);
+            ResultSet resultSet = statement.executeQuery();
+
+            List<Comment> allComments = new ArrayList<>();
+            while (resultSet.next()){
+                Comment comment = new Comment();
+                comment.setId(resultSet.getInt(1));
+                comment.setMovieId(resultSet.getInt(2));
+                comment.setUserId(resultSet.getInt(3));
+                comment.setTitle(resultSet.getString(4));
+                comment.setContent(resultSet.getString(5));
+                comment.setDateOfPublication(resultSet.getDate(6));
+
+                allComments.add(comment);
+            }
+            return allComments;
+        } catch (SQLException e) {
+            throw new DAOException("Exception in DAO layer when getting comment", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
+        }
+    }
 }

@@ -9,5 +9,5 @@ import java.util.List;
  * Created by Владислав on 15.07.2016.
  */
 public interface CommentService {
-    List<Comment> getAllComments(String languageId) throws ServiceException;
+    List<Comment> getRecentAddedComments(int amount, String languageId) throws ServiceException;
 }

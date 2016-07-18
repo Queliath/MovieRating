@@ -16,4 +16,5 @@ public interface CommentDAO {
     Comment getCommentById(int id) throws DAOException;
     List<Comment> getCommentsByMovie(int movieId, String languageId) throws DAOException;
     List<Comment> getCommentsByUser(int userId, String languageId) throws DAOException;
+    List<Comment> getRecentAddedComments(int amount, String languageId) throws DAOException;
 }

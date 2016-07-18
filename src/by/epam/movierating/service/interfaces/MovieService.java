@@ -9,5 +9,5 @@ import java.util.List;
  * Created by Владислав on 15.07.2016.
  */
 public interface MovieService {
-    List<Movie> getAllMovies(String languageId) throws ServiceException;
+    List<Movie> getRecentAddedMovies(int amount, String languageId) throws ServiceException;
 }

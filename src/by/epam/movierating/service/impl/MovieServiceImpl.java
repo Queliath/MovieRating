@@ -20,11 +20,11 @@ public class MovieServiceImpl implements MovieService {
     private static final int DIRECTOR = 2;
 
     @Override
-    public List<Movie> getAllMovies(String languageId) throws ServiceException {
+    public List<Movie> getRecentAddedMovies(int amount, String languageId) throws ServiceException {
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             MovieDAO movieDAO = daoFactory.getMovieDAO();
-            List<Movie> movies = movieDAO.getAllMovies(languageId);
+            List<Movie> movies = movieDAO.getRecentAddedMovies(amount, languageId);
 
             CountryDAO countryDAO = daoFactory.getCountryDAO();
             GenreDAO genreDAO = daoFactory.getGenreDAO();
