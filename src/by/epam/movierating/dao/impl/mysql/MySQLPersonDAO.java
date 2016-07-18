@@ -18,17 +18,11 @@ public class MySQLPersonDAO implements PersonDAO {
 
     @Override
     public void addPerson(Person person, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -65,17 +59,11 @@ public class MySQLPersonDAO implements PersonDAO {
 
     @Override
     public void updatePerson(Person person, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -113,17 +101,11 @@ public class MySQLPersonDAO implements PersonDAO {
 
     @Override
     public void deletePerson(int id) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -145,17 +127,11 @@ public class MySQLPersonDAO implements PersonDAO {
 
     @Override
     public List<Person> getAllPersons(String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -200,17 +176,11 @@ public class MySQLPersonDAO implements PersonDAO {
 
     @Override
     public Person getPersonById(int id, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -253,17 +223,11 @@ public class MySQLPersonDAO implements PersonDAO {
 
     @Override
     public List<Person> getPersonsByMovieAndRelationType(int movieId, int relationType, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 

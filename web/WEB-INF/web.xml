@@ -22,6 +22,10 @@
         <filter-name>CharsetFilter</filter-name>
         <servlet-name>Controller</servlet-name>
     </filter-mapping>
+
+    <listener>
+        <listener-class>by.epam.movierating.controller.listener.MySQLConnectionPoolListener</listener-class>
+    </listener>
     
     <welcome-file-list>
         <welcome-file>Controller</welcome-file>

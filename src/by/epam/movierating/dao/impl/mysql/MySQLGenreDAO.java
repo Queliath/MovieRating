@@ -18,17 +18,11 @@ public class MySQLGenreDAO implements GenreDAO {
 
     @Override
     public void addGenre(Genre genre, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -64,17 +58,11 @@ public class MySQLGenreDAO implements GenreDAO {
 
     @Override
     public void updateGenre(Genre genre, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -111,17 +99,11 @@ public class MySQLGenreDAO implements GenreDAO {
 
     @Override
     public void deleteGenre(int id) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -143,17 +125,11 @@ public class MySQLGenreDAO implements GenreDAO {
 
     @Override
     public List<Genre> getAllGenres(String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -195,17 +171,11 @@ public class MySQLGenreDAO implements GenreDAO {
 
     @Override
     public Genre getGenreById(int id, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -246,17 +216,11 @@ public class MySQLGenreDAO implements GenreDAO {
 
     @Override
     public List<Genre> getGenresByMovie(int movieId, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -302,17 +266,11 @@ public class MySQLGenreDAO implements GenreDAO {
 
     @Override
     public List<Genre> getTopPositionGenres(int amount, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 

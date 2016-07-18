@@ -18,17 +18,11 @@ public class MySQLCountryDAO implements CountryDAO {
 
     @Override
     public void addCountry(Country country, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -63,17 +57,11 @@ public class MySQLCountryDAO implements CountryDAO {
 
     @Override
     public void updateCountry(Country country, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -109,17 +97,11 @@ public class MySQLCountryDAO implements CountryDAO {
 
     @Override
     public void deleteCountry(int id) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -141,17 +123,11 @@ public class MySQLCountryDAO implements CountryDAO {
 
     @Override
     public List<Country> getAllCountries(String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -194,17 +170,11 @@ public class MySQLCountryDAO implements CountryDAO {
 
     @Override
     public Country getCountryById(int id, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -246,17 +216,11 @@ public class MySQLCountryDAO implements CountryDAO {
 
     @Override
     public List<Country> getCountriesByMovie(int movieId, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
@@ -303,17 +267,11 @@ public class MySQLCountryDAO implements CountryDAO {
 
     @Override
     public List<Country> getTopPositionCountries(int amount, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = null;
-        try {
-            mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        } catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot create a Connection Pool", e);
-        }
-
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         }
 
