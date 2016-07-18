@@ -9,6 +9,8 @@ import by.epam.movierating.service.exception.ServiceWrongEmailException;
 import by.epam.movierating.service.exception.ServiceWrongPasswordException;
 import by.epam.movierating.service.interfaces.SiteService;
 
+import java.util.Date;
+
 /**
  * Created by Владислав on 15.07.2016.
  */
@@ -28,6 +30,32 @@ public class SiteServiceImpl implements SiteService {
             return user;
         } catch (DAOException e) {
             throw new ServiceException("Service layer: cannot make a login operation", e);
+        }
+    }
+
+    @Override
+    public User registration(String email, String password, String firstName, String lastName) throws ServiceWrongEmailException, ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            UserDAO userDAO = daoFactory.getUserDAO();
+
+            User userWithThisEmail = userDAO.getUserByEmail(email);
+            if(userWithThisEmail != null){
+                throw new ServiceWrongEmailException("Wrong email");
+            }
+
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setPassword(password);
+            newUser.setFirstName(firstName);
+            newUser.setLastName(lastName);
+            newUser.setDateOfRegistry(new Date());
+            newUser.setStatus("normal");
+            userDAO.addUser(newUser);
+
+            return newUser;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot make a registration", e);
         }
     }
 }
