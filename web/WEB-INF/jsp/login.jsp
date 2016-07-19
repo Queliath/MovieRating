@@ -36,7 +36,7 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
                     <li><a href="Controller?command=welcome">${requestScope.mainPageName}</a></li>
-                    <li><a href="#">${requestScope.catalogPageName}</a></li>
+                    <li><a href="Controller?command=movies">${requestScope.catalogPageName}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="Controller?command=registration"><span class="glyphicon glyphicon-user"></span> ${requestScope.registrationPageName}</a></li>

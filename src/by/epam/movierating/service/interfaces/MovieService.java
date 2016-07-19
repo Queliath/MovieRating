@@ -10,4 +10,7 @@ import java.util.List;
  */
 public interface MovieService {
     List<Movie> getRecentAddedMovies(int amount, String languageId) throws ServiceException;
+    List<Movie> getMoviesByCriteria(String name, int minYear, int maxYear,
+                                    List<Integer> genreIds, List<Integer> countyIds, int minRating, int maxRating,
+                                    int from, int amount, String languageId) throws ServiceException;
 }

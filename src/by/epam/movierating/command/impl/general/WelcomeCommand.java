@@ -57,7 +57,7 @@ public class WelcomeCommand implements Command {
             List<Comment> comments = commentService.getRecentAddedComments(AMOUNT_OF_RECENT_ADDED_COMMENTS, languageId);
             request.setAttribute("comments", comments);
         } catch (ServiceException e) {
-            request.setAttribute("errorMessage", "Ошибка загрузки данных.");
+            request.setAttribute("serviceError", true);
         }
         request.getRequestDispatcher("WEB-INF/jsp/index.jsp").forward(request, response);
     }
@@ -94,6 +94,7 @@ public class WelcomeCommand implements Command {
         request.setAttribute("localeMinute", resourceBundle.getString("locale.minute"));
         request.setAttribute("localeRating", resourceBundle.getString("locale.rating"));
         request.setAttribute("localeToMovie", resourceBundle.getString("locale.toMovie"));
+        request.setAttribute("localeServiceError", resourceBundle.getString("locale.serviceError"));
 
         request.setAttribute("selectedLanguage", languageId);
     }

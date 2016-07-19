@@ -5,6 +5,7 @@ import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.pool.mysql.MySQLConnectionPool;
 import by.epam.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 import by.epam.movierating.domain.Movie;
+import by.epam.movierating.domain.criteria.MovieCriteria;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -465,6 +466,140 @@ public class MySQLMovieDAO implements MovieDAO {
             return allMovies;
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting all movies", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
+        }
+    }
+
+    @Override
+    public List<Movie> getMoviesByCriteria(MovieCriteria criteria, int from, int amount, String languageId) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
+            StringBuilder query = new StringBuilder();
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                query.append("SELECT DISTINCT m.* FROM movie AS m ");
+            }
+            else {
+                query.append("SELECT DISTINCT m.id, coalesce(t.name, m.name), m.year, " +
+                        "coalesce(t.tagline, m.tagline), m.budget, m.premiere, m.lasting, " +
+                        "coalesce(t.annotation, m.annotation), coalesce(t.image, m.image) " +
+                        "FROM movie AS m ");
+            }
+            if (criteria.getGenreIds() != null) {
+                query.append("INNER JOIN movie_genre AS mg ON m.id = mg.movie_id ");
+            }
+            if (criteria.getCountryIds() != null) {
+                query.append("INNER JOIN movie_country AS mc ON m.id = mc.movie_id ");
+            }
+            if(criteria.getMinRating() != 0 || criteria.getMaxRating() != 0){
+                query.append("INNER JOIN rating AS r ON m.id = r.movie_id ");
+            }
+            if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
+                query.append("LEFT JOIN (SELECT * FROM tmovie WHERE language_id = '");
+                query.append(languageId);
+                query.append("') AS t USING(id) ");
+            }
+
+            boolean atLeastOneWhereCriteria = false;
+            if (criteria.getName() != null) {
+                if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                    query.append("WHERE m.name LIKE '%");
+                    query.append(criteria.getName());
+                    query.append("%' ");
+                }
+                else {
+                    query.append("WHERE (m.name LIKE '%");
+                    query.append(criteria.getName());
+                    query.append("%' OR t.name LIKE '%");
+                    query.append(criteria.getName());
+                    query.append("%') ");
+                }
+                atLeastOneWhereCriteria = true;
+            }
+            if (criteria.getMinYear() != 0) {
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" m.year > ");
+                query.append(criteria.getMinYear());
+                query.append(" ");
+                atLeastOneWhereCriteria = true;
+            }
+            if (criteria.getMaxYear() != 0) {
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" m.year < ");
+                query.append(criteria.getMaxYear());
+                query.append(" ");
+                atLeastOneWhereCriteria = true;
+            }
+            if (criteria.getGenreIds() != null) {
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" mg.genre_id IN (");
+                for (Integer integer : criteria.getGenreIds()) {
+                    query.append(integer);
+                    query.append(',');
+                }
+                query.deleteCharAt(query.length() - 1);
+                query.append(") ");
+                atLeastOneWhereCriteria = true;
+            }
+            if (criteria.getCountryIds() != null) {
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" mc.country_id IN (");
+                for (Integer integer : criteria.getCountryIds()) {
+                    query.append(integer);
+                    query.append(',');
+                }
+                query.deleteCharAt(query.length() - 1);
+                query.append(") ");
+            }
+            if(criteria.getMinRating() != 0 || criteria.getMaxRating() != 0){
+                query.append("GROUP BY r.movie_id ");
+                boolean atLeastOneHavingCriteria = false;
+                if(criteria.getMinRating() != 0){
+                    query.append("HAVING AVG(r.value) > ");
+                    query.append(criteria.getMinRating());
+                    query.append(" ");
+                    atLeastOneHavingCriteria = true;
+                }
+                if(criteria.getMaxRating() != 0){
+                    query.append(atLeastOneHavingCriteria ? "AND" : "HAVING");
+                    query.append(" AVG(r.value) < ");
+                    query.append(criteria.getMaxRating());
+                    query.append(" ");
+                }
+            }
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query.toString());
+
+            List<Movie> allMovies = new ArrayList<>();
+            while (resultSet.next()){
+                Movie movie = new Movie();
+                movie.setId(resultSet.getInt(1));
+                movie.setName(resultSet.getString(2));
+                movie.setYear(resultSet.getInt(3));
+                movie.setTagline(resultSet.getString(4));
+                movie.setBudget(resultSet.getInt(5));
+                movie.setPremiere(resultSet.getDate(6));
+                movie.setLasting(resultSet.getInt(7));
+                movie.setAnnotation(resultSet.getString(8));
+                movie.setImage(resultSet.getString(9));
+
+                allMovies.add(movie);
+            }
+
+            return allMovies;
+        } catch (SQLException e) {
+            throw new DAOException("Cannot get movies by criteria", e);
         } finally {
             try {
                 mySQLConnectionPool.freeConnection(connection);

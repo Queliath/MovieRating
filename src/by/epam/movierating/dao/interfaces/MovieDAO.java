@@ -2,6 +2,7 @@ package by.epam.movierating.dao.interfaces;
 
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.domain.Movie;
+import by.epam.movierating.domain.criteria.MovieCriteria;
 
 import java.util.List;
 
@@ -18,4 +19,5 @@ public interface MovieDAO {
     List<Movie> getMoviesByCountry(int countryId, String languageId) throws DAOException;
     List<Movie> getMoviesByPersonAndRelationType(int personId, int relationType, String languageId) throws DAOException;
     List<Movie> getRecentAddedMovies(int amount, String languageId) throws DAOException;
+    List<Movie> getMoviesByCriteria(MovieCriteria criteria, int from, int amount, String languageId) throws DAOException;
 }

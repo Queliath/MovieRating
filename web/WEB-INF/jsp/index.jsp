@@ -36,7 +36,7 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="Controller?command=welcome">${requestScope.mainPageName}</a></li>
-                    <li><a href="#">${requestScope.catalogPageName}</a></li>
+                    <li><a href="Controller?command=movies">${requestScope.catalogPageName}</a></li>
                     <c:if test="${sessionScope.userId != null}">
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
                             <li><a href="#">${requestScope.personsPageName}</a></li>
@@ -68,6 +68,12 @@
     </nav>
 </header>
 <main class="container">
+    <c:if test="${requestScope.serviceError}">
+        <div class="alert alert-danger fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                ${requestScope.localeServiceError}
+        </div>
+    </c:if>
     <div class="row">
         <div class="col-sm-6">
             <h2>${requestScope.searchMovieByGenre}</h2>

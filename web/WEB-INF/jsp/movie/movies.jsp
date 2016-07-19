@@ -6,18 +6,20 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Фильмы</title>
+    <title>${requestScope.catalogPageName}</title>
     <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>-->
     <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <script src="../js/jquery.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="img/movie-roll.png" type="image/png">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
 <header>
@@ -29,92 +31,106 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="movies.html">КиноРейтинг</a>
+                <a class="navbar-brand" href="Controller?command=welcome">${requestScope.siteName}</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="movies.html">Фильмы</a></li>
-                    <li><a href="persons.html">Личности</a></li>
-                    <li><a href="users.html">Пользователи</a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Прочее <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="genres.html">Жанры</a></li>
-                            <li><a href="countries.html">Страны</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="Controller?command=welcome">${requestScope.mainPageName}</a></li>
+                    <li class="active"><a href="Controller?command=movies">${requestScope.catalogPageName}</a></li>
+                    <c:if test="${sessionScope.userId != null}">
+                        <c:if test='${sessionScope.userStatus eq "admin"}'>
+                            <li><a href="#">${requestScope.personsPageName}</a></li>
+                            <li><a href="#">${requestScope.usersPageName}</a></li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">${requestScope.localeOther} <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">${requestScope.genresPageName}</a></li>
+                                    <li><a href="#">${requestScope.countriesPageName}</a></li>
+                                </ul>
+                            </li>
+                        </c:if>
+                    </c:if>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> Выход</a></li>
-                    <li class="active"><a href="#">RU</a></li>
-                    <li><a href="#">EN</a></li>
+                    <c:if test="${sessionScope.userId != null}">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> ${requestScope.profilePageName}</a></li>
+                        <li><a href="Controller?command=logout"><span class="glyphicon glyphicon-log-out"></span> ${requestScope.logoutName}</a></li>
+                    </c:if>
+                    <c:if test="${sessionScope.userId == null}">
+                        <li><a href="Controller?command=registration"><span class="glyphicon glyphicon-user"></span> ${requestScope.registrationPageName}</a></li>
+                        <li><a href="Controller?command=login"><span class="glyphicon glyphicon-log-in"></span> ${requestScope.loginPageName}</a></li>
+                    </c:if>
+                    <li <c:if test='${requestScope.selectedLanguage eq "RU"}'>class="active"</c:if>><form id="change-language-ru" action="Controller?command=change-language" method="post"><input type="hidden" name="changeLanguageId" value="RU"><a href="#" onclick="document.getElementById('change-language-ru').submit()">RU</a></form></li>
+                    <li <c:if test='${requestScope.selectedLanguage eq "EN"}'>class="active"</c:if>><form id="change-language-en" action="Controller?command=change-language" method="post"><input type="hidden" name="changeLanguageId" value="EN"><a href="#" onclick="document.getElementById('change-language-en').submit()">EN</a></form></li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
 <main class="container">
+    <c:if test="${requestScope.serviceError}">
+        <div class="alert alert-danger fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                ${requestScope.localeServiceError}
+        </div>
+    </c:if>
     <div class="jumbotron">
-        <h3>Критерии поиска</h3>
+        <h3>${requestScope.localeSearchCriteria}</h3>
         <form role="form">
             <div class="row">
                 <div class="form-group col-sm-6">
-                    <label for="name">Название:</label>
+                    <label for="name">${requestScope.localeName}:</label>
                     <input type="text" id="name" class="form-control">
                 </div>
                 <div class="form-group col-sm-6 row">
                     <div class="col-xs-12">
-                        <label>Год выпуска</label>
+                        <label>${requestScope.localeYear}</label>
                     </div>
                     <div class="col-xs-6">
-                        <label for="min-year">От:</label>
+                        <label for="min-year">${requestScope.localeFrom}:</label>
                         <input type="number" id="min-year" class="form-control">
                     </div>
                     <div class="col-xs-6">
-                        <label for="max-year">До:</label>
+                        <label for="max-year">${requestScope.localeTo}:</label>
                         <input type="number" id="max-year" class="form-control">
                     </div>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label>Жанр</label>
-                    <div class="checkbox">
-                        <label><input type="checkbox"> Триллер</label>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox"> Драма</label>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox"> Комедия</label>
-                    </div>
+                    <label>${requestScope.localeGenre}</label>
+                    <c:if test="${requestScope.genres != null}">
+                        <c:forEach items="${requestScope.genres}" var="genre">
+                            <div class="checkbox">
+                                <label><input type="checkbox"> ${genre.name}</label>
+                            </div>
+                        </c:forEach>
+                    </c:if>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label>Страна</label>
-                    <div class="checkbox">
-                        <label><input type="checkbox"> США</label>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox"> Германия</label>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox"> Великобритания</label>
-                    </div>
+                    <label>${requestScope.localeCountry}</label>
+                    <c:if test="${requestScope.countries != null}">
+                        <c:forEach items="${requestScope.countries}" var="country">
+                            <div class="checkbox">
+                                <label><input type="checkbox"> ${country.name}</label>
+                            </div>
+                        </c:forEach>
+                    </c:if>
                 </div>
                 <div class="form-group col-sm-6 row">
                     <div class="col-xs-12">
-                        <label>Рейтинг</label>
+                        <label>${requestScope.localeRating}</label>
                     </div>
                     <div class="col-xs-6">
-                        <label for="min-rating">От:</label>
+                        <label for="min-rating">${requestScope.localeFrom}:</label>
                         <input type="number" id="min-rating" class="form-control">
                     </div>
                     <div class="col-xs-6">
-                        <label for="max-rating">До:</label>
+                        <label for="max-rating">${requestScope.localeTo}:</label>
                         <input type="number" id="max-rating" class="form-control">
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-default">Найти</button>
+                <button type="submit" class="btn btn-default">${requestScope.localeFindButton}</button>
             </div>
         </form>
     </div>
@@ -128,176 +144,27 @@
         По выбранным критериям не найдено ни одного фильма.
     </div>
     <p>Отображается 10 из 78</p>
-    <div class="well clearfix">
-        <a href="movie.html">
-            <img src="../img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-        </a>
-        <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-        <ul>
-            <li>Страна: <a href="movies.html">США</a>, <a href="movies.html">Германия</a></li>
-            <li>Жанр: <a href="movies.html">Триллер</a>, <a href="movies.html">Драма</a></li>
-            <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-            <li>Год: 1999</li>
-            <li>Бюджет: 63 000 000 $</li>
-            <li>Премьера: 10 сен 1999</li>
-            <li>Время: 131 мин.</li>
-            <li>Рейтинг: 8.7</li>
-        </ul>
-        <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-    </div>
-    <div class="well clearfix">
-        <a href="movie.html">
-            <img src="../img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-        </a>
-        <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-        <ul>
-            <li>Страна: <a href="movies.html">США</a>, <a href="movies.html">Германия</a></li>
-            <li>Жанр: <a href="movies.html">Триллер</a>, <a href="movies.html">Драма</a></li>
-            <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-            <li>Год: 1999</li>
-            <li>Бюджет: 63 000 000 $</li>
-            <li>Премьера: 10 сен 1999</li>
-            <li>Время: 131 мин.</li>
-            <li>Рейтинг: 8.7</li>
-        </ul>
-        <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-    </div>
-    <div class="well clearfix">
-        <a href="movie.html">
-            <img src="../img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-        </a>
-        <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-        <ul>
-            <li>Страна: <a href="movies.html">США</a>, <a href="movies.html">Германия</a></li>
-            <li>Жанр: <a href="movies.html">Триллер</a>, <a href="movies.html">Драма</a></li>
-            <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-            <li>Год: 1999</li>
-            <li>Бюджет: 63 000 000 $</li>
-            <li>Премьера: 10 сен 1999</li>
-            <li>Время: 131 мин.</li>
-            <li>Рейтинг: 8.7</li>
-        </ul>
-        <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-    </div>
-    <div class="well clearfix">
-        <a href="movie.html">
-            <img src="../img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-        </a>
-        <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-        <ul>
-            <li>Страна: <a href="movies.html">США</a>, <a href="movies.html">Германия</a></li>
-            <li>Жанр: <a href="movies.html">Триллер</a>, <a href="movies.html">Драма</a></li>
-            <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-            <li>Год: 1999</li>
-            <li>Бюджет: 63 000 000 $</li>
-            <li>Премьера: 10 сен 1999</li>
-            <li>Время: 131 мин.</li>
-            <li>Рейтинг: 8.7</li>
-        </ul>
-        <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-    </div>
-    <div class="well clearfix">
-        <a href="movie.html">
-            <img src="../img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-        </a>
-        <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-        <ul>
-            <li>Страна: <a href="movies.html">США</a>, <a href="movies.html">Германия</a></li>
-            <li>Жанр: <a href="movies.html">Триллер</a>, <a href="movies.html">Драма</a></li>
-            <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-            <li>Год: 1999</li>
-            <li>Бюджет: 63 000 000 $</li>
-            <li>Премьера: 10 сен 1999</li>
-            <li>Время: 131 мин.</li>
-            <li>Рейтинг: 8.7</li>
-        </ul>
-        <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-    </div>
-    <div class="well clearfix">
-        <a href="movie.html">
-            <img src="../img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-        </a>
-        <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-        <ul>
-            <li>Страна: <a href="movies.html">США</a>, <a href="movies.html">Германия</a></li>
-            <li>Жанр: <a href="movies.html">Триллер</a>, <a href="movies.html">Драма</a></li>
-            <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-            <li>Год: 1999</li>
-            <li>Бюджет: 63 000 000 $</li>
-            <li>Премьера: 10 сен 1999</li>
-            <li>Время: 131 мин.</li>
-            <li>Рейтинг: 8.7</li>
-        </ul>
-        <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-    </div>
-    <div class="well clearfix">
-        <a href="movie.html">
-            <img src="../img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-        </a>
-        <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-        <ul>
-            <li>Страна: <a href="movies.html">США</a>, <a href="movies.html">Германия</a></li>
-            <li>Жанр: <a href="movies.html">Триллер</a>, <a href="movies.html">Драма</a></li>
-            <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-            <li>Год: 1999</li>
-            <li>Бюджет: 63 000 000 $</li>
-            <li>Премьера: 10 сен 1999</li>
-            <li>Время: 131 мин.</li>
-            <li>Рейтинг: 8.7</li>
-        </ul>
-        <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-    </div>
-    <div class="well clearfix">
-        <a href="movie.html">
-            <img src="../img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-        </a>
-        <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-        <ul>
-            <li>Страна: <a href="movies.html">США</a>, <a href="movies.html">Германия</a></li>
-            <li>Жанр: <a href="movies.html">Триллер</a>, <a href="movies.html">Драма</a></li>
-            <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-            <li>Год: 1999</li>
-            <li>Бюджет: 63 000 000 $</li>
-            <li>Премьера: 10 сен 1999</li>
-            <li>Время: 131 мин.</li>
-            <li>Рейтинг: 8.7</li>
-        </ul>
-        <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-    </div>
-    <div class="well clearfix">
-        <a href="movie.html">
-            <img src="../img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-        </a>
-        <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-        <ul>
-            <li>Страна: <a href="movies.html">США</a>, <a href="movies.html">Германия</a></li>
-            <li>Жанр: <a href="movies.html">Триллер</a>, <a href="movies.html">Драма</a></li>
-            <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-            <li>Год: 1999</li>
-            <li>Бюджет: 63 000 000 $</li>
-            <li>Премьера: 10 сен 1999</li>
-            <li>Время: 131 мин.</li>
-            <li>Рейтинг: 8.7</li>
-        </ul>
-        <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-    </div>
-    <div class="well clearfix">
-        <a href="movie.html">
-            <img src="../img/fight-club.jpg" class="img-rounded" alt="Бойцовский клуб">
-        </a>
-        <a href="movie.html"><h3>Бойцовский клуб</h3></a>
-        <ul>
-            <li>Страна: <a href="movies.html">США</a>, <a href="movies.html">Германия</a></li>
-            <li>Жанр: <a href="movies.html">Триллер</a>, <a href="movies.html">Драма</a></li>
-            <li>Режиссер: <a href="person.html">Дэвид Финчер</a></li>
-            <li>Год: 1999</li>
-            <li>Бюджет: 63 000 000 $</li>
-            <li>Премьера: 10 сен 1999</li>
-            <li>Время: 131 мин.</li>
-            <li>Рейтинг: 8.7</li>
-        </ul>
-        <p>Терзаемый хронической бессонницей и отчаянно пытающийся вырваться из мучительно скучной жизни, клерк встречает некоего Тайлера Дардена, харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а саморазрушение — единственное, ради чего стоит жить.</p>
-    </div>
+    <c:if test="${requestScope.movies != null}">
+        <c:forEach items="${requestScope.movies}" var="movie">
+            <div class="well clearfix">
+                <a href="#">
+                    <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
+                </a>
+                <a href="#"><h3>${movie.name}</h3></a>
+                <ul>
+                    <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="#">${country.name}</a> </c:forEach></li>
+                    <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="#">${genre.name}</a> </c:forEach></li>
+                    <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="#">${director.name}</a> </c:forEach></li>
+                    <li>${requestScope.localeYear}: ${movie.year}</li>
+                    <li>${requestScope.localeBudget}: ${movie.budget} $</li>
+                    <li>${requestScope.localePremiere}: ${movie.premiere}</li>
+                    <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
+                    <li>${requestScope.localeRating}: ${movie.averageRating}</li>
+                </ul>
+                <p>${movie.annotation}</p>
+            </div>
+        </c:forEach>
+    </c:if>
     <ul class="pagination">
         <li><a href="#">Пред</a></li>
         <li class="active"><a href="#">1</a></li>
