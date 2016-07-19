@@ -4,6 +4,9 @@ package by.epam.movierating.controller.listener; /**
 
 import by.epam.movierating.dao.pool.mysql.MySQLConnectionPool;
 import by.epam.movierating.dao.pool.mysql.MySQLConnectionPoolException;
+import by.epam.movierating.service.exception.ServiceException;
+import by.epam.movierating.service.factory.ServiceFactory;
+import by.epam.movierating.service.interfaces.PoolService;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -22,19 +25,21 @@ public class MySQLConnectionPoolListener implements ServletContextListener {
     // ServletContextListener implementation
     // -------------------------------------------------------
     public void contextInitialized(ServletContextEvent sce) {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        PoolService poolService = serviceFactory.getPoolService();
         try {
-            mySQLConnectionPool.init();
-        } catch (MySQLConnectionPoolException e) {
+            poolService.init();
+        } catch (ServiceException e) {
             e.printStackTrace();
         }
     }
 
     public void contextDestroyed(ServletContextEvent sce) {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        PoolService poolService = serviceFactory.getPoolService();
         try {
-            mySQLConnectionPool.destroy();
-        } catch (MySQLConnectionPoolException e) {
+            poolService.destroy();
+        } catch (ServiceException e) {
             e.printStackTrace();
         }
     }

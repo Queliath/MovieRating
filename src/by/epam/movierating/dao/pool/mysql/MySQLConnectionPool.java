@@ -28,6 +28,7 @@ public class MySQLConnectionPool {
     private String userPassword;
 
     private volatile boolean isAvailable = false;
+    private volatile boolean isInit = false;
 
     private static MySQLConnectionPool instance = new MySQLConnectionPool();
 
@@ -40,45 +41,63 @@ public class MySQLConnectionPool {
     private MySQLConnectionPool() {}
 
     public void init() throws MySQLConnectionPoolException {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
-        String numberOfConnectionsStr = resourceBundle.getString(NUMBER_OF_CONNECTIONS_PROPERTY);
-        String driverClassName = resourceBundle.getString(DRIVER_CLASS_NAME_PROPERTY);
-        String hostConnectionString = resourceBundle.getString(HOST_CONNECTION_STRING_PROPERTY);
-        String databaseName = resourceBundle.getString(DATABASE_NAME_PROPERTY);
-        String userLogin = resourceBundle.getString(USER_LOGIN_PROPERTY);
-        String userPassword = resourceBundle.getString(USER_PASSWORD_PROPERTY);
+        if(!isInit) {
+            ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
+            String numberOfConnectionsStr = resourceBundle.getString(NUMBER_OF_CONNECTIONS_PROPERTY);
+            String driverClassName = resourceBundle.getString(DRIVER_CLASS_NAME_PROPERTY);
+            String hostConnectionString = resourceBundle.getString(HOST_CONNECTION_STRING_PROPERTY);
+            String databaseName = resourceBundle.getString(DATABASE_NAME_PROPERTY);
+            String userLogin = resourceBundle.getString(USER_LOGIN_PROPERTY);
+            String userPassword = resourceBundle.getString(USER_PASSWORD_PROPERTY);
 
-        this.hostConnectionString = hostConnectionString;
-        this.databaseName = databaseName;
-        this.userLogin = userLogin;
-        this.userPassword = userPassword;
+            this.hostConnectionString = hostConnectionString;
+            this.databaseName = databaseName;
+            this.userLogin = userLogin;
+            this.userPassword = userPassword;
 
-        try {
-            Class.forName(driverClassName).newInstance();
-            for(int i = 0; i < Integer.parseInt(numberOfConnectionsStr); i++){
-                Connection newConnection = DriverManager.getConnection(hostConnectionString +
-                        databaseName, userLogin, userPassword);
+            try {
+                Class.forName(driverClassName).newInstance();
+                for (int i = 0; i < Integer.parseInt(numberOfConnectionsStr); i++) {
+                    Connection newConnection = DriverManager.getConnection(hostConnectionString +
+                            databaseName, userLogin, userPassword);
 
-                lock.lock();
-                availableConnections.add(newConnection);
-                isAvailable = true;
-                lock.unlock();
+                    lock.lock();
+                    availableConnections.add(newConnection);
+                    isAvailable = true;
+                    lock.unlock();
+                }
+                isInit = true;
+            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+                throw new MySQLConnectionPoolException("Cannot init a pool", e);
             }
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-            throw new MySQLConnectionPoolException("Cannot init a pool", e);
+        }
+        else {
+            throw new MySQLConnectionPoolException("Try to init already init pool");
         }
     }
 
     public void destroy() throws MySQLConnectionPoolException {
-        try {
-            for (Connection connection : availableConnections) {
-                connection.close();
+        if(isInit) {
+            lock.lock();
+            try {
+                for (Connection connection : availableConnections) {
+                    connection.close();
+                }
+                availableConnections.clear();
+                for (Connection connection : usedConnections) {
+                    connection.close();
+                }
+                usedConnections.clear();
+                isAvailable = false;
+                isInit = false;
+            } catch (SQLException e) {
+                throw new MySQLConnectionPoolException("Cannot destroy a pool", e);
+            } finally {
+                lock.unlock();
             }
-            for (Connection connection : usedConnections) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            throw new MySQLConnectionPoolException("Cannot destroy a pool", e);
+        }
+        else {
+            throw new MySQLConnectionPoolException("Try to destroy not init pool");
         }
     }
 
