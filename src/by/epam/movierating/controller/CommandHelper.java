@@ -15,6 +15,8 @@ import java.util.Map;
  * Created by Владислав on 14.07.2016.
  */
 public class CommandHelper {
+    private static final CommandName DEFAULT_COMMAND_NAME = CommandName.WELCOME;
+
     private static final CommandHelper instance = new CommandHelper();
 
     private Map<CommandName, Command> commands = new HashMap<>();
@@ -34,12 +36,14 @@ public class CommandHelper {
     }
 
     public Command getCommand(String name) throws CommandNotFoundException {
-        name = name.replace('-', '_');
+        if(name == null){
+            return commands.get(DEFAULT_COMMAND_NAME);
+        }
 
+        name = name.replace('-', '_');
         try {
             CommandName commandName = CommandName.valueOf(name.toUpperCase());
-            Command command = commands.get(commandName);
-            return command;
+            return commands.get(commandName);
         } catch (IllegalArgumentException | NullPointerException e) {
             throw new CommandNotFoundException("Wrong or empty command name", e);
         }
