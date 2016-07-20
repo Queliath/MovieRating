@@ -20,4 +20,5 @@ public interface MovieDAO {
     List<Movie> getMoviesByPersonAndRelationType(int personId, int relationType, String languageId) throws DAOException;
     List<Movie> getRecentAddedMovies(int amount, String languageId) throws DAOException;
     List<Movie> getMoviesByCriteria(MovieCriteria criteria, int from, int amount, String languageId) throws DAOException;
+    int getMoviesCountByCriteria(MovieCriteria criteria) throws DAOException;
 }

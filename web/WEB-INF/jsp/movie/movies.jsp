@@ -134,49 +134,52 @@
             </div>
         </form>
     </div>
-    <form action="forms/movie-form.html" method="post" role="form">
-        <div class="form-group">
-            <button type="submit" class="btn btn-success btn-lg">Добавить новый фильм</button>
-        </div>
-    </form>
-    <div class="alert alert-info fade in">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        По выбранным критериям не найдено ни одного фильма.
-    </div>
-    <p>Отображается 10 из 78</p>
-    <c:if test="${requestScope.movies != null}">
-        <c:forEach items="${requestScope.movies}" var="movie">
-            <div class="well clearfix">
-                <a href="#">
-                    <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
-                </a>
-                <a href="#"><h3>${movie.name}</h3></a>
-                <ul>
-                    <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="#">${country.name}</a> </c:forEach></li>
-                    <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="#">${genre.name}</a> </c:forEach></li>
-                    <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="#">${director.name}</a> </c:forEach></li>
-                    <li>${requestScope.localeYear}: ${movie.year}</li>
-                    <li>${requestScope.localeBudget}: ${movie.budget} $</li>
-                    <li>${requestScope.localePremiere}: ${movie.premiere}</li>
-                    <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
-                    <li>${requestScope.localeRating}: ${movie.averageRating}</li>
-                </ul>
-                <p>${movie.annotation}</p>
-            </div>
-        </c:forEach>
+    <c:if test="${sessionScope.userId != null}">
+        <c:if test='${sessionScope.userStatus eq "admin"}'>
+            <form action="#" method="post" role="form">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-lg">${requestScope.localeAddMovie}</button>
+                </div>
+            </form>
+        </c:if>
     </c:if>
-    <ul class="pagination">
-        <li><a href="#">Пред</a></li>
-        <li class="active"><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li><a href="#">6</a></li>
-        <li><a href="#">7</a></li>
-        <li><a href="#">8</a></li>
-        <li><a href="#">След.</a></li>
-    </ul>
+    <c:if test="${requestScope.moviesCount == 0}">
+        <div class="alert alert-info fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                ${requestScope.localeNoResults}
+        </div>
+    </c:if>
+    <c:if test="${requestScope.moviesCount != 0}">
+        <p>${requestScope.localeDisplaying} ${requestScope.moviesFrom}-${requestScope.moviesTo} ${requestScope.localeOf} ${requestScope.moviesCount}</p>
+        <c:if test="${requestScope.movies != null}">
+            <c:forEach items="${requestScope.movies}" var="movie">
+                <div class="well clearfix">
+                    <a href="#">
+                        <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
+                    </a>
+                    <a href="#"><h3>${movie.name}</h3></a>
+                    <ul>
+                        <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="#">${country.name}</a> </c:forEach></li>
+                        <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="#">${genre.name}</a> </c:forEach></li>
+                        <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="#">${director.name}</a> </c:forEach></li>
+                        <li>${requestScope.localeYear}: ${movie.year}</li>
+                        <li>${requestScope.localeBudget}: ${movie.budget} $</li>
+                        <li>${requestScope.localePremiere}: ${movie.premiere}</li>
+                        <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
+                        <li>${requestScope.localeRating}: ${movie.averageRating}</li>
+                    </ul>
+                    <p>${movie.annotation}</p>
+                </div>
+            </c:forEach>
+        </c:if>
+        <c:if test="${requestScope.pagination != null}">
+            <ul class="pagination">
+                <c:forEach items="${requestScope.pagination}" var="paginationItem">
+                    <li <c:if test="${paginationItem.key == requestScope.activePage}">class="active"</c:if>><a href="${paginationItem.value}">${paginationItem.key}</a></li>
+                </c:forEach>
+            </ul>
+        </c:if>
+    </c:if>
 </main>
 <footer class="container-fluid">
     <p class="text-center">EPAM Training Center, Java 5 2016, Kostevich Vladislav</p>

@@ -609,4 +609,106 @@ public class MySQLMovieDAO implements MovieDAO {
         }
     }
 
+    @Override
+    public int getMoviesCountByCriteria(MovieCriteria criteria) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
+            StringBuilder query = new StringBuilder();
+            query.append("SELECT COUNT(*) FROM (SELECT DISTINCT m.* FROM movie AS m ");
+
+            if (criteria.getGenreIds() != null) {
+                query.append("INNER JOIN movie_genre AS mg ON m.id = mg.movie_id ");
+            }
+            if (criteria.getCountryIds() != null) {
+                query.append("INNER JOIN movie_country AS mc ON m.id = mc.movie_id ");
+            }
+            if(criteria.getMinRating() != 0 || criteria.getMaxRating() != 0){
+                query.append("INNER JOIN rating AS r ON m.id = r.movie_id ");
+            }
+
+            boolean atLeastOneWhereCriteria = false;
+            if (criteria.getName() != null) {
+                query.append("WHERE m.name LIKE '%");
+                query.append(criteria.getName());
+                query.append("%' ");
+                atLeastOneWhereCriteria = true;
+            }
+            if (criteria.getMinYear() != 0) {
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" m.year > ");
+                query.append(criteria.getMinYear());
+                query.append(" ");
+                atLeastOneWhereCriteria = true;
+            }
+            if (criteria.getMaxYear() != 0) {
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" m.year < ");
+                query.append(criteria.getMaxYear());
+                query.append(" ");
+                atLeastOneWhereCriteria = true;
+            }
+            if (criteria.getGenreIds() != null) {
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" mg.genre_id IN (");
+                for (Integer integer : criteria.getGenreIds()) {
+                    query.append(integer);
+                    query.append(',');
+                }
+                query.deleteCharAt(query.length() - 1);
+                query.append(") ");
+                atLeastOneWhereCriteria = true;
+            }
+            if (criteria.getCountryIds() != null) {
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" mc.country_id IN (");
+                for (Integer integer : criteria.getCountryIds()) {
+                    query.append(integer);
+                    query.append(',');
+                }
+                query.deleteCharAt(query.length() - 1);
+                query.append(") ");
+            }
+            if(criteria.getMinRating() != 0 || criteria.getMaxRating() != 0){
+                query.append("GROUP BY r.movie_id ");
+                boolean atLeastOneHavingCriteria = false;
+                if(criteria.getMinRating() != 0){
+                    query.append("HAVING AVG(r.value) > ");
+                    query.append(criteria.getMinRating());
+                    query.append(" ");
+                    atLeastOneHavingCriteria = true;
+                }
+                if(criteria.getMaxRating() != 0){
+                    query.append(atLeastOneHavingCriteria ? "AND" : "HAVING");
+                    query.append(" AVG(r.value) < ");
+                    query.append(criteria.getMaxRating());
+                    query.append(" ");
+                }
+            }
+            query.append(") AS c");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query.toString());
+
+            int moviesCount = 0;
+            if(resultSet.next()){
+                moviesCount = resultSet.getInt(1);
+            }
+            return moviesCount;
+        } catch (SQLException e) {
+            throw new DAOException("Cannot get movies by criteria", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
+        }
+    }
+
 }

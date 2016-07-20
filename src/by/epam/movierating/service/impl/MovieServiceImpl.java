@@ -88,4 +88,25 @@ public class MovieServiceImpl implements MovieService {
             throw new ServiceException("Service layer: cannot get movies by criteria", e);
         }
     }
+
+    @Override
+    public int getMoviesCountByCriteria(String name, int minYear, int maxYear, List<Integer> genreIds, List<Integer> countyIds, int minRating, int maxRating) throws ServiceException {
+        MovieCriteria criteria = new MovieCriteria();
+        criteria.setName(name);
+        criteria.setMinYear(minYear);
+        criteria.setMaxYear(maxYear);
+        criteria.setGenreIds(genreIds);
+        criteria.setCountryIds(countyIds);
+        criteria.setMinRating(minRating);
+        criteria.setMaxRating(maxRating);
+
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            MovieDAO movieDAO = daoFactory.getMovieDAO();
+            int moviesCount = movieDAO.getMoviesCountByCriteria(criteria);
+            return moviesCount;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get movies count by criteria", e);
+        }
+    }
 }

@@ -2,6 +2,7 @@ package by.epam.movierating.command.impl.movie;
 
 import by.epam.movierating.command.Command;
 import by.epam.movierating.command.util.LanguageUtil;
+import by.epam.movierating.command.util.PaginationUtil;
 import by.epam.movierating.command.util.QueryUtil;
 import by.epam.movierating.domain.Country;
 import by.epam.movierating.domain.Genre;
@@ -16,9 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Владислав on 19.07.2016.
@@ -27,11 +26,16 @@ public class MoviesCommand implements Command {
     private static final int AMOUNT_OF_TOP_POSITION_COUNTRIES = 5;
     private static final int AMOUNT_OF_TOP_POSITION_GENRES = 5;
 
+    private static final int MOVIES_PER_PAGE = 10;
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
         setLocaleAttributes(request, languageId);
+
+        String pageStr = request.getParameter("page");
+        int page = (pageStr == null) ? 1 : Integer.parseInt(pageStr);
 
         try {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
@@ -45,8 +49,25 @@ public class MoviesCommand implements Command {
             request.setAttribute("countries", countries);
 
             MovieService movieService = serviceFactory.getMovieService();
-            List<Movie> movies = movieService.getMoviesByCriteria(null, 0, 0, null, null, 0, 0, 0, 10, languageId);
+
+            int moviesCount = movieService.getMoviesCountByCriteria(null, 0, 0, null, null, 0, 0);
+            request.setAttribute("moviesCount", moviesCount);
+
+            int from = (page - 1) * MOVIES_PER_PAGE;
+            List<Movie> movies = movieService.getMoviesByCriteria(null, 0, 0, null, null, 0, 0, from, MOVIES_PER_PAGE, languageId);
             request.setAttribute("movies", movies);
+            request.setAttribute("moviesFrom", from + 1);
+            request.setAttribute("moviesTo", from + movies.size());
+
+            Map<Integer, String> pagination = new LinkedHashMap<>();
+            for(int i = 0; i < moviesCount; i += MOVIES_PER_PAGE){
+                int pageNumber = (i / MOVIES_PER_PAGE) + 1;
+                pagination.put(pageNumber, PaginationUtil.createLinkForPage(request, pageNumber));
+            }
+            if(pagination.size() > 1){
+                request.setAttribute("pagination", pagination);
+                request.setAttribute("activePage", page);
+            }
         } catch (ServiceException e) {
             request.setAttribute("serviceError", true);
         }
@@ -83,6 +104,10 @@ public class MoviesCommand implements Command {
         request.setAttribute("localeMinute", resourceBundle.getString("locale.minute"));
         request.setAttribute("localeRating", resourceBundle.getString("locale.rating"));
         request.setAttribute("localeServiceError", resourceBundle.getString("locale.serviceError"));
+        request.setAttribute("localeAddMovie", resourceBundle.getString("locale.addMovie"));
+        request.setAttribute("localeNoResults", resourceBundle.getString("locale.noResults"));
+        request.setAttribute("localeDisplaying", resourceBundle.getString("locale.displaying"));
+        request.setAttribute("localeOf", resourceBundle.getString("locale.of"));
 
         request.setAttribute("selectedLanguage", languageId);
     }
