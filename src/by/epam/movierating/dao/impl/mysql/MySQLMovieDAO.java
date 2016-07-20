@@ -578,6 +578,13 @@ public class MySQLMovieDAO implements MovieDAO {
                     query.append(" ");
                 }
             }
+            if(amount != 0){
+                query.append("LIMIT ");
+                query.append(from);
+                query.append(", ");
+                query.append(amount);
+                query.append(" ");
+            }
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query.toString());
 
