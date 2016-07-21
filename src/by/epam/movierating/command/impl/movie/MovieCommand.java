@@ -8,10 +8,12 @@ import by.epam.movierating.domain.Movie;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.factory.ServiceFactory;
 import by.epam.movierating.service.interfaces.MovieService;
+import by.epam.movierating.service.interfaces.RatingService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -30,6 +32,18 @@ public class MovieCommand implements Command {
             return;
         }
 
+        HttpSession session = request.getSession(false);
+        Integer userId = (session == null) ? null : (Integer) session.getAttribute("userId");
+        String ratingValueStr = request.getParameter("ratingValue");
+        if(ratingValueStr != null){
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+            RatingService ratingService = serviceFactory.getRatingService();
+            try {
+                ratingService.addRating(Integer.parseInt(ratingValueStr), id, userId);
+            } catch (ServiceException ignored) {}
+            return;
+        }
+
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
         setLocaleAttributes(request, languageId);
@@ -40,6 +54,15 @@ public class MovieCommand implements Command {
             Movie movie = movieService.getMovieById(id, languageId);
             if(movie != null){
                 request.setAttribute("movie", movie);
+            }
+
+            if(userId != null){
+                request.setAttribute("currentUrl", request.getRequestURI() + '?' + request.getQueryString());
+                RatingService ratingService = serviceFactory.getRatingService();
+                int ratingValue = ratingService.getRatingValueByMovieAndUser(id, userId);
+                if(ratingValue != -1){
+                    request.setAttribute("ratingValue", ratingValue);
+                }
             }
         } catch (ServiceException e) {
             request.setAttribute("serviceError", true);

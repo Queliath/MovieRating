@@ -15,6 +15,7 @@ public class ServiceFactory {
     private final GenreService genreService = new GenreServiceImpl();
     private final MovieService movieService = new MovieServiceImpl();
     private final PoolService poolService = new PoolServiceImpl();
+    private final RatingService ratingService = new RatingServiceImpl();
 
     private ServiceFactory(){}
 
@@ -44,5 +45,9 @@ public class ServiceFactory {
 
     public PoolService getPoolService() {
         return poolService;
+    }
+
+    public RatingService getRatingService() {
+        return ratingService;
     }
 }

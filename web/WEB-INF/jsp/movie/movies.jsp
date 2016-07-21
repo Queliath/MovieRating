@@ -154,10 +154,10 @@
         <c:if test="${requestScope.movies != null}">
             <c:forEach items="${requestScope.movies}" var="movie">
                 <div class="well clearfix">
-                    <a href="#">
+                    <a href="Controller?command=movie&id=${movie.id}">
                         <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
                     </a>
-                    <a href="#"><h3>${movie.name}</h3></a>
+                    <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                     <ul>
                         <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="#">${country.name}</a> </c:forEach></li>
                         <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="#">${genre.name}</a> </c:forEach></li>
