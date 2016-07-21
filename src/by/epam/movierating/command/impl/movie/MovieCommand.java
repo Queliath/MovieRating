@@ -93,6 +93,16 @@ public class MovieCommand implements Command {
         request.setAttribute("localeAddComposer", resourceBundle.getString("locale.addComposer"));
         request.setAttribute("localeAddCountry", resourceBundle.getString("locale.addCountry"));
         request.setAttribute("localeAddGenre", resourceBundle.getString("locale.addGenre"));
+        request.setAttribute("localeWriteComment", resourceBundle.getString("locale.writeComment"));
+        request.setAttribute("localeTitle", resourceBundle.getString("locale.title"));
+        request.setAttribute("localeEnterTitle", resourceBundle.getString("locale.enterTitle"));
+        request.setAttribute("localeContent", resourceBundle.getString("locale.content"));
+        request.setAttribute("localeEnterContent", resourceBundle.getString("locale.enterContent"));
+        request.setAttribute("localeCommentButton", resourceBundle.getString("locale.commentButton"));
+        request.setAttribute("localeComments", resourceBundle.getString("locale.comments"));
+        request.setAttribute("localeDeleteTitle", resourceBundle.getString("locale.deleteTitle"));
+        request.setAttribute("localeDeleteBody", resourceBundle.getString("locale.deleteBody"));
+        request.setAttribute("localeCancel", resourceBundle.getString("locale.cancel"));
 
         request.setAttribute("selectedLanguage", languageId);
     }

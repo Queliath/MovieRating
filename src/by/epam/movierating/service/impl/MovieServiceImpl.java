@@ -135,6 +135,11 @@ public class MovieServiceImpl implements MovieService {
 
                 CommentDAO commentDAO = daoFactory.getCommentDAO();
                 List<Comment> comments = commentDAO.getCommentsByMovie(movie.getId(), languageId);
+                UserDAO userDAO = daoFactory.getUserDAO();
+                for(Comment comment : comments){
+                    User user = userDAO.getUserById(comment.getUserId());
+                    comment.setUser(user);
+                }
                 movie.setComments(comments);
 
                 PersonDAO personDAO = daoFactory.getPersonDAO();
@@ -146,14 +151,14 @@ public class MovieServiceImpl implements MovieService {
                 List<Person> painters = personDAO.getPersonsByMovieAndRelationType(movie.getId(), PAINTER, languageId);
                 List<Person> editors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), EDITOR, languageId);
                 List<Person> composers = personDAO.getPersonsByMovieAndRelationType(movie.getId(), COMPOSER, languageId);
-                movie.setActors(actors);
-                movie.setDirectors(directors);
-                movie.setProducers(producers);
-                movie.setWriters(writers);
-                movie.setOperators(operators);
-                movie.setPainters(painters);
-                movie.setEditors(editors);
-                movie.setComposers(composers);
+                movie.setActors(actors.isEmpty() ? null : actors);
+                movie.setDirectors(directors.isEmpty() ? null : directors);
+                movie.setProducers(producers.isEmpty() ? null : producers);
+                movie.setWriters(writers.isEmpty() ? null : writers);
+                movie.setOperators(operators.isEmpty() ? null : operators);
+                movie.setPainters(painters.isEmpty() ? null : painters);
+                movie.setEditors(editors.isEmpty() ? null : editors);
+                movie.setComposers(composers.isEmpty() ? null : composers);
             }
 
             return movie;

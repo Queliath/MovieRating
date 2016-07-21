@@ -15,6 +15,7 @@
     <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>-->
     <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
+    <link rel="shortcut icon" href="img/movie-roll.png" type="image/png">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/jquery.min.js"></script>
@@ -85,16 +86,16 @@
             <div class="clearfix">
                 <img src="img/${requestScope.movie.image}" class="img-rounded" alt="${requestScope.movie.name}">
                 <ul>
-                    <li>${requestScope.localeActors}: <c:forEach items="${requestScope.movie.actors}" var="actor"><a href="#">${actor.name}</a> <a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a></c:forEach> <a href="#" class="btn btn-success btn-xs">${requestScope.localeAddActor}</a></li>
-                    <li>${requestScope.localeDirectors}: <c:forEach items="${requestScope.movie.directors}" var="director"><a href="#">${director.name}</a> <a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a></c:forEach> <a href="#" class="btn btn-success btn-xs">${requestScope.localeAddDirector}</a></li>
-                    <li>${requestScope.localeProducers}: <c:forEach items="${requestScope.movie.producers}" var="producer"><a href="#">${producer.name}</a> <a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a></c:forEach> <a href="#" class="btn btn-success btn-xs">${requestScope.localeAddProducer}</a></li>
-                    <li>${requestScope.localeWriters}: <c:forEach items="${requestScope.movie.writers}" var="writer"><a href="#">${writer.name}</a> <a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a></c:forEach> <a href="#" class="btn btn-success btn-xs">${requestScope.localeAddWriter}</a></li>
-                    <li>${requestScope.localePainters}: <c:forEach items="${requestScope.movie.painters}" var="painter"><a href="#">${painter.name}</a> <a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a></c:forEach> <a href="#" class="btn btn-success btn-xs">${requestScope.localeAddPainter}</a></li>
-                    <li>${requestScope.localeOperators}: <c:forEach items="${requestScope.movie.operators}" var="operator"><a href="#">${operator.name}</a> <a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a></c:forEach> <a href="#" class="btn btn-success btn-xs">${requestScope.localeAddOperator}</a></li>
-                    <li>${requestScope.localeEditors}: <c:forEach items="${requestScope.movie.editors}" var="editor"><a href="#">${editor.name}</a> <a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a></c:forEach> <a href="#" class="btn btn-success btn-xs">${requestScope.localeAddEditor}</a></li>
-                    <li>${requestScope.localeComposers}: <c:forEach items="${requestScope.movie.composers}" var="composers"><a href="#">${composers.name}</a> <a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a></c:forEach> <a href="#" class="btn btn-success btn-xs">${requestScope.localeAddComposer}</a></li>
-                    <li>${requestScope.localeCountry}: <c:forEach items="${requestScope.movie.countries}" var="country"><a href="#">${country.name}</a> <a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a></c:forEach> <a href="#" class="btn btn-success btn-xs">${requestScope.localeAddCountry}</a></li>
-                    <li>${requestScope.localeGenre}: <c:forEach items="${requestScope.movie.genres}" var="genre"><a href="#">${genre.name}</a> <a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a></c:forEach> <a href="#" class="btn btn-success btn-xs">${requestScope.localeAddGenre}</a></li>
+                    <c:if test='${requestScope.movie.actors != null || sessionScope.userStatus eq "admin"}'><li>${requestScope.localeActors}: <c:forEach items="${requestScope.movie.actors}" var="actor"><a href="#">${actor.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${requestScope.localeAddActor}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.directors != null || sessionScope.userStatus eq "admin"}'><li>${requestScope.localeDirectors}: <c:forEach items="${requestScope.movie.directors}" var="director"><a href="#">${director.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${requestScope.localeAddDirector}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.producers != null || sessionScope.userStatus eq "admin"}'><li>${requestScope.localeProducers}: <c:forEach items="${requestScope.movie.producers}" var="producer"><a href="#">${producer.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${requestScope.localeAddProducer}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.writers != null || sessionScope.userStatus eq "admin"}'><li>${requestScope.localeWriters}: <c:forEach items="${requestScope.movie.writers}" var="writer"><a href="#">${writer.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${requestScope.localeAddWriter}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.painters != null || sessionScope.userStatus eq "admin"}'><li>${requestScope.localePainters}: <c:forEach items="${requestScope.movie.painters}" var="painter"><a href="#">${painter.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${requestScope.localeAddPainter}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.operators != null || sessionScope.userStatus eq "admin"}'><li>${requestScope.localeOperators}: <c:forEach items="${requestScope.movie.operators}" var="operator"><a href="#">${operator.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${requestScope.localeAddOperator}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.editors != null || sessionScope.userStatus eq "admin"}'><li>${requestScope.localeEditors}: <c:forEach items="${requestScope.movie.editors}" var="editor"><a href="#">${editor.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${requestScope.localeAddEditor}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.composers != null || sessionScope.userStatus eq "admin"}'><li>${requestScope.localeComposers}: <c:forEach items="${requestScope.movie.composers}" var="composers"><a href="#">${composers.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${requestScope.localeAddComposer}</a></c:if></li></c:if>
+                    <li>${requestScope.localeCountry}: <c:forEach items="${requestScope.movie.countries}" var="country"><a href="#">${country.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${requestScope.localeAddCountry}</a></c:if></li>
+                    <li>${requestScope.localeGenre}: <c:forEach items="${requestScope.movie.genres}" var="genre"><a href="#">${genre.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${requestScope.localeAddGenre}</a></c:if></li>
                     <li>${requestScope.localeYear}: ${requestScope.movie.year}</li>
                     <li>${requestScope.localeTagline}: ${requestScope.movie.tagline}</li>
                     <li>${requestScope.localeBudget}: ${requestScope.movie.budget} $</li>
@@ -103,79 +104,65 @@
                 </ul>
             </div>
             <p>${requestScope.movie.annotation}</p>
-            <div id="star-rating"></div>
+            <c:if test="${sessionScope.userId != null}">
+                <div id="star-rating"></div>
+            </c:if>
             <p>${requestScope.localeRating}: ${requestScope.movie.averageRating}</p>
-            <form action="#" method="post" role="form">
+            <c:if test='${sessionScope.userStatus eq "admin"}'>
+                <form action="#" method="post" role="form">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">${requestScope.localeEdit}</button>
+                    </div>
+                </form>
+                <form action="#" method="post" role="form">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove-modal">${requestScope.localeDelete}</button>
+                    </div>
+                </form>
+            </c:if>
+        </div>
+        <c:if test="${sessionScope.userId != null}">
+            <h3>${requestScope.localeWriteComment}</h3>
+            <form role="form">
                 <div class="form-group">
-                    <button type="submit" class="btn btn-success">${requestScope.localeEdit}</button>
+                    <label for="title">${requestScope.localeTitle}</label>
+                    <input type="text" class="form-control" id="title" placeholder="${requestScope.localeEnterTitle}">
+                </div>
+                <div class="form-group">
+                    <label for="content">${requestScope.localeContent}</label>
+                    <textarea id="content" class="form-control" rows="5" placeholder="${requestScope.localeEnterContent}"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default">${requestScope.localeCommentButton}</button>
                 </div>
             </form>
-            <form action="#" method="post" role="form">
-                <div class="form-group">
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove-modal">${requestScope.localeDelete}</button>
+        </c:if>
+        <c:if test="${requestScope.movie.comments != null}">
+            <h3>${requestScope.localeComments}</h3>
+            <c:forEach items="${requestScope.movie.comments}" var="comment">
+                <div class="well clearfix">
+                    <a href="#">
+                        <img src="img/${comment.user.photo}" class="img-circle" alt="${comment.user.firstName} ${comment.user.lastName}">
+                    </a>
+                    <h3>${comment.title}</h3>
+                    <p><a href="#">${comment.user.firstName} ${comment.user.lastName}</a> ${comment.dateOfPublication}</p>
+                    <p>${comment.content}</p>
                 </div>
-            </form>
-        </div>
-        <h3>Оставить отзыв</h3>
-        <form role="form">
-            <div class="form-group">
-                <label for="title">Заголовок</label>
-                <input type="text" class="form-control" id="title" placeholder="Введите заголовок">
-            </div>
-            <div class="form-group">
-                <label for="content">Содержимое</label>
-                <textarea id="content" class="form-control" rows="5" placeholder="Введите содержимое"></textarea>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-default">Оставить</button>
-            </div>
-        </form>
-        <div class="alert alert-success fade in">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            Отзыв оставлен!
-        </div>
-        <div class="alert alert-danger fade in">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            При сохранении отзыва на сервере произошла ошибка. Повторите попытку позже.
-        </div>
-        <h3>Отзывы</h3>
-        <div class="well clearfix">
-            <a href="user.html">
-                <img src="../img/arinafedosova@gmail.com.jpg" class="img-circle" alt="Арина Федосова">
-            </a>
-            <h3>Lorem ipsum dolor sit amet</h3>
-            <p><a href="user.html">Арина Федосова</a> 04.07.2016</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sollicitudin, dolor in porta consectetur, dolor mauris ultricies nulla, et lacinia arcu nibh eu quam. Curabitur in malesuada nisi. Etiam vulputate, mauris nec tristique euismod, leo massa tincidunt justo, malesuada varius nulla nulla non enim. Nunc nisl purus, tincidunt eu est interdum, faucibus ultricies odio. Aenean pharetra porttitor mollis. In neque dolor, aliquet ac condimentum et, malesuada vel sem.</p>
-        </div>
-        <div class="well clearfix">
-            <a href="user.html">
-                <img src="../img/arinafedosova@gmail.com.jpg" class="img-circle" alt="Арина Федосова">
-            </a>
-            <h3>Lorem ipsum dolor sit amet</h3>
-            <p><a href="user.html">Арина Федосова</a> 04.07.2016</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sollicitudin, dolor in porta consectetur, dolor mauris ultricies nulla, et lacinia arcu nibh eu quam. Curabitur in malesuada nisi. Etiam vulputate, mauris nec tristique euismod, leo massa tincidunt justo, malesuada varius nulla nulla non enim. Nunc nisl purus, tincidunt eu est interdum, faucibus ultricies odio. Aenean pharetra porttitor mollis. In neque dolor, aliquet ac condimentum et, malesuada vel sem.</p>
-        </div>
-        <div class="well clearfix">
-            <a href="user.html">
-                <img src="../img/arinafedosova@gmail.com.jpg" class="img-circle" alt="Арина Федосова">
-            </a>
-            <h3>Lorem ipsum dolor sit amet</h3>
-            <p><a href="user.html">Арина Федосова</a> 04.07.2016</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sollicitudin, dolor in porta consectetur, dolor mauris ultricies nulla, et lacinia arcu nibh eu quam. Curabitur in malesuada nisi. Etiam vulputate, mauris nec tristique euismod, leo massa tincidunt justo, malesuada varius nulla nulla non enim. Nunc nisl purus, tincidunt eu est interdum, faucibus ultricies odio. Aenean pharetra porttitor mollis. In neque dolor, aliquet ac condimentum et, malesuada vel sem.</p>
-        </div>
+            </c:forEach>
+        </c:if>
         <div id="remove-modal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Подтверждение удаления</h4>
+                        <h4 class="modal-title">${requestScope.localeDeleteTitle}</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Вы уверены что хотите произвести удаление?</p>
+                        <p>${requestScope.localeDeleteBody}</p>
                     </div>
                     <div class="modal-footer">
-                        <a href="#" class="btn btn-danger">Удалить</a>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <a href="#" class="btn btn-danger">${requestScope.localeDelete}</a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${requestScope.localeCancel}</button>
                     </div>
                 </div>
             </div>
