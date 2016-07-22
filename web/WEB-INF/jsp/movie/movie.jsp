@@ -100,7 +100,7 @@
                     <li>${requestScope.localeTagline}: ${requestScope.movie.tagline}</li>
                     <li>${requestScope.localeBudget}: ${requestScope.movie.budget} $</li>
                     <li>${requestScope.localePremiere}: ${requestScope.movie.premiere}</li>
-                    <li>${requestScope.localeLasting}: ${requestScope.movie.lasting} ${requestScope.localeMin}</li>
+                    <li>${requestScope.localeLasting}: ${requestScope.movie.lasting} ${requestScope.localeMinute}</li>
                 </ul>
             </div>
             <p>${requestScope.movie.annotation}</p>

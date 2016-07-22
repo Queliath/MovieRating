@@ -617,7 +617,7 @@ public class MySQLMovieDAO implements MovieDAO {
     }
 
     @Override
-    public int getMoviesCountByCriteria(MovieCriteria criteria) throws DAOException {
+    public int getMoviesCountByCriteria(MovieCriteria criteria, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
@@ -639,12 +639,26 @@ public class MySQLMovieDAO implements MovieDAO {
             if(criteria.getMinRating() != 0 || criteria.getMaxRating() != 0){
                 query.append("INNER JOIN rating AS r ON m.id = r.movie_id ");
             }
+            if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
+                query.append("LEFT JOIN (SELECT * FROM tmovie WHERE language_id = '");
+                query.append(languageId);
+                query.append("') AS t USING(id) ");
+            }
 
             boolean atLeastOneWhereCriteria = false;
             if (criteria.getName() != null) {
-                query.append("WHERE m.name LIKE '%");
-                query.append(criteria.getName());
-                query.append("%' ");
+                if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                    query.append("WHERE m.name LIKE '%");
+                    query.append(criteria.getName());
+                    query.append("%' ");
+                }
+                else {
+                    query.append("WHERE (m.name LIKE '%");
+                    query.append(criteria.getName());
+                    query.append("%' OR t.name LIKE '%");
+                    query.append(criteria.getName());
+                    query.append("%') ");
+                }
                 atLeastOneWhereCriteria = true;
             }
             if (criteria.getMinYear() != 0) {

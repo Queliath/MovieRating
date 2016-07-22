@@ -93,7 +93,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public int getMoviesCountByCriteria(String name, int minYear, int maxYear, List<Integer> genreIds, List<Integer> countyIds, int minRating, int maxRating) throws ServiceException {
+    public int getMoviesCountByCriteria(String name, int minYear, int maxYear, List<Integer> genreIds, List<Integer> countyIds, int minRating, int maxRating, String languageId) throws ServiceException {
         MovieCriteria criteria = new MovieCriteria();
         criteria.setName(name);
         criteria.setMinYear(minYear);
@@ -106,7 +106,7 @@ public class MovieServiceImpl implements MovieService {
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             MovieDAO movieDAO = daoFactory.getMovieDAO();
-            int moviesCount = movieDAO.getMoviesCountByCriteria(criteria);
+            int moviesCount = movieDAO.getMoviesCountByCriteria(criteria, languageId);
             return moviesCount;
         } catch (DAOException e) {
             throw new ServiceException("Service layer: cannot get movies count by criteria", e);

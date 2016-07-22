@@ -10,6 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${requestScope.catalogPageName}</title>
     <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
@@ -76,11 +77,12 @@
     </c:if>
     <div class="jumbotron">
         <h3>${requestScope.localeSearchCriteria}</h3>
-        <form role="form">
+        <form action="Controller?command=movies" method="post" role="form" id="search-form">
+            <input name="page" value="1" type="hidden">
             <div class="row">
                 <div class="form-group col-sm-6">
                     <label for="name">${requestScope.localeName}:</label>
-                    <input type="text" id="name" class="form-control">
+                    <input name="searchFormName" value="${requestScope.searchFormName}" type="text" id="name" class="form-control">
                 </div>
                 <div class="form-group col-sm-6 row">
                     <div class="col-xs-12">
@@ -88,11 +90,11 @@
                     </div>
                     <div class="col-xs-6">
                         <label for="min-year">${requestScope.localeFrom}:</label>
-                        <input type="number" id="min-year" class="form-control">
+                        <input name="searchFormMinYear" value="${requestScope.searchFormMinYear}" type="number" id="min-year" class="form-control">
                     </div>
                     <div class="col-xs-6">
                         <label for="max-year">${requestScope.localeTo}:</label>
-                        <input type="number" id="max-year" class="form-control">
+                        <input name="searchFormMaxYear" value="${requestScope.searchFormMaxYear}" type="number" id="max-year" class="form-control">
                     </div>
                 </div>
                 <div class="form-group col-sm-6">
@@ -100,7 +102,7 @@
                     <c:if test="${requestScope.genres != null}">
                         <c:forEach items="${requestScope.genres}" var="genre">
                             <div class="checkbox">
-                                <label><input type="checkbox"> ${genre.name}</label>
+                                <label><input name="searchFormGenres[]" value="${genre.id}" type="checkbox" <c:forEach items="${requestScope.searchFormGenres}" var="searchFormGenre"><c:if test="${searchFormGenre == genre.id}">checked</c:if></c:forEach>> ${genre.name}</label>
                             </div>
                         </c:forEach>
                     </c:if>
@@ -110,7 +112,7 @@
                     <c:if test="${requestScope.countries != null}">
                         <c:forEach items="${requestScope.countries}" var="country">
                             <div class="checkbox">
-                                <label><input type="checkbox"> ${country.name}</label>
+                                <label><input name="searchFormCountries[]" value="${country.id}" type="checkbox" <c:forEach items="${requestScope.searchFormCountries}" var="searchFormCountry"><c:if test="${searchFormCountry == country.id}">checked</c:if></c:forEach>> ${country.name}</label>
                             </div>
                         </c:forEach>
                     </c:if>
@@ -121,11 +123,11 @@
                     </div>
                     <div class="col-xs-6">
                         <label for="min-rating">${requestScope.localeFrom}:</label>
-                        <input type="number" id="min-rating" class="form-control">
+                        <input name="searchFormMinRating" value="${requestScope.searchFormMinRating}" type="number" id="min-rating" class="form-control">
                     </div>
                     <div class="col-xs-6">
                         <label for="max-rating">${requestScope.localeTo}:</label>
-                        <input type="number" id="max-rating" class="form-control">
+                        <input name="searchFormMaxRating" value="${requestScope.searchFormMaxRating}" type="number" id="max-rating" class="form-control">
                     </div>
                 </div>
             </div>
@@ -175,7 +177,7 @@
         <c:if test="${requestScope.pagination != null}">
             <ul class="pagination">
                 <c:forEach items="${requestScope.pagination}" var="paginationItem">
-                    <li <c:if test="${paginationItem.key == requestScope.activePage}">class="active"</c:if>><a href="${paginationItem.value}">${paginationItem.key}</a></li>
+                    <li <c:if test="${paginationItem == requestScope.activePage}">class="active"</c:if>><a href="#">${paginationItem}</a></li>
                 </c:forEach>
             </ul>
         </c:if>
@@ -184,5 +186,6 @@
 <footer class="container-fluid">
     <p class="text-center">EPAM Training Center, Java 5 2016, Kostevich Vladislav</p>
 </footer>
+<script src="js/pagination.js"></script>
 </body>
 </html>

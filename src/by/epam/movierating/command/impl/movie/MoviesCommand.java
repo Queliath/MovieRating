@@ -36,6 +36,40 @@ public class MoviesCommand implements Command {
 
         String pageStr = request.getParameter("page");
         int page = (pageStr == null) ? 1 : Integer.parseInt(pageStr);
+        String searchFormNameParam = request.getParameter("searchFormName");
+        String searchFormName = (searchFormNameParam == null || searchFormNameParam.isEmpty()) ? null : searchFormNameParam;
+        String searchFormMinYearStr = request.getParameter("searchFormMinYear");
+        int searchFormMinYear = (searchFormMinYearStr == null || searchFormMinYearStr.isEmpty()) ? 0 : Integer.parseInt(searchFormMinYearStr);
+        String searchFormMaxYearStr = request.getParameter("searchFormMaxYear");
+        int searchFormMaxYear = (searchFormMaxYearStr == null || searchFormMaxYearStr.isEmpty()) ? 0 : Integer.parseInt(searchFormMaxYearStr);
+        String[] searchFormGenresStr = request.getParameterValues("searchFormGenres[]");
+        List<Integer> searchFormGenres = null;
+        if(searchFormGenresStr != null){
+            searchFormGenres = new ArrayList<>();
+            for(String genreStr : searchFormGenresStr){
+                searchFormGenres.add(Integer.parseInt(genreStr));
+            }
+        }
+        String[] searchFormCountriesStr = request.getParameterValues("searchFormCountries[]");
+        List<Integer> searchFormCountries = null;
+        if(searchFormCountriesStr != null){
+            searchFormCountries = new ArrayList<>();
+            for(String countryStr : searchFormCountriesStr){
+                searchFormCountries.add(Integer.parseInt(countryStr));
+            }
+        }
+        String searchFormMinRatingStr = request.getParameter("searchFormMinRating");
+        int searchFormMinRating = (searchFormMinRatingStr == null || searchFormMinRatingStr.isEmpty()) ? 0 : Integer.parseInt(searchFormMinRatingStr);
+        String searchFormMaxRatingStr = request.getParameter("searchFormMaxRating");
+        int searchFormMaxRating = (searchFormMaxRatingStr == null || searchFormMaxRatingStr.isEmpty()) ? 0 : Integer.parseInt(searchFormMaxRatingStr);
+
+        request.setAttribute("searchFormName", searchFormNameParam);
+        request.setAttribute("searchFormMinYear", searchFormMinYearStr);
+        request.setAttribute("searchFormMaxYear", searchFormMaxYearStr);
+        request.setAttribute("searchFormGenres", searchFormGenres);
+        request.setAttribute("searchFormCountries", searchFormCountries);
+        request.setAttribute("searchFormMinRating", searchFormMinRatingStr);
+        request.setAttribute("searchFormMaxRating", searchFormMaxRatingStr);
 
         try {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
@@ -50,19 +84,23 @@ public class MoviesCommand implements Command {
 
             MovieService movieService = serviceFactory.getMovieService();
 
-            int moviesCount = movieService.getMoviesCountByCriteria(null, 0, 0, null, null, 0, 0);
+            int moviesCount = movieService.getMoviesCountByCriteria(searchFormName, searchFormMinYear,
+                    searchFormMaxYear, searchFormGenres, searchFormCountries, searchFormMinRating,
+                    searchFormMaxRating, languageId);
             request.setAttribute("moviesCount", moviesCount);
 
             int from = (page - 1) * MOVIES_PER_PAGE;
-            List<Movie> movies = movieService.getMoviesByCriteria(null, 0, 0, null, null, 0, 0, from, MOVIES_PER_PAGE, languageId);
+            List<Movie> movies = movieService.getMoviesByCriteria(searchFormName, searchFormMinYear,
+                    searchFormMaxYear, searchFormGenres, searchFormCountries, searchFormMinRating,
+                    searchFormMaxRating, from, MOVIES_PER_PAGE, languageId);
             request.setAttribute("movies", movies);
             request.setAttribute("moviesFrom", from + 1);
             request.setAttribute("moviesTo", from + movies.size());
 
-            Map<Integer, String> pagination = new LinkedHashMap<>();
+            List<Integer> pagination = new ArrayList<>();
             for(int i = 0; i < moviesCount; i += MOVIES_PER_PAGE){
                 int pageNumber = (i / MOVIES_PER_PAGE) + 1;
-                pagination.put(pageNumber, PaginationUtil.createLinkForPage(request, pageNumber));
+                pagination.add(pageNumber);
             }
             if(pagination.size() > 1){
                 request.setAttribute("pagination", pagination);
