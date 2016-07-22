@@ -80,7 +80,7 @@
             <div class="list-group">
                 <c:if test="${requestScope.genres != null}">
                     <c:forEach items="${requestScope.genres}" var="genre">
-                        <a href="#" class="list-group-item">${genre.name}</a>
+                        <a href="Controller?command=movies&searchFormGenres[]=${genre.id}" class="list-group-item">${genre.name}</a>
                     </c:forEach>
                 </c:if>
             </div>
@@ -90,17 +90,17 @@
             <div class="list-group">
                 <c:if test="${requestScope.countries != null}">
                     <c:forEach items="${requestScope.countries}" var="country">
-                        <a href="#" class="list-group-item">${country.name}</a>
+                        <a href="Controller?command=movies&searchFormCountries[]=${country.id}" class="list-group-item">${country.name}</a>
                     </c:forEach>
                 </c:if>
             </div>
         </div>
     </div>
     <div class="jumbotron">
-        <form role="form">
+        <form action="Controller?command=movies" method="post" role="form">
             <div class="form-group">
                 <label for="keyword">${requestScope.findYourMovie}:</label>
-                <input type="text" class="form-control" id="keyword" placeholder="${requestScope.enterMovieName}">
+                <input name="searchFormName" type="text" class="form-control" id="keyword" placeholder="${requestScope.enterMovieName}">
             </div>
             <button type="submit" class="btn btn-default">${requestScope.findButton}</button>
         </form>
@@ -116,8 +116,8 @@
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
-                            <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="#">${country.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="#">${genre.name}</a> </c:forEach></li>
+                            <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
+                            <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
                             <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="#">${director.name}</a> </c:forEach></li>
                             <li>${requestScope.localeYear}: ${movie.year}</li>
                             <li>${requestScope.localeBudget}: ${movie.budget} $</li>

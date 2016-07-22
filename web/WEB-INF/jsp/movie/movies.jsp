@@ -161,8 +161,8 @@
                     </a>
                     <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                     <ul>
-                        <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="#">${country.name}</a> </c:forEach></li>
-                        <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="#">${genre.name}</a> </c:forEach></li>
+                        <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
+                        <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
                         <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="#">${director.name}</a> </c:forEach></li>
                         <li>${requestScope.localeYear}: ${movie.year}</li>
                         <li>${requestScope.localeBudget}: ${movie.budget} $</li>
