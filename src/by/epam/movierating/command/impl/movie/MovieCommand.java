@@ -3,10 +3,10 @@ package by.epam.movierating.command.impl.movie;
 import by.epam.movierating.command.Command;
 import by.epam.movierating.command.util.LanguageUtil;
 import by.epam.movierating.command.util.QueryUtil;
-import by.epam.movierating.dao.interfaces.MovieDAO;
 import by.epam.movierating.domain.Movie;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.factory.ServiceFactory;
+import by.epam.movierating.service.interfaces.CommentService;
 import by.epam.movierating.service.interfaces.MovieService;
 import by.epam.movierating.service.interfaces.RatingService;
 
@@ -18,9 +18,6 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-/**
- * Created by Владислав on 19.07.2016.
- */
 public class MovieCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,19 +31,45 @@ public class MovieCommand implements Command {
 
         HttpSession session = request.getSession(false);
         Integer userId = (session == null) ? null : (Integer) session.getAttribute("userId");
+
         String ratingValueStr = request.getParameter("ratingValue");
         if(ratingValueStr != null){
-            ServiceFactory serviceFactory = ServiceFactory.getInstance();
-            RatingService ratingService = serviceFactory.getRatingService();
-            try {
-                ratingService.addRating(Integer.parseInt(ratingValueStr), id, userId);
-            } catch (ServiceException ignored) {}
+            if(userId == null){
+                response.sendRedirect("Controller?command=login&cause=timeout");
+            }
+            else {
+                ServiceFactory serviceFactory = ServiceFactory.getInstance();
+                RatingService ratingService = serviceFactory.getRatingService();
+                try {
+                    ratingService.addRating(Integer.parseInt(ratingValueStr), id, userId);
+                } catch (ServiceException ignored) {}
+            }
             return;
         }
 
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
         setLocaleAttributes(request, languageId);
+
+        String commentFormTitle = request.getParameter("commentFormTitle");
+        String commentFormContent = request.getParameter("commentFormContent");
+        if(commentFormTitle != null && commentFormContent != null){
+            if(userId == null){
+                response.sendRedirect("Controller?command=login&cause=timeout");
+                return;
+            }
+            else {
+                try {
+                    ServiceFactory serviceFactory = ServiceFactory.getInstance();
+                    CommentService commentService = serviceFactory.getCommentService();
+                    commentService.addComment(commentFormTitle, commentFormContent, id, userId, languageId);
+                } catch (ServiceException e) {
+                    request.setAttribute("commentFormTitle", commentFormTitle);
+                    request.setAttribute("commentFormContent", commentFormContent);
+                    request.setAttribute("serviceError", true);
+                }
+            }
+        }
 
         try {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();

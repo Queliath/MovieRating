@@ -140,7 +140,7 @@ public class MovieServiceImpl implements MovieService {
                     User user = userDAO.getUserById(comment.getUserId());
                     comment.setUser(user);
                 }
-                movie.setComments(comments);
+                movie.setComments(comments.isEmpty() ? null : comments);
 
                 PersonDAO personDAO = daoFactory.getPersonDAO();
                 List<Person> actors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), ACTOR, languageId);

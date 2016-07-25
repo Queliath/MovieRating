@@ -123,14 +123,14 @@
         </div>
         <c:if test="${sessionScope.userId != null}">
             <h3>${requestScope.localeWriteComment}</h3>
-            <form role="form">
+            <form action="Controller?command=movie&id=${requestScope.movie.id}" method="post" role="form">
                 <div class="form-group">
                     <label for="title">${requestScope.localeTitle}</label>
-                    <input type="text" class="form-control" id="title" placeholder="${requestScope.localeEnterTitle}">
+                    <input name="commentFormTitle" value="${requestScope.commentFormTitle}" type="text" class="form-control" id="title" placeholder="${requestScope.localeEnterTitle}">
                 </div>
                 <div class="form-group">
                     <label for="content">${requestScope.localeContent}</label>
-                    <textarea id="content" class="form-control" rows="5" placeholder="${requestScope.localeEnterContent}"></textarea>
+                    <textarea name="commentFormContent" vocab="${requestScope.commentFormContent}" id="content" class="form-control" rows="5" placeholder="${requestScope.localeEnterContent}"></textarea>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-default">${requestScope.localeCommentButton}</button>

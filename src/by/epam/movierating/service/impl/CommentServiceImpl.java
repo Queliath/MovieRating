@@ -11,6 +11,7 @@ import by.epam.movierating.domain.User;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.interfaces.CommentService;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +37,25 @@ public class CommentServiceImpl implements CommentService {
             return comments;
         } catch (DAOException e) {
             throw new ServiceException("Service layer: cannot get all comments", e);
+        }
+    }
+
+    @Override
+    public void addComment(String title, String content, int movieId, int userId, String languageId) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            CommentDAO commentDAO = daoFactory.getCommentDAO();
+
+            Comment comment = new Comment();
+            comment.setTitle(title);
+            comment.setContent(content);
+            comment.setDateOfPublication(new Date());
+            comment.setMovieId(movieId);
+            comment.setUserId(userId);
+
+            commentDAO.addComment(comment, languageId);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot add a comment", e);
         }
     }
 }

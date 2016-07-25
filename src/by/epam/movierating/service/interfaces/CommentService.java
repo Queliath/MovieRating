@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface CommentService {
     List<Comment> getRecentAddedComments(int amount, String languageId) throws ServiceException;
+    void addComment(String title, String content, int movieId, int userId, String languageId) throws ServiceException;
 }
