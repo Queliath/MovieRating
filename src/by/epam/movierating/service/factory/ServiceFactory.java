@@ -16,6 +16,7 @@ public class ServiceFactory {
     private final MovieService movieService = new MovieServiceImpl();
     private final PoolService poolService = new PoolServiceImpl();
     private final RatingService ratingService = new RatingServiceImpl();
+    private final PersonService personService = new PersonServiceImpl();
 
     private ServiceFactory(){}
 
@@ -49,5 +50,9 @@ public class ServiceFactory {
 
     public RatingService getRatingService() {
         return ratingService;
+    }
+
+    public PersonService getPersonService() {
+        return personService;
     }
 }

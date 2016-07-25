@@ -4,6 +4,8 @@ import by.epam.movierating.command.Command;
 import by.epam.movierating.command.impl.general.*;
 import by.epam.movierating.command.impl.movie.MovieCommand;
 import by.epam.movierating.command.impl.movie.MoviesCommand;
+import by.epam.movierating.command.impl.person.PersonCommand;
+import by.epam.movierating.command.impl.person.PersonsCommand;
 import by.epam.movierating.command.impl.pool.DestroyMySQLConnectionPoolCommand;
 import by.epam.movierating.command.impl.pool.InitMySQLConnectionPoolCommand;
 import by.epam.movierating.controller.exception.CommandNotFoundException;
@@ -30,6 +32,9 @@ public class CommandHelper {
 
         commands.put(CommandName.MOVIES, new MoviesCommand());
         commands.put(CommandName.MOVIE, new MovieCommand());
+
+        commands.put(CommandName.PERSONS, new PersonsCommand());
+        commands.put(CommandName.PERSON, new PersonCommand());
 
         commands.put(CommandName.INIT_MYSQL_CONNECTION_POOL, new InitMySQLConnectionPoolCommand());
         commands.put(CommandName.DESTROY_MYSQL_CONNECTION_POOL, new DestroyMySQLConnectionPoolCommand());

@@ -86,7 +86,7 @@
             <div class="clearfix">
                 <img src="img/${requestScope.person.photo}" class="img-rounded" alt="${requestScope.person.name}">
                 <ul>
-                    <li>${requestScope.localeFilmsTotal}: ${requestScope.person.moviesTotal}</li>
+                    <li>${requestScope.localeMoviesTotal}: ${requestScope.person.moviesTotal}</li>
                     <li>${requestScope.localeDateOfBirth}: ${requestScope.person.dateOfBirth}</li>
                     <li>${requestScope.localePlaceOfBirth}: ${requestScope.person.placeOfBirth}</li>
                 </ul>

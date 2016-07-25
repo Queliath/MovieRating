@@ -3,6 +3,10 @@ package by.epam.movierating.command.impl.person;
 import by.epam.movierating.command.Command;
 import by.epam.movierating.command.util.LanguageUtil;
 import by.epam.movierating.command.util.QueryUtil;
+import by.epam.movierating.domain.Person;
+import by.epam.movierating.service.exception.ServiceException;
+import by.epam.movierating.service.factory.ServiceFactory;
+import by.epam.movierating.service.interfaces.PersonService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +32,19 @@ public class PersonCommand implements Command {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
         setLocaleAttributes(request, languageId);
+
+        try{
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+            PersonService personService = serviceFactory.getPersonService();
+            Person person = personService.getPersonById(id, languageId);
+            if(person != null){
+                request.setAttribute("person", person);
+            }
+        } catch (ServiceException e) {
+            request.setAttribute("serviceError", true);
+        }
+
+        request.getRequestDispatcher("WEB-INF/jsp/person/person.jsp").forward(request, response);
     }
 
     private void setLocaleAttributes(HttpServletRequest request, String languageId){
@@ -53,6 +70,7 @@ public class PersonCommand implements Command {
         request.setAttribute("localeYear", resourceBundle.getString("locale.year"));
         request.setAttribute("localeBudget", resourceBundle.getString("locale.budget"));
         request.setAttribute("localePremiere", resourceBundle.getString("locale.premiere"));
+        request.setAttribute("localeDirector", resourceBundle.getString("locale.director"));
         request.setAttribute("localeLasting", resourceBundle.getString("locale.lasting"));
         request.setAttribute("localeMinute", resourceBundle.getString("locale.minute"));
         request.setAttribute("localeRating", resourceBundle.getString("locale.rating"));
