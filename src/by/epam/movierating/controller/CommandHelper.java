@@ -8,53 +8,53 @@ import by.epam.movierating.command.impl.person.PersonCommand;
 import by.epam.movierating.command.impl.person.PersonsCommand;
 import by.epam.movierating.command.impl.pool.DestroyMySQLConnectionPoolCommand;
 import by.epam.movierating.command.impl.pool.InitMySQLConnectionPoolCommand;
+import by.epam.movierating.controller.exception.CommandHelperInitException;
 import by.epam.movierating.controller.exception.CommandNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * Created by Владислав on 14.07.2016.
  */
-public class CommandHelper {
-    private static final CommandName DEFAULT_COMMAND_NAME = CommandName.WELCOME;
+public final class CommandHelper {
+    private static final String RESOURCE_BUNDLE_NAME = "commands";
 
-    private static final CommandHelper instance = new CommandHelper();
+    private static final String DEFAULT_COMMAND_NAME = "welcome";
 
-    private Map<CommandName, Command> commands = new HashMap<>();
+    private static CommandHelper instance;
 
-    private CommandHelper(){
-        commands.put(CommandName.WELCOME, new WelcomeCommand());
-        commands.put(CommandName.LOGIN, new LoginCommand());
-        commands.put(CommandName.LOGOUT, new LogoutCommand());
-        commands.put(CommandName.REGISTRATION, new RegistrationCommand());
-        commands.put(CommandName.CHANGE_LANGUAGE, new ChangeLanguageCommand());
+    private Map<String, Command> commands = new HashMap<>();
 
-        commands.put(CommandName.MOVIES, new MoviesCommand());
-        commands.put(CommandName.MOVIE, new MovieCommand());
-
-        commands.put(CommandName.PERSONS, new PersonsCommand());
-        commands.put(CommandName.PERSON, new PersonCommand());
-
-        commands.put(CommandName.INIT_MYSQL_CONNECTION_POOL, new InitMySQLConnectionPoolCommand());
-        commands.put(CommandName.DESTROY_MYSQL_CONNECTION_POOL, new DestroyMySQLConnectionPoolCommand());
+    private CommandHelper() throws CommandHelperInitException {
+        try {
+            ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
+            Set<String> commandNameSet = resourceBundle.keySet();
+            for (String commandName : commandNameSet) {
+                String commandClassName = resourceBundle.getString(commandName);
+                Command command = (Command) Class.forName(commandClassName).newInstance();
+                commands.put(commandName, command);
+            }
+        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
+            throw new CommandHelperInitException("Cannot init CommandHelper", e);
+        }
     }
 
-    public Command getCommand(String name) throws CommandNotFoundException {
-        if(name == null){
+    public Command getCommand(String commandName) throws CommandNotFoundException {
+        if(commandName == null){
             return commands.get(DEFAULT_COMMAND_NAME);
         }
 
-        name = name.replace('-', '_');
         try {
-            CommandName commandName = CommandName.valueOf(name.toUpperCase());
             return commands.get(commandName);
         } catch (IllegalArgumentException | NullPointerException e) {
             throw new CommandNotFoundException("Wrong or empty command name", e);
         }
     }
 
-    public static CommandHelper getInstance() {
-        return instance;
+    public static synchronized CommandHelper getInstance() throws CommandHelperInitException {
+        return (instance == null) ? new CommandHelper() : instance;
     }
 }
