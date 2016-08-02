@@ -1,19 +1,12 @@
 package by.epam.movierating.controller.listener; /**
  * Created by Владислав on 19.07.2016.
  */
-
-import by.epam.movierating.dao.pool.mysql.MySQLConnectionPool;
-import by.epam.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.factory.ServiceFactory;
 import by.epam.movierating.service.interfaces.PoolService;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.http.HttpSessionAttributeListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-import javax.servlet.http.HttpSessionBindingEvent;
 
 public class ConnectionPoolListener implements ServletContextListener {
 
@@ -30,7 +23,7 @@ public class ConnectionPoolListener implements ServletContextListener {
             PoolService poolService = serviceFactory.getPoolService();
             poolService.init();
         } catch (ServiceException e) {
-            sce.getServletContext().setAttribute("poolException", true);
+            sce.getServletContext().setAttribute("initPoolException", true);
         }
     }
 
@@ -40,7 +33,7 @@ public class ConnectionPoolListener implements ServletContextListener {
             PoolService poolService = serviceFactory.getPoolService();
             poolService.destroy();
         } catch (ServiceException e) {
-            sce.getServletContext().setAttribute("poolException", true);
+            throw new ConnectionPoolListenerException("Cannot destroy pool", e);
         }
     }
 }
