@@ -17,6 +17,7 @@ public class MySQLDAOFactory extends DAOFactory {
     private final MovieCountryDAO mySQLMovieCountryDAO = new MySQLMovieCountryDAO();
     private final MovieGenreDAO mySQLMovieGenreDAO = new MySQLMovieGenreDAO();
     private final MoviePersonRelationDAO mySQLMoviePersonRelationDAO = new MySQLMoviePersonRelationDAO();
+    private final PoolDAO mySQLPoolDAO = new MySQLPoolDAO();
 
     @Override
     public MovieDAO getMovieDAO() {
@@ -66,5 +67,10 @@ public class MySQLDAOFactory extends DAOFactory {
     @Override
     public MoviePersonRelationDAO getMoviePersonRelationDAO() {
         return mySQLMoviePersonRelationDAO;
+    }
+
+    @Override
+    public PoolDAO getPoolDAO() {
+        return mySQLPoolDAO;
     }
 }

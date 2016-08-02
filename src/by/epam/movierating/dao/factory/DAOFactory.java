@@ -24,6 +24,7 @@ public abstract class DAOFactory {
     public abstract MovieCountryDAO getMovieCountryDAO();
     public abstract MovieGenreDAO getMovieGenreDAO();
     public abstract MoviePersonRelationDAO getMoviePersonRelationDAO();
+    public abstract PoolDAO getPoolDAO();
 
     public static synchronized DAOFactory getInstance() throws DAOException {
         if(instance == null){
