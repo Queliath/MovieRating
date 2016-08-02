@@ -197,7 +197,7 @@
                     <ul>
                         <li>${localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
                         <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
-                        <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="#">${director.name}</a> </c:forEach></li>
+                        <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
                         <li>${localeYear}: ${movie.year}</li>
                         <li>${localeBudget}: ${movie.budget} $</li>
                         <li>${localePremiere}: ${movie.premiere}</li>
