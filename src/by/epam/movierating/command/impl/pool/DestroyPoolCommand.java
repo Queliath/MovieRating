@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by Владислав on 19.07.2016.
  */
-public class InitMySQLConnectionPoolCommand implements Command {
+public class DestroyPoolCommand implements Command {
     private static final String WELCOME_PAGE = "/Controller?command=welcome";
     private static final int ERROR_CODE = 500;
 
@@ -22,7 +22,7 @@ public class InitMySQLConnectionPoolCommand implements Command {
         try {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             PoolService poolService = serviceFactory.getPoolService();
-            poolService.init();
+            poolService.destroy();
             response.sendRedirect(WELCOME_PAGE);
         } catch (ServiceException e) {
             response.sendError(ERROR_CODE);

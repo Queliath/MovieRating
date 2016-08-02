@@ -1,13 +1,6 @@
 package by.epam.movierating.controller;
 
 import by.epam.movierating.command.Command;
-import by.epam.movierating.command.impl.general.*;
-import by.epam.movierating.command.impl.movie.MovieCommand;
-import by.epam.movierating.command.impl.movie.MoviesCommand;
-import by.epam.movierating.command.impl.person.PersonCommand;
-import by.epam.movierating.command.impl.person.PersonsCommand;
-import by.epam.movierating.command.impl.pool.DestroyMySQLConnectionPoolCommand;
-import by.epam.movierating.command.impl.pool.InitMySQLConnectionPoolCommand;
 import by.epam.movierating.controller.exception.CommandHelperInitException;
 import by.epam.movierating.controller.exception.CommandNotFoundException;
 
