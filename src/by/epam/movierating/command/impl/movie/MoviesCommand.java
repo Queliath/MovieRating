@@ -32,7 +32,7 @@ public class MoviesCommand implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        setLocaleAttributes(request, languageId);
+        request.setAttribute("selectedLanguage", languageId);
 
         String pageStr = request.getParameter("page");
         int page = (pageStr == null) ? 1 : Integer.parseInt(pageStr);
@@ -110,43 +110,5 @@ public class MoviesCommand implements Command {
             request.setAttribute("serviceError", true);
         }
         request.getRequestDispatcher("WEB-INF/jsp/movie/movies.jsp").forward(request, response);
-    }
-
-    private void setLocaleAttributes(HttpServletRequest request, String languageId){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("locale", new Locale(languageId));
-
-        request.setAttribute("siteName", resourceBundle.getString("locale.siteName"));
-        request.setAttribute("mainPageName", resourceBundle.getString("locale.mainPageName"));
-        request.setAttribute("catalogPageName", resourceBundle.getString("locale.catalogPageName"));
-        request.setAttribute("registrationPageName", resourceBundle.getString("locale.registrationPageName"));
-        request.setAttribute("loginPageName", resourceBundle.getString("locale.loginPageName"));
-        request.setAttribute("profilePageName", resourceBundle.getString("locale.profilePageName"));
-        request.setAttribute("logoutName", resourceBundle.getString("locale.logoutName"));
-        request.setAttribute("personsPageName", resourceBundle.getString("locale.personsPageName"));
-        request.setAttribute("usersPageName", resourceBundle.getString("locale.usersPageName"));
-        request.setAttribute("localeOther", resourceBundle.getString("locale.other"));
-        request.setAttribute("genresPageName", resourceBundle.getString("locale.genresPageName"));
-        request.setAttribute("countriesPageName", resourceBundle.getString("locale.countriesPageName"));
-        request.setAttribute("localeSearchCriteria", resourceBundle.getString("locale.searchCriteria"));
-        request.setAttribute("localeName", resourceBundle.getString("locale.name"));
-        request.setAttribute("localeFrom", resourceBundle.getString("locale.from"));
-        request.setAttribute("localeTo", resourceBundle.getString("locale.to"));
-        request.setAttribute("localeFindButton", resourceBundle.getString("locale.findButton"));
-        request.setAttribute("localeCountry", resourceBundle.getString("locale.country"));
-        request.setAttribute("localeGenre", resourceBundle.getString("locale.genre"));
-        request.setAttribute("localeDirector", resourceBundle.getString("locale.director"));
-        request.setAttribute("localeYear", resourceBundle.getString("locale.year"));
-        request.setAttribute("localeBudget", resourceBundle.getString("locale.budget"));
-        request.setAttribute("localePremiere", resourceBundle.getString("locale.premiere"));
-        request.setAttribute("localeLasting", resourceBundle.getString("locale.lasting"));
-        request.setAttribute("localeMinute", resourceBundle.getString("locale.minute"));
-        request.setAttribute("localeRating", resourceBundle.getString("locale.rating"));
-        request.setAttribute("localeServiceError", resourceBundle.getString("locale.serviceError"));
-        request.setAttribute("localeAddMovie", resourceBundle.getString("locale.addMovie"));
-        request.setAttribute("localeNoResults", resourceBundle.getString("locale.noResults"));
-        request.setAttribute("localeDisplaying", resourceBundle.getString("locale.displaying"));
-        request.setAttribute("localeOf", resourceBundle.getString("locale.of"));
-
-        request.setAttribute("selectedLanguage", languageId);
     }
 }
