@@ -24,7 +24,7 @@
     </filter-mapping>
 
     <listener>
-        <listener-class>by.epam.movierating.controller.listener.MySQLConnectionPoolListener</listener-class>
+        <listener-class>by.epam.movierating.controller.listener.ConnectionPoolListener</listener-class>
     </listener>
     
     <welcome-file-list>

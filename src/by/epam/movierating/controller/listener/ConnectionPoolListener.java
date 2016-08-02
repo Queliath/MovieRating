@@ -15,10 +15,10 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 
-public class MySQLConnectionPoolListener implements ServletContextListener {
+public class ConnectionPoolListener implements ServletContextListener {
 
     // Public constructor is required by servlet spec
-    public MySQLConnectionPoolListener() {
+    public ConnectionPoolListener() {
     }
 
     // -------------------------------------------------------
@@ -30,7 +30,7 @@ public class MySQLConnectionPoolListener implements ServletContextListener {
             PoolService poolService = serviceFactory.getPoolService();
             poolService.init();
         } catch (ServiceException e) {
-            e.printStackTrace();
+            sce.getServletContext().setAttribute("poolException", true);
         }
     }
 
@@ -40,7 +40,7 @@ public class MySQLConnectionPoolListener implements ServletContextListener {
             PoolService poolService = serviceFactory.getPoolService();
             poolService.destroy();
         } catch (ServiceException e) {
-            e.printStackTrace();
+            sce.getServletContext().setAttribute("poolException", true);
         }
     }
 }
