@@ -36,7 +36,7 @@ public class WelcomeCommand implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        setLocaleAttributes(request, languageId);
+        request.setAttribute("selectedLanguage", languageId);
 
         try {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
@@ -96,6 +96,6 @@ public class WelcomeCommand implements Command {
         request.setAttribute("localeToMovie", resourceBundle.getString("locale.toMovie"));
         request.setAttribute("localeServiceError", resourceBundle.getString("locale.serviceError"));
 
-        request.setAttribute("selectedLanguage", languageId);
+
     }
 }
