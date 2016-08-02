@@ -40,7 +40,7 @@ public class RegistrationCommand implements Command {
                 response.sendRedirect("/Controller?command=welcome");
             } catch (ServiceWrongEmailException e) {
                 String languageId = LanguageUtil.getLanguageId(request);
-                setLocaleAttributes(request, languageId);
+                request.setAttribute("selectedLanguage", languageId);
                 request.setAttribute("registrationFormEmail", registrationFormEmail);
                 request.setAttribute("registrationFormPassword", registrationFormPassword);
                 request.setAttribute("registrationFormFirstName", registrationFormFirstName);
@@ -49,7 +49,7 @@ public class RegistrationCommand implements Command {
                 request.getRequestDispatcher("WEB-INF/jsp/registration.jsp").forward(request, response);
             } catch (ServiceException e) {
                 String languageId = LanguageUtil.getLanguageId(request);
-                setLocaleAttributes(request, languageId);
+                request.setAttribute("selectedLanguage", languageId);
                 request.setAttribute("registrationFormEmail", registrationFormEmail);
                 request.setAttribute("registrationFormPassword", registrationFormPassword);
                 request.setAttribute("registrationFormFirstName", registrationFormFirstName);
@@ -61,32 +61,9 @@ public class RegistrationCommand implements Command {
         else {
             QueryUtil.saveCurrentQueryToSession(request);
             String languageId = LanguageUtil.getLanguageId(request);
-            setLocaleAttributes(request, languageId);
+            request.setAttribute("selectedLanguage", languageId);
 
             request.getRequestDispatcher("WEB-INF/jsp/registration.jsp").forward(request, response);
         }
-    }
-
-    private void setLocaleAttributes(HttpServletRequest request, String languageId){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("locale", new Locale(languageId));
-
-        request.setAttribute("siteName", resourceBundle.getString("locale.siteName"));
-        request.setAttribute("mainPageName", resourceBundle.getString("locale.mainPageName"));
-        request.setAttribute("catalogPageName", resourceBundle.getString("locale.catalogPageName"));
-        request.setAttribute("registrationPageName", resourceBundle.getString("locale.registrationPageName"));
-        request.setAttribute("loginPageName", resourceBundle.getString("locale.loginPageName"));
-        request.setAttribute("localeEmail", resourceBundle.getString("locale.email"));
-        request.setAttribute("localePassword", resourceBundle.getString("locale.password"));
-        request.setAttribute("localeEnterEmail", resourceBundle.getString("locale.enterEmail"));
-        request.setAttribute("localeEnterPassword", resourceBundle.getString("locale.enterPassword"));
-        request.setAttribute("localeFirstName", resourceBundle.getString("locale.firstName"));
-        request.setAttribute("localeEnterFirstName", resourceBundle.getString("locale.enterFirstName"));
-        request.setAttribute("localeLastName", resourceBundle.getString("locale.lastName"));
-        request.setAttribute("localeEnterLastName", resourceBundle.getString("locale.enterLastName"));
-        request.setAttribute("localeRegistrationButton", resourceBundle.getString("locale.registrationButton"));
-        request.setAttribute("localeUsedEmail", resourceBundle.getString("locale.usedEmail"));
-        request.setAttribute("localeServiceError", resourceBundle.getString("locale.serviceError"));
-
-        request.setAttribute("selectedLanguage", languageId);
     }
 }

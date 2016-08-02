@@ -7,11 +7,31 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<f:setLocale value="${requestScope.selectedLanguage}"/>
+<f:setBundle basename="locale" var="locale"/>
+<f:message bundle="${locale}" key="locale.siteName" var="siteName"/>
+<f:message bundle="${locale}" key="locale.mainPageName" var="mainPageName"/>
+<f:message bundle="${locale}" key="locale.catalogPageName" var="catalogPageName"/>
+<f:message bundle="${locale}" key="locale.registrationPageName" var="registrationPageName"/>
+<f:message bundle="${locale}" key="locale.loginPageName" var="loginPageName"/>
+<f:message bundle="${locale}" key="locale.email" var="localeEmail"/>
+<f:message bundle="${locale}" key="locale.password" var="localePassword"/>
+<f:message bundle="${locale}" key="locale.enterEmail" var="localeEnterEmail"/>
+<f:message bundle="${locale}" key="locale.enterPassword" var="localeEnterPassword"/>
+<f:message bundle="${locale}" key="locale.firstName" var="localeFirstName"/>
+<f:message bundle="${locale}" key="locale.enterFirstName" var="localeEnterFirstName"/>
+<f:message bundle="${locale}" key="locale.lastName" var="localeLastName"/>
+<f:message bundle="${locale}" key="locale.enterLastName" var="localeEnterLastName"/>
+<f:message bundle="${locale}" key="locale.registrationButton" var="localeRegistrationButton"/>
+<f:message bundle="${locale}" key="locale.usedEmail" var="localeUsedEmail"/>
+<f:message bundle="${locale}" key="locale.serviceError" var="localeServiceError"/>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>${requestScope.registrationPageName}</title>
+    <title>${registrationPageName}</title>
     <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>-->
     <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
@@ -31,16 +51,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="Controller?command=welcome">${requestScope.siteName}</a>
+                <a class="navbar-brand" href="Controller?command=welcome">${siteName}</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li><a href="Controller?command=welcome">${requestScope.mainPageName}</a></li>
-                    <li><a href="Controller?command=movies">${requestScope.catalogPageName}</a></li>
+                    <li><a href="Controller?command=welcome">${mainPageName}</a></li>
+                    <li><a href="Controller?command=movies">${catalogPageName}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="Controller?command=registration"><span class="glyphicon glyphicon-user"></span> ${requestScope.registrationPageName}</a></li>
-                    <li><a href="Controller?command=login"><span class="glyphicon glyphicon-log-in"></span> ${requestScope.loginPageName}</a></li>
+                    <li class="active"><a href="Controller?command=registration"><span class="glyphicon glyphicon-user"></span> ${registrationPageName}</a></li>
+                    <li><a href="Controller?command=login"><span class="glyphicon glyphicon-log-in"></span> ${loginPageName}</a></li>
                     <li <c:if test='${requestScope.selectedLanguage eq "RU"}'>class="active"</c:if>><form id="change-language-ru" action="Controller?command=change-language" method="post"><input type="hidden" name="changeLanguageId" value="RU"><a href="#" onclick="document.getElementById('change-language-ru').submit()">RU</a></form></li>
                     <li <c:if test='${requestScope.selectedLanguage eq "EN"}'>class="active"</c:if>><form id="change-language-en" action="Controller?command=change-language" method="post"><input type="hidden" name="changeLanguageId" value="EN"><a href="#" onclick="document.getElementById('change-language-en').submit()">EN</a></form></li>
                 </ul>
@@ -52,35 +72,35 @@
     <div class="jumbotron">
         <form action="Controller?command=registration" method="post" role="form">
             <div class="form-group">
-                <label for="email">${requestScope.localeEmail}</label>
-                <input name="registrationFormEmail" value="${requestScope.registrationFormEmail}" type="email" class="form-control" id="email" placeholder="${requestScope.localeEnterEmail}">
+                <label for="email">${localeEmail}</label>
+                <input name="registrationFormEmail" value="${requestScope.registrationFormEmail}" type="email" class="form-control" id="email" placeholder="${localeEnterEmail}">
             </div>
             <div class="form-group">
-                <label for="password">${requestScope.localePassword}</label>
-                <input name="registrationFormPassword" value="${requestScope.registrationFormPassword}" type="password" class="form-control" id="password" placeholder="${requestScope.localeEnterPassword}">
+                <label for="password">${localePassword}</label>
+                <input name="registrationFormPassword" value="${requestScope.registrationFormPassword}" type="password" class="form-control" id="password" placeholder="${localeEnterPassword}">
             </div>
             <div class="form-group">
-                <label for="first-name">${requestScope.localeFirstName}</label>
-                <input name="registrationFormFirstName" value="${requestScope.registrationFormFirstName}" type="text" class="form-control" id="first-name" placeholder="${requestScope.localeEnterFirstName}">
+                <label for="first-name">${localeFirstName}</label>
+                <input name="registrationFormFirstName" value="${requestScope.registrationFormFirstName}" type="text" class="form-control" id="first-name" placeholder="${localeEnterFirstName}">
             </div>
             <div class="form-group">
-                <label for="second-name">${requestScope.localeLastName}</label>
-                <input name="registrationFormLastName" value="${requestScope.registrationFormLastName}" type="text" class="form-control" id="second-name" placeholder="${requestScope.localeEnterLastName}">
+                <label for="second-name">${localeLastName}</label>
+                <input name="registrationFormLastName" value="${requestScope.registrationFormLastName}" type="text" class="form-control" id="second-name" placeholder="${localeEnterLastName}">
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-default">${requestScope.localeRegistrationButton}</button>
+                <button type="submit" class="btn btn-default">${localeRegistrationButton}</button>
             </div>
         </form>
         <c:if test="${requestScope.wrongEmail}">
             <div class="alert alert-danger fade in">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                ${requestScope.localeUsedEmail}
+                ${localeUsedEmail}
             </div>
         </c:if>
         <c:if test="${requestScope.serviceError}">
             <div class="alert alert-danger fade in">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                ${requestScope.localeServiceError}
+                ${localeServiceError}
             </div>
         </c:if>
     </div>
