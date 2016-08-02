@@ -25,9 +25,9 @@ public class MySQLConnectionPoolListener implements ServletContextListener {
     // ServletContextListener implementation
     // -------------------------------------------------------
     public void contextInitialized(ServletContextEvent sce) {
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        PoolService poolService = serviceFactory.getPoolService();
         try {
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+            PoolService poolService = serviceFactory.getPoolService();
             poolService.init();
         } catch (ServiceException e) {
             e.printStackTrace();
@@ -35,9 +35,9 @@ public class MySQLConnectionPoolListener implements ServletContextListener {
     }
 
     public void contextDestroyed(ServletContextEvent sce) {
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        PoolService poolService = serviceFactory.getPoolService();
         try {
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+            PoolService poolService = serviceFactory.getPoolService();
             poolService.destroy();
         } catch (ServiceException e) {
             e.printStackTrace();

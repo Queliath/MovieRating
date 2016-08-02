@@ -28,9 +28,9 @@ public class LoginCommand implements Command {
         String loginFormPassword = request.getParameter("loginFormPassword");
 
         if(loginFormEmail != null && loginFormPassword != null){
-            ServiceFactory serviceFactory = ServiceFactory.getInstance();
-            SiteService siteService = serviceFactory.getSiteService();
             try {
+                ServiceFactory serviceFactory = ServiceFactory.getInstance();
+                SiteService siteService = serviceFactory.getSiteService();
                 User user = siteService.login(loginFormEmail, loginFormPassword);
                 HttpSession session = request.getSession(true);
                 session.setAttribute("userId", user.getId());

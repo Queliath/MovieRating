@@ -38,9 +38,9 @@ public class MovieCommand implements Command {
                 response.sendRedirect("Controller?command=login&cause=timeout");
             }
             else {
-                ServiceFactory serviceFactory = ServiceFactory.getInstance();
-                RatingService ratingService = serviceFactory.getRatingService();
                 try {
+                    ServiceFactory serviceFactory = ServiceFactory.getInstance();
+                    RatingService ratingService = serviceFactory.getRatingService();
                     ratingService.addRating(Integer.parseInt(ratingValueStr), id, userId);
                 } catch (ServiceException ignored) {}
             }

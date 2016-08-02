@@ -30,9 +30,9 @@ public class RegistrationCommand implements Command {
 
         if(registrationFormEmail != null && registrationFormPassword != null &&
                 registrationFormFirstName != null && registrationFormLastName != null){
-            ServiceFactory serviceFactory = ServiceFactory.getInstance();
-            SiteService siteService = serviceFactory.getSiteService();
             try {
+                ServiceFactory serviceFactory = ServiceFactory.getInstance();
+                SiteService siteService = serviceFactory.getSiteService();
                 User user = siteService.registration(registrationFormEmail, registrationFormPassword, registrationFormFirstName, registrationFormLastName);
                 HttpSession session = request.getSession(true);
                 session.setAttribute("userId", user.getId());

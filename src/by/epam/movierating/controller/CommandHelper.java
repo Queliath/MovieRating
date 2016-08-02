@@ -55,6 +55,9 @@ public final class CommandHelper {
     }
 
     public static synchronized CommandHelper getInstance() throws CommandHelperInitException {
-        return (instance == null) ? new CommandHelper() : instance;
+        if(instance == null){
+            instance = new CommandHelper();
+        }
+        return instance;
     }
 }

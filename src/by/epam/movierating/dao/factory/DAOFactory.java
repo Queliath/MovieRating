@@ -25,7 +25,7 @@ public abstract class DAOFactory {
     public abstract MovieGenreDAO getMovieGenreDAO();
     public abstract MoviePersonRelationDAO getMoviePersonRelationDAO();
 
-    public static DAOFactory getInstance() throws DAOException {
+    public static synchronized DAOFactory getInstance() throws DAOException {
         if(instance == null){
             try {
                 ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);

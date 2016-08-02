@@ -19,9 +19,9 @@ public class DestroyMySQLConnectionPoolCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        PoolService poolService = serviceFactory.getPoolService();
         try {
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+            PoolService poolService = serviceFactory.getPoolService();
             poolService.destroy();
             response.sendRedirect(WELCOME_PAGE);
         } catch (ServiceException e) {
