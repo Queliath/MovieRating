@@ -38,21 +38,21 @@ public class LoginCommand implements Command {
                 response.sendRedirect("/Controller?command=welcome");
             } catch (ServiceWrongEmailException e) {
                 String languageId = LanguageUtil.getLanguageId(request);
-                setLocaleAttributes(request, languageId);
+                request.setAttribute("selectedLanguage", languageId);
                 request.setAttribute("wrongEmail", true);
                 request.setAttribute("loginFormEmail", loginFormEmail);
                 request.setAttribute("loginFormPassword", loginFormPassword);
                 request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
             } catch (ServiceWrongPasswordException e) {
                 String languageId = LanguageUtil.getLanguageId(request);
-                setLocaleAttributes(request, languageId);
+                request.setAttribute("selectedLanguage", languageId);
                 request.setAttribute("wrongPassword", true);
                 request.setAttribute("loginFormEmail", loginFormEmail);
                 request.setAttribute("loginFormPassword", loginFormPassword);
                 request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
             } catch (ServiceException e) {
                 String languageId = LanguageUtil.getLanguageId(request);
-                setLocaleAttributes(request, languageId);
+                request.setAttribute("selectedLanguage", languageId);
                 request.setAttribute("serviceError", true);
                 request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
             }
@@ -69,29 +69,9 @@ public class LoginCommand implements Command {
 
             QueryUtil.saveCurrentQueryToSession(request);
             String languageId = LanguageUtil.getLanguageId(request);
-            setLocaleAttributes(request, languageId);
+            request.setAttribute("selectedLanguage", languageId);
 
             request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
         }
-    }
-
-    private void setLocaleAttributes(HttpServletRequest request, String languageId){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("locale", new Locale(languageId));
-
-        request.setAttribute("siteName", resourceBundle.getString("locale.siteName"));
-        request.setAttribute("mainPageName", resourceBundle.getString("locale.mainPageName"));
-        request.setAttribute("catalogPageName", resourceBundle.getString("locale.catalogPageName"));
-        request.setAttribute("registrationPageName", resourceBundle.getString("locale.registrationPageName"));
-        request.setAttribute("loginPageName", resourceBundle.getString("locale.loginPageName"));
-        request.setAttribute("localeEmail", resourceBundle.getString("locale.email"));
-        request.setAttribute("localePassword", resourceBundle.getString("locale.password"));
-        request.setAttribute("localeEnterEmail", resourceBundle.getString("locale.enterEmail"));
-        request.setAttribute("localeEnterPassword", resourceBundle.getString("locale.enterPassword"));
-        request.setAttribute("localeLoginButton", resourceBundle.getString("locale.loginButton"));
-        request.setAttribute("localeWrongEmail", resourceBundle.getString("locale.wrongEmail"));
-        request.setAttribute("localeWrongPassword", resourceBundle.getString("locale.wrongPassword"));
-        request.setAttribute("localeTimeout", resourceBundle.getString("locale.timeout"));
-
-        request.setAttribute("selectedLanguage", languageId);
     }
 }
