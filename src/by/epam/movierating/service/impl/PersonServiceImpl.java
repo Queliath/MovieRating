@@ -33,6 +33,10 @@ public class PersonServiceImpl implements PersonService {
             Person person = personDAO.getPersonById(id, languageId);
 
             if(person != null){
+                MoviePersonRelationDAO moviePersonRelationDAO = daoFactory.getMoviePersonRelationDAO();
+                int moviesTotal = moviePersonRelationDAO.getMoviesTotalByPerson(id);
+                person.setMoviesTotal(moviesTotal);
+
                 MovieDAO movieDAO = daoFactory.getMovieDAO();
                 List<Movie> moviesAsActor = movieDAO.getMoviesByPersonAndRelationType(person.getId(), ACTOR, languageId);
                 List<Movie> moviesAsDirector = movieDAO.getMoviesByPersonAndRelationType(person.getId(), DIRECTOR, languageId);

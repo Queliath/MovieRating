@@ -8,4 +8,5 @@ import by.epam.movierating.dao.exception.DAOException;
 public interface MoviePersonRelationDAO {
     void addMovieToPersonWithRelation(int movieId, int personId, int relationType) throws DAOException;
     void deleteMovieFromPersonWithRelation(int movieId, int personId, int relationType) throws DAOException;
+    int getMoviesTotalByPerson(int personId) throws DAOException;
 }

@@ -7,6 +7,49 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<f:setLocale value="${requestScope.selectedLanguage}"/>
+<f:setBundle basename="locale" var="locale"/>
+<f:message bundle="${locale}" key="locale.siteName" var="siteName"/>
+<f:message bundle="${locale}" key="locale.mainPageName" var="mainPageName"/>
+<f:message bundle="${locale}" key="locale.catalogPageName" var="catalogPageName"/>
+<f:message bundle="${locale}" key="locale.registrationPageName" var="registrationPageName"/>
+<f:message bundle="${locale}" key="locale.loginPageName" var="loginPageName"/>
+<f:message bundle="${locale}" key="locale.profilePageName" var="profilePageName"/>
+<f:message bundle="${locale}" key="locale.logoutName" var="logoutName"/>
+<f:message bundle="${locale}" key="locale.personsPageName" var="personsPageName"/>
+<f:message bundle="${locale}" key="locale.usersPageName" var="usersPageName"/>
+<f:message bundle="${locale}" key="locale.other" var="localeOther"/>
+<f:message bundle="${locale}" key="locale.genresPageName" var="genresPageName"/>
+<f:message bundle="${locale}" key="locale.countriesPageName" var="countriesPageName"/>
+<f:message bundle="${locale}" key="locale.moviesTotal" var="localeMoviesTotal"/>
+<f:message bundle="${locale}" key="locale.dateOfBirth" var="localeDateOfBirth"/>
+<f:message bundle="${locale}" key="locale.placeOfBirth" var="localePlaceOfBirth"/>
+<f:message bundle="${locale}" key="locale.country" var="localeCountry"/>
+<f:message bundle="${locale}" key="locale.genre" var="localeGenre"/>
+<f:message bundle="${locale}" key="locale.director" var="localeDirector"/>
+<f:message bundle="${locale}" key="locale.year" var="localeYear"/>
+<f:message bundle="${locale}" key="locale.budget" var="localeBudget"/>
+<f:message bundle="${locale}" key="locale.premiere" var="localePremiere"/>
+<f:message bundle="${locale}" key="locale.lasting" var="localeLasting"/>
+<f:message bundle="${locale}" key="locale.minute" var="localeMinute"/>
+<f:message bundle="${locale}" key="locale.rating" var="localeRating"/>
+<f:message bundle="${locale}" key="locale.serviceError" var="localeServiceError"/>
+<f:message bundle="${locale}" key="locale.noPerson" var="localeNoPerson"/>
+<f:message bundle="${locale}" key="locale.asActor" var="localeAsActor"/>
+<f:message bundle="${locale}" key="locale.asDirector" var="localeAsDirector"/>
+<f:message bundle="${locale}" key="locale.asProducer" var="localeAsProducer"/>
+<f:message bundle="${locale}" key="locale.asWriter" var="localeAsWriter"/>
+<f:message bundle="${locale}" key="locale.asPainter" var="localeAsPainter"/>
+<f:message bundle="${locale}" key="locale.asOperator" var="localeAsOperator"/>
+<f:message bundle="${locale}" key="locale.asEditor" var="localeAsEditor"/>
+<f:message bundle="${locale}" key="locale.asComposer" var="localeAsComposer"/>
+<f:message bundle="${locale}" key="locale.edit" var="localeEdit"/>
+<f:message bundle="${locale}" key="locale.delete" var="localeDelete"/>
+<f:message bundle="${locale}" key="locale.addMovieToPerson" var="localeAddMovieToPerson"/>
+<f:message bundle="${locale}" key="locale.deleteTitle" var="localeDeleteTitle"/>
+<f:message bundle="${locale}" key="locale.deleteBody" var="localeDeleteBody"/>
+<f:message bundle="${locale}" key="locale.cancel" var="localeCancel"/>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -31,21 +74,21 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="Controller?command=welcome">${requestScope.siteName}</a>
+                <a class="navbar-brand" href="Controller?command=welcome">${siteName}</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li><a href="Controller?command=welcome">${requestScope.mainPageName}</a></li>
-                    <li><a href="Controller?command=movies">${requestScope.catalogPageName}</a></li>
+                    <li><a href="Controller?command=welcome">${mainPageName}</a></li>
+                    <li><a href="Controller?command=movies">${catalogPageName}</a></li>
                     <c:if test="${sessionScope.userId != null}">
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <li><a href="#">${requestScope.personsPageName}</a></li>
-                            <li><a href="#">${requestScope.usersPageName}</a></li>
+                            <li><a href="#">${personsPageName}</a></li>
+                            <li><a href="#">${usersPageName}</a></li>
                             <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">${requestScope.localeOther} <span class="caret"></span></a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">${localeOther} <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">${requestScope.genresPageName}</a></li>
-                                    <li><a href="#">${requestScope.countriesPageName}</a></li>
+                                    <li><a href="#">${genresPageName}</a></li>
+                                    <li><a href="#">${countriesPageName}</a></li>
                                 </ul>
                             </li>
                         </c:if>
@@ -53,12 +96,12 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <c:if test="${sessionScope.userId != null}">
-                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> ${requestScope.profilePageName}</a></li>
-                        <li><a href="Controller?command=logout"><span class="glyphicon glyphicon-log-out"></span> ${requestScope.logoutName}</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> ${profilePageName}</a></li>
+                        <li><a href="Controller?command=logout"><span class="glyphicon glyphicon-log-out"></span> ${logoutName}</a></li>
                     </c:if>
                     <c:if test="${sessionScope.userId == null}">
-                        <li><a href="Controller?command=registration"><span class="glyphicon glyphicon-user"></span> ${requestScope.registrationPageName}</a></li>
-                        <li><a href="Controller?command=login"><span class="glyphicon glyphicon-log-in"></span> ${requestScope.loginPageName}</a></li>
+                        <li><a href="Controller?command=registration"><span class="glyphicon glyphicon-user"></span> ${registrationPageName}</a></li>
+                        <li><a href="Controller?command=login"><span class="glyphicon glyphicon-log-in"></span> ${loginPageName}</a></li>
                     </c:if>
                     <li <c:if test='${requestScope.selectedLanguage eq "RU"}'>class="active"</c:if>><form id="change-language-ru" action="Controller?command=change-language" method="post"><input type="hidden" name="changeLanguageId" value="RU"><a href="#" onclick="document.getElementById('change-language-ru').submit()">RU</a></form></li>
                     <li <c:if test='${requestScope.selectedLanguage eq "EN"}'>class="active"</c:if>><form id="change-language-en" action="Controller?command=change-language" method="post"><input type="hidden" name="changeLanguageId" value="EN"><a href="#" onclick="document.getElementById('change-language-en').submit()">EN</a></form></li>
@@ -71,13 +114,13 @@
     <c:if test="${requestScope.serviceError}">
         <div class="alert alert-danger fade in">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                ${requestScope.localeServiceError}
+                ${localeServiceError}
         </div>
     </c:if>
     <c:if test="${requestScope.person == null}">
         <div class="alert alert-info fade in">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                ${requestScope.localeNoPerson}
+                ${localeNoPerson}
         </div>
     </c:if>
     <c:if test="${requestScope.person != null}">
@@ -86,29 +129,29 @@
             <div class="clearfix">
                 <img src="img/${requestScope.person.photo}" class="img-rounded" alt="${requestScope.person.name}">
                 <ul>
-                    <li>${requestScope.localeMoviesTotal}: ${requestScope.person.moviesTotal}</li>
-                    <li>${requestScope.localeDateOfBirth}: ${requestScope.person.dateOfBirth}</li>
-                    <li>${requestScope.localePlaceOfBirth}: ${requestScope.person.placeOfBirth}</li>
+                    <li>${localeMoviesTotal}: ${requestScope.person.moviesTotal}</li>
+                    <li>${localeDateOfBirth}: ${requestScope.person.dateOfBirth}</li>
+                    <li>${localePlaceOfBirth}: ${requestScope.person.placeOfBirth}</li>
                 </ul>
             </div>
             <c:if test='${sessionScope.userStatus eq "admin"}'>
                 <form action="#" method="post" role="form">
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success">${requestScope.localeEdit}</button>
+                        <button type="submit" class="btn btn-success">${localeEdit}</button>
                     </div>
                 </form>
                 <form action="#" method="post" role="form">
                     <div class="form-group">
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove-modal">${requestScope.localeDelete}</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove-modal">${localeDelete}</button>
                     </div>
                 </form>
             </c:if>
             <c:if test='${requestScope.person.moviesAsActor != null || sessionScope.userStatus eq "admin"}'>
-                <h3>${requestScope.localeAsActor}</h3>
+                <h3>${localeAsActor}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
                     <form action="#" method="post" role="form">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">${requestScope.localeAddMovie}</button>
+                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
                         </div>
                     </form>
                 </c:if>
@@ -119,28 +162,28 @@
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
-                            <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeYear}: ${movie.year}</li>
-                            <li>${requestScope.localeBudget}: ${movie.budget} $</li>
-                            <li>${requestScope.localePremiere}: ${movie.premiere}</li>
-                            <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
-                            <li>${requestScope.localeRating}: ${movie.averageRating}</li>
+                            <li>${localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
+                            <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
+                            <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
+                            <li>${localeYear}: ${movie.year}</li>
+                            <li>${localeBudget}: ${movie.budget} $</li>
+                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
+                            <li>${localeRating}: ${movie.averageRating}</li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${requestScope.localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
             </c:if>
             <c:if test='${requestScope.person.moviesAsDirector != null || sessionScope.userStatus eq "admin"}'>
-                <h3>${requestScope.localeAsDirector}</h3>
+                <h3>${localeAsDirector}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
                     <form action="#" method="post" role="form">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">${requestScope.localeAddMovie}</button>
+                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
                         </div>
                     </form>
                 </c:if>
@@ -151,28 +194,28 @@
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
-                            <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeYear}: ${movie.year}</li>
-                            <li>${requestScope.localeBudget}: ${movie.budget} $</li>
-                            <li>${requestScope.localePremiere}: ${movie.premiere}</li>
-                            <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
-                            <li>${requestScope.localeRating}: ${movie.averageRating}</li>
+                            <li>${localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
+                            <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
+                            <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
+                            <li>${localeYear}: ${movie.year}</li>
+                            <li>${localeBudget}: ${movie.budget} $</li>
+                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
+                            <li>${localeRating}: ${movie.averageRating}</li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${requestScope.localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
             </c:if>
             <c:if test='${requestScope.person.moviesAsProducer != null || sessionScope.userStatus eq "admin"}'>
-                <h3>${requestScope.localeAsProducer}</h3>
+                <h3>${localeAsProducer}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
                     <form action="#" method="post" role="form">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">${requestScope.localeAddMovie}</button>
+                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
                         </div>
                     </form>
                 </c:if>
@@ -183,28 +226,28 @@
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
-                            <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeYear}: ${movie.year}</li>
-                            <li>${requestScope.localeBudget}: ${movie.budget} $</li>
-                            <li>${requestScope.localePremiere}: ${movie.premiere}</li>
-                            <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
-                            <li>${requestScope.localeRating}: ${movie.averageRating}</li>
+                            <li>${localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
+                            <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
+                            <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
+                            <li>${localeYear}: ${movie.year}</li>
+                            <li>${localeBudget}: ${movie.budget} $</li>
+                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
+                            <li>${localeRating}: ${movie.averageRating}</li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${requestScope.localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
             </c:if>
             <c:if test='${requestScope.person.moviesAsWriter != null || sessionScope.userStatus eq "admin"}'>
-                <h3>${requestScope.localeAsWriter}</h3>
+                <h3>${localeAsWriter}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
                     <form action="#" method="post" role="form">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">${requestScope.localeAddMovie}</button>
+                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
                         </div>
                     </form>
                 </c:if>
@@ -215,28 +258,28 @@
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
-                            <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeYear}: ${movie.year}</li>
-                            <li>${requestScope.localeBudget}: ${movie.budget} $</li>
-                            <li>${requestScope.localePremiere}: ${movie.premiere}</li>
-                            <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
-                            <li>${requestScope.localeRating}: ${movie.averageRating}</li>
+                            <li>${localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
+                            <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
+                            <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
+                            <li>${localeYear}: ${movie.year}</li>
+                            <li>${localeBudget}: ${movie.budget} $</li>
+                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
+                            <li>${localeRating}: ${movie.averageRating}</li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${requestScope.localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
             </c:if>
             <c:if test='${requestScope.person.moviesAsPainter != null || sessionScope.userStatus eq "admin"}'>
-                <h3>${requestScope.localeAsPainter}</h3>
+                <h3>${localeAsPainter}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
                     <form action="#" method="post" role="form">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">${requestScope.localeAddMovie}</button>
+                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
                         </div>
                     </form>
                 </c:if>
@@ -247,28 +290,28 @@
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
-                            <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeYear}: ${movie.year}</li>
-                            <li>${requestScope.localeBudget}: ${movie.budget} $</li>
-                            <li>${requestScope.localePremiere}: ${movie.premiere}</li>
-                            <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
-                            <li>${requestScope.localeRating}: ${movie.averageRating}</li>
+                            <li>${localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
+                            <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
+                            <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
+                            <li>${localeYear}: ${movie.year}</li>
+                            <li>${localeBudget}: ${movie.budget} $</li>
+                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
+                            <li>${localeRating}: ${movie.averageRating}</li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${requestScope.localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
             </c:if>
             <c:if test='${requestScope.person.moviesAsOperator != null || sessionScope.userStatus eq "admin"}'>
-                <h3>${requestScope.localeAsOperator}</h3>
+                <h3>${localeAsOperator}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
                     <form action="#" method="post" role="form">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">${requestScope.localeAddMovie}</button>
+                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
                         </div>
                     </form>
                 </c:if>
@@ -279,28 +322,28 @@
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
-                            <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeYear}: ${movie.year}</li>
-                            <li>${requestScope.localeBudget}: ${movie.budget} $</li>
-                            <li>${requestScope.localePremiere}: ${movie.premiere}</li>
-                            <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
-                            <li>${requestScope.localeRating}: ${movie.averageRating}</li>
+                            <li>${localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
+                            <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
+                            <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
+                            <li>${localeYear}: ${movie.year}</li>
+                            <li>${localeBudget}: ${movie.budget} $</li>
+                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
+                            <li>${localeRating}: ${movie.averageRating}</li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${requestScope.localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
             </c:if>
             <c:if test='${requestScope.person.moviesAsEditor != null || sessionScope.userStatus eq "admin"}'>
-                <h3>${requestScope.localeAsEditor}</h3>
+                <h3>${localeAsEditor}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
                     <form action="#" method="post" role="form">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">${requestScope.localeAddMovie}</button>
+                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
                         </div>
                     </form>
                 </c:if>
@@ -311,28 +354,28 @@
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
-                            <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeYear}: ${movie.year}</li>
-                            <li>${requestScope.localeBudget}: ${movie.budget} $</li>
-                            <li>${requestScope.localePremiere}: ${movie.premiere}</li>
-                            <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
-                            <li>${requestScope.localeRating}: ${movie.averageRating}</li>
+                            <li>${localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
+                            <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
+                            <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
+                            <li>${localeYear}: ${movie.year}</li>
+                            <li>${localeBudget}: ${movie.budget} $</li>
+                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
+                            <li>${localeRating}: ${movie.averageRating}</li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${requestScope.localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
             </c:if>
             <c:if test='${requestScope.person.moviesAsComposer != null || sessionScope.userStatus eq "admin"}'>
-                <h3>${requestScope.localeAsComposer}</h3>
+                <h3>${localeAsComposer}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
                     <form action="#" method="post" role="form">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">${requestScope.localeAddMovie}</button>
+                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
                         </div>
                     </form>
                 </c:if>
@@ -343,18 +386,18 @@
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
-                            <li>${requestScope.localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
-                            <li>${requestScope.localeYear}: ${movie.year}</li>
-                            <li>${requestScope.localeBudget}: ${movie.budget} $</li>
-                            <li>${requestScope.localePremiere}: ${movie.premiere}</li>
-                            <li>${requestScope.localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
-                            <li>${requestScope.localeRating}: ${movie.averageRating}</li>
+                            <li>${localeCountry}: <c:forEach items="${movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> </c:forEach></li>
+                            <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
+                            <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
+                            <li>${localeYear}: ${movie.year}</li>
+                            <li>${localeBudget}: ${movie.budget} $</li>
+                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
+                            <li>${localeRating}: ${movie.averageRating}</li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${requestScope.localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -365,14 +408,14 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">${requestScope.localeDeleteTitle}</h4>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
                     </div>
                     <div class="modal-body">
-                        <p>${requestScope.localeDeleteBody}</p>
+                        <p>${localeDeleteBody}</p>
                     </div>
                     <div class="modal-footer">
-                        <a href="#" class="btn btn-danger">${requestScope.localeDelete}</a>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">${requestScope.localeCancel}</button>
+                        <a href="#" class="btn btn-danger">${localeDelete}</a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
                     </div>
                 </div>
             </div>
