@@ -3,13 +3,16 @@ package by.epam.movierating.dao.factory;
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.interfaces.*;
 
+import java.util.ResourceBundle;
+
 /**
  * Created by Владислав on 14.07.2016.
  */
 public abstract class DAOFactory {
-    private static final int MY_SQL = 1;
+    private static final String RESOURCE_BUNDLE_NAME = "dao-factory";
+    private static final String FACTORY_CLASS_KEY = "factory-class";
 
-    private static final DAOFactory mySQLDAOFactory = new MySQLDAOFactory();
+    private static DAOFactory instance;
 
     public abstract MovieDAO getMovieDAO();
     public abstract GenreDAO getGenreDAO();
@@ -23,17 +26,15 @@ public abstract class DAOFactory {
     public abstract MoviePersonRelationDAO getMoviePersonRelationDAO();
 
     public static DAOFactory getInstance() throws DAOException {
-        int factoryType = readConfig();
-
-        switch (factoryType) {
-            case MY_SQL:
-                return mySQLDAOFactory;
-            default:
-                throw new DAOException("Wrong config file for DAO layer");
+        if(instance == null){
+            try {
+                ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
+                String factoryClassName = resourceBundle.getString(FACTORY_CLASS_KEY);
+                instance = (DAOFactory) Class.forName(factoryClassName).newInstance();
+            } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
+                throw new DAOException("Cannot init a DAOFactory", e);
+            }
         }
-    }
-
-    private static int readConfig(){
-        return MY_SQL;
+        return instance;
     }
 }
