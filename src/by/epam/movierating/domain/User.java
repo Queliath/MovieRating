@@ -1,6 +1,7 @@
 package by.epam.movierating.domain;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Владислав on 12.06.2016.
@@ -15,6 +16,8 @@ public class User {
     private String photo;
     private int rating;
     private String status;
+
+    private List<Comment> comments;
 
     public User() {
     }
@@ -101,6 +104,14 @@ public class User {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override

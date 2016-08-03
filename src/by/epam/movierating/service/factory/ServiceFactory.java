@@ -19,6 +19,7 @@ public class ServiceFactory {
     private static final String POOL_SERVICE_IMPL_KEY = "pool-service";
     private static final String RATING_SERVICE_IMPL_KEY = "rating-service";
     private static final String PERSON_SERVICE_IMPL_KEY = "person-service";
+    private static final String USER_SERVICE_IMPL_KEY = "user-service";
 
     private static ServiceFactory instance;
 
@@ -30,6 +31,7 @@ public class ServiceFactory {
     private PoolService poolService;
     private RatingService ratingService;
     private PersonService personService;
+    private UserService userService;
 
     private ServiceFactory() throws ServiceException {
         ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
@@ -41,6 +43,7 @@ public class ServiceFactory {
         String poolServiceImplClassName = resourceBundle.getString(POOL_SERVICE_IMPL_KEY);
         String ratingServiceImplClassName = resourceBundle.getString(RATING_SERVICE_IMPL_KEY);
         String personServiceImplClassName = resourceBundle.getString(PERSON_SERVICE_IMPL_KEY);
+        String userServiceImplClassName = resourceBundle.getString(USER_SERVICE_IMPL_KEY);
 
         try {
             siteService = (SiteService) Class.forName(siteServiceImplClassName).newInstance();
@@ -51,6 +54,7 @@ public class ServiceFactory {
             poolService = (PoolService) Class.forName(poolServiceImplClassName).newInstance();
             ratingService = (RatingService) Class.forName(ratingServiceImplClassName).newInstance();
             personService = (PersonService) Class.forName(personServiceImplClassName).newInstance();
+            userService = (UserService) Class.forName(userServiceImplClassName).newInstance();
         } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
             throw new ServiceException("Cannot init ServiceFactory", e);
         }
@@ -93,5 +97,9 @@ public class ServiceFactory {
 
     public PersonService getPersonService() {
         return personService;
+    }
+
+    public UserService getUserService() {
+        return userService;
     }
 }
