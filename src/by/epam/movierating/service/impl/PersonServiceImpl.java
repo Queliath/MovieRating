@@ -146,4 +146,35 @@ public class PersonServiceImpl implements PersonService {
             throw new ServiceException("Service layer: cannot get a person", e);
         }
     }
+
+    @Override
+    public List<Person> getPersonsByCriteria(String name, int from, int amount, String languageId) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            PersonDAO personDAO = daoFactory.getPersonDAO();
+            List<Person> persons = personDAO.getPersonsByCriteria(name, from, amount, languageId);
+
+            MoviePersonRelationDAO moviePersonRelationDAO = daoFactory.getMoviePersonRelationDAO();
+            for(Person person : persons){
+                int moviesTotal = moviePersonRelationDAO.getMoviesTotalByPerson(person.getId());
+                person.setMoviesTotal(moviesTotal);
+            }
+
+            return persons;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get persons by a criteria", e);
+        }
+    }
+
+    @Override
+    public int getPersonsCountByCriteria(String name, String languageId) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            PersonDAO personDAO = daoFactory.getPersonDAO();
+            int personsCount = personDAO.getPersonsCountByCriteria(name, languageId);
+            return personsCount;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get persons count by a criteria", e);
+        }
+    }
 }

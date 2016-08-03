@@ -13,6 +13,7 @@
 <f:message bundle="${locale}" key="locale.siteName" var="siteName"/>
 <f:message bundle="${locale}" key="locale.mainPageName" var="mainPageName"/>
 <f:message bundle="${locale}" key="locale.catalogPageName" var="catalogPageName"/>
+<f:message bundle="${locale}" key="locale.personsPageName" var="personsPageName"/>
 <f:message bundle="${locale}" key="locale.registrationPageName" var="registrationPageName"/>
 <f:message bundle="${locale}" key="locale.loginPageName" var="loginPageName"/>
 <f:message bundle="${locale}" key="locale.email" var="localeEmail"/>
@@ -53,6 +54,7 @@
                 <ul class="nav navbar-nav">
                     <li><a href="Controller?command=welcome">${mainPageName}</a></li>
                     <li><a href="Controller?command=movies">${catalogPageName}</a></li>
+                    <li><a href="Controller?command=persons">${personsPageName}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="Controller?command=registration"><span class="glyphicon glyphicon-user"></span> ${registrationPageName}</a></li>

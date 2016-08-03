@@ -15,4 +15,6 @@ public interface PersonDAO {
     List<Person> getAllPersons(String languageId) throws DAOException;
     Person getPersonById(int id, String languageId) throws DAOException;
     List<Person> getPersonsByMovieAndRelationType(int movieId, int relationType, String languageId) throws DAOException;
+    List<Person> getPersonsByCriteria(String name, int from, int amount, String languageId) throws DAOException;
+    int getPersonsCountByCriteria(String name, String languageId) throws DAOException;
 }

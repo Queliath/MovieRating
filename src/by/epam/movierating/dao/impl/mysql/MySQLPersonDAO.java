@@ -276,4 +276,136 @@ public class MySQLPersonDAO implements PersonDAO {
         }
     }
 
+    @Override
+    public List<Person> getPersonsByCriteria(String name, int from, int amount, String languageId) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
+            StringBuilder query = new StringBuilder();
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                query.append("SELECT DISTINCT p.* FROM person AS p ");
+            }
+            else {
+                query.append("SELECT DISTINCT p.id, coalesce(t.name, p.name), p.date_of_birth, " +
+                        "coalesce(t.place_of_birth, p.place_of_birth), p.photo FROM person AS p ");
+            }
+            if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
+                query.append("LEFT JOIN (SELECT * FROM tperson WHERE language_id = '");
+                query.append(languageId);
+                query.append("') AS t USING(id) ");
+            }
+
+            boolean atLeastOneWhereCriteria = false;
+            if (name != null) {
+                if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                    query.append("WHERE p.name LIKE '%");
+                    query.append(name);
+                    query.append("%' ");
+                }
+                else {
+                    query.append("WHERE (p.name LIKE '%");
+                    query.append(name);
+                    query.append("%' OR t.name LIKE '%");
+                    query.append(name);
+                    query.append("%') ");
+                }
+                atLeastOneWhereCriteria = true;
+            }
+            if(amount != 0){
+                query.append("LIMIT ");
+                query.append(from);
+                query.append(", ");
+                query.append(amount);
+                query.append(" ");
+            }
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query.toString());
+
+            List<Person> persons = new ArrayList<>();
+            while (resultSet.next()){
+                Person person = new Person();
+                person.setId(resultSet.getInt(1));
+                person.setName(resultSet.getString(2));
+                person.setDateOfBirth(resultSet.getDate(3));
+                person.setPlaceOfBirth(resultSet.getString(4));
+                person.setPhoto(resultSet.getString(5));
+
+                persons.add(person);
+            }
+
+            return persons;
+        } catch (SQLException e) {
+            throw new DAOException("Cannot get persons by criteria", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
+        }
+    }
+
+    @Override
+    public int getPersonsCountByCriteria(String name, String languageId) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
+            StringBuilder query = new StringBuilder();
+            query.append("SELECT COUNT(*) FROM (SELECT p.* FROM person AS p ");
+            if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
+                query.append("LEFT JOIN (SELECT * FROM tperson WHERE language_id = '");
+                query.append(languageId);
+                query.append("') AS t USING(id) ");
+            }
+
+            boolean atLeastOneWhereCriteria = false;
+            if (name != null) {
+                if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                    query.append("WHERE p.name LIKE '%");
+                    query.append(name);
+                    query.append("%' ");
+                }
+                else {
+                    query.append("WHERE (p.name LIKE '%");
+                    query.append(name);
+                    query.append("%' OR t.name LIKE '%");
+                    query.append(name);
+                    query.append("%') ");
+                }
+                atLeastOneWhereCriteria = true;
+            }
+            query.append(") AS c");
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query.toString());
+
+            int personsCount = 0;
+            if(resultSet.next()){
+                personsCount = resultSet.getInt(1);
+            }
+            return personsCount;
+        } catch (SQLException e) {
+            throw new DAOException("Cannot get persons by criteria", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
+        }
+    }
+
 }
