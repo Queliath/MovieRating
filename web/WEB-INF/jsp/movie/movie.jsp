@@ -110,7 +110,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <c:if test="${sessionScope.userId != null}">
-                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> ${profilePageName}</a></li>
+                        <li><a href="Controller?command=user&id=${sessionScope.userId}"><span class="glyphicon glyphicon-user"></span> ${profilePageName}</a></li>
                         <li><a href="Controller?command=logout"><span class="glyphicon glyphicon-log-out"></span> ${logoutName}</a></li>
                     </c:if>
                     <c:if test="${sessionScope.userId == null}">
@@ -198,11 +198,11 @@
             <h3>${localeComments}</h3>
             <c:forEach items="${requestScope.movie.comments}" var="comment">
                 <div class="well clearfix">
-                    <a href="#">
+                    <a href="Controller?command=user&id=${comment.user.id}">
                         <img src="img/${comment.user.photo}" class="img-circle" alt="${comment.user.firstName} ${comment.user.lastName}">
                     </a>
                     <h3>${comment.title}</h3>
-                    <p><a href="#">${comment.user.firstName} ${comment.user.lastName}</a> ${comment.dateOfPublication}</p>
+                    <p><a href="Controller?command=user&id=${comment.user.id}">${comment.user.firstName} ${comment.user.lastName}</a> ${comment.dateOfPublication}</p>
                     <p>${comment.content}</p>
                 </div>
             </c:forEach>

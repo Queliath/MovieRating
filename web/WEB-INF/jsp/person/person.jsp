@@ -96,7 +96,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <c:if test="${sessionScope.userId != null}">
-                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> ${profilePageName}</a></li>
+                        <li><a href="Controller?command=user&id=${sessionScope.userId}"><span class="glyphicon glyphicon-user"></span> ${profilePageName}</a></li>
                         <li><a href="Controller?command=logout"><span class="glyphicon glyphicon-log-out"></span> ${logoutName}</a></li>
                     </c:if>
                     <c:if test="${sessionScope.userId == null}">
