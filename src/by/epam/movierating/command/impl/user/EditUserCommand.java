@@ -45,6 +45,34 @@ public class EditUserCommand implements Command {
         String languageId = LanguageUtil.getLanguageId(request);
         request.setAttribute("selectedLanguage", languageId);
 
+        String userFormEmail = request.getParameter("userFormEmail");
+        String userFormPassword = request.getParameter("userFormPassword");
+        String userFormFirstName = request.getParameter("userFormFirstName");
+        String userFormLastName = request.getParameter("userFormLastName");
+        String userFormRating = request.getParameter("userFormRating");
+        String userFormStatus = request.getParameter("userFormStatus");
+
+        if(userFormEmail != null && userFormPassword != null && userFormFirstName != null && userFormLastName != null){
+            try {
+                ServiceFactory serviceFactory = ServiceFactory.getInstance();
+                UserService userService = serviceFactory.getUserService();
+                userService.editUserMainInf(id, userFormEmail, userFormPassword, userFormFirstName, userFormLastName, "user" + id + ".jpg");
+                request.setAttribute("saveSuccess", true);
+            } catch (ServiceException e) {
+                request.setAttribute("serviceError", true);
+            }
+        }
+        if(userFormRating != null && userFormStatus != null){
+            try {
+                ServiceFactory serviceFactory = ServiceFactory.getInstance();
+                UserService userService = serviceFactory.getUserService();
+                userService.editUserSecondInf(id, Integer.parseInt(userFormRating), userFormStatus);
+                request.setAttribute("saveSuccess", true);
+            } catch (ServiceException e) {
+                request.setAttribute("serviceError", true);
+            }
+        }
+
         try {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             UserService userService = serviceFactory.getUserService();

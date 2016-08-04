@@ -44,11 +44,35 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            UserDAO userDAO = daoFactory.getUserDAO();
 
+            User user = userDAO.getUserById(id);
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+
+            userDAO.updateUser(user);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot edit user main inf", e);
+        }
     }
 
     @Override
     public void editUserSecondInf(int id, int rating, String status) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            UserDAO userDAO = daoFactory.getUserDAO();
 
+            User user = userDAO.getUserById(id);
+            user.setRating(rating);
+            user.setStatus(status);
+
+            userDAO.updateUser(user);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot edit user main inf", e);
+        }
     }
 }

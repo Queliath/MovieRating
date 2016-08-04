@@ -148,9 +148,9 @@
                     <div class="form-group">
                         <label for="status">${localeStatus}</label>
                         <select name="userFormStatus" class="form-control" id="status">
-                            <option <c:if test='${requestScope.user.status eq "normal"}'>selected</c:if>>${localeStatusNormal}</option>
-                            <option <c:if test='${requestScope.user.status eq "banned"}'>selected</c:if>>${localeStatusBanned}</option>
-                            <option <c:if test='${requestScope.user.status eq "admin"}'>selected</c:if>>${localeStatusAdmin}</option>
+                            <option value="normal" <c:if test='${requestScope.user.status eq "normal"}'>selected</c:if>>${localeStatusNormal}</option>
+                            <option value="banned" <c:if test='${requestScope.user.status eq "banned"}'>selected</c:if>>${localeStatusBanned}</option>
+                            <option value="admin" <c:if test='${requestScope.user.status eq "admin"}'>selected</c:if>>${localeStatusAdmin}</option>
                         </select>
                     </div>
                 </c:if>
