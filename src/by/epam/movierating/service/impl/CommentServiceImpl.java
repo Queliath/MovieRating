@@ -58,4 +58,9 @@ public class CommentServiceImpl implements CommentService {
             throw new ServiceException("Service layer: cannot add a comment", e);
         }
     }
+
+    @Override
+    public void editComment(int id, String title, String content) throws ServiceException {
+
+    }
 }

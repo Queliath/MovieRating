@@ -123,7 +123,7 @@
                 </ul>
             </div>
             <c:if test='${sessionScope.userId == requestScope.user.id || sessionScope.userStatus eq "admin"}'>
-                <a href="Controller?command=edit-user&id=${sessionScope.userId}" class="btn btn-success">${localeEdit}</a>
+                <a href="Controller?command=edit-user&id=${requestScope.user.id}" class="btn btn-success">${localeEdit}</a>
             </c:if>
             <c:if test='${sessionScope.userId == requestScope.user.id}'>
                 <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#user-remove-modal">${localeDelete}</a>

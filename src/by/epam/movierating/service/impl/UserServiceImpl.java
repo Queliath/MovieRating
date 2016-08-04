@@ -41,4 +41,14 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Service layer: cannot get user by id", e);
         }
     }
+
+    @Override
+    public void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo) throws ServiceException {
+
+    }
+
+    @Override
+    public void editUserSecondInf(int id, int rating, String status) throws ServiceException {
+
+    }
 }
