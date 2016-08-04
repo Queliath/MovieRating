@@ -114,22 +114,20 @@
             <div class="clearfix">
                 <img src="img/${requestScope.user.photo}" class="img-circle" alt="${requestScope.user.firstName} ${requestScope.user.lastName}">
                 <ul>
-                    <li>${localeEmail}: ${requestScope.user.email}</li>
+                    <c:if test='${sessionScope.userId == requestScope.user.id || sessionScope.userStatus eq "admin"}'>
+                        <li>${localeEmail}: ${requestScope.user.email}</li>
+                    </c:if>
                     <li>${localeDateOfRegistration}: ${requestScope.user.dateOfRegistry}</li>
                     <li>${localeRating}: ${requestScope.user.rating}</li>
                     <li>${localeStatus}: ${requestScope.user.status}</li>
                 </ul>
             </div>
-            <form action="#" method="post" role="form">
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">${localeEdit}</button>
-                </div>
-            </form>
-            <form action="#" method="post" role="form">
-                <div class="form-group">
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove-modal">${localeDelete}</button>
-                </div>
-            </form>
+            <c:if test='${sessionScope.userId == requestScope.user.id || sessionScope.userStatus eq "admin"}'>
+                <a href="Controller?command=edit-user&id=${sessionScope.userId}" class="btn btn-success">${localeEdit}</a>
+            </c:if>
+            <c:if test='${sessionScope.userId == requestScope.user.id}'>
+                <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#user-remove-modal">${localeDelete}</a>
+            </c:if>
             <c:if test="${requestScope.user.comments != null}">
                 <h3>${localeComments}</h3>
                 <c:forEach items="${requestScope.user.comments}" var="comment">
@@ -140,13 +138,15 @@
                         <h3>${comment.title}</h3>
                         <p>${comment.dateOfPublication} ${localeToMovie} <a href="Controller?command=movie&id=${comment.movie.id}">${comment.movie.name}</a></p>
                         <p>${comment.content}</p>
-                        <a href="#" class="btn btn-success btn-sm">${localeEdit}</a>
-                        <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
+                        <c:if test='${sessionScope.userId == requestScope.user.id}'>
+                            <a href="Controller?command=edit-comment&id=${comment.id}" class="btn btn-success btn-sm">${localeEdit}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#comment-remove-modal">${localeDelete}</a>
+                        </c:if>
                     </div>
                 </c:forEach>
             </c:if>
         </div>
-        <div id="remove-modal" class="modal fade" role="dialog">
+        <div id="user-remove-modal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -157,7 +157,30 @@
                         <p>${localeDeleteBody}</p>
                     </div>
                     <div class="modal-footer">
-                        <a href="#" class="btn btn-danger">${localeDelete}</a>
+                        <form action="Controller?command=delete-user">
+                            <input type="hidden" name="id">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="comment-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-comment">
+                            <input type="hidden" name="id">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
                         <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
                     </div>
                 </div>
