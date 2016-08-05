@@ -35,6 +35,9 @@
 <f:message bundle="${locale}" key="locale.noUser" var="localeNoUser"/>
 <f:message bundle="${locale}" key="locale.dateOfRegistration" var="localeDateOfRegistration"/>
 <f:message bundle="${locale}" key="locale.status" var="localeStatus"/>
+<f:message bundle="${locale}" key="locale.statusNormal" var="localeStatusNormal"/>
+<f:message bundle="${locale}" key="locale.statusBanned" var="localeStatusBanned"/>
+<f:message bundle="${locale}" key="locale.statusAdmin" var="localeStatusAdmin"/>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -119,7 +122,7 @@
                     </c:if>
                     <li>${localeDateOfRegistration}: ${requestScope.user.dateOfRegistry}</li>
                     <li>${localeRating}: ${requestScope.user.rating}</li>
-                    <li>${localeStatus}: ${requestScope.user.status}</li>
+                    <li>${localeStatus}: <c:if test='${requestScope.user.status eq "normal"}'>${localeStatusNormal}</c:if><c:if test='${requestScope.user.status eq "banned"}'>${localeStatusBanned}</c:if><c:if test='${requestScope.user.status eq "admin"}'>${localeStatusAdmin}</c:if></li>
                 </ul>
             </div>
             <c:if test='${sessionScope.userId == requestScope.user.id || sessionScope.userStatus eq "admin"}'>

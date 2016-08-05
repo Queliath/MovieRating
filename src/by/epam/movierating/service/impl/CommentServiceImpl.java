@@ -61,6 +61,29 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void editComment(int id, String title, String content) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            CommentDAO commentDAO = daoFactory.getCommentDAO();
 
+            Comment comment = commentDAO.getCommentById(id);
+            comment.setTitle(title);
+            comment.setContent(content);
+
+            commentDAO.updateComment(comment);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot edit a comment", e);
+        }
+    }
+
+    @Override
+    public Comment getCommentById(int id) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            CommentDAO commentDAO = daoFactory.getCommentDAO();
+            Comment comment = commentDAO.getCommentById(id);
+            return comment;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get comment by id", e);
+        }
     }
 }

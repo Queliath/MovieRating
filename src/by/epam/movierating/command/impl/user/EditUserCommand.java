@@ -5,6 +5,7 @@ import by.epam.movierating.command.util.LanguageUtil;
 import by.epam.movierating.command.util.QueryUtil;
 import by.epam.movierating.domain.User;
 import by.epam.movierating.service.exception.ServiceException;
+import by.epam.movierating.service.exception.ServiceWrongEmailException;
 import by.epam.movierating.service.factory.ServiceFactory;
 import by.epam.movierating.service.interfaces.UserService;
 
@@ -58,6 +59,8 @@ public class EditUserCommand implements Command {
                 UserService userService = serviceFactory.getUserService();
                 userService.editUserMainInf(id, userFormEmail, userFormPassword, userFormFirstName, userFormLastName, "user" + id + ".jpg");
                 request.setAttribute("saveSuccess", true);
+            } catch (ServiceWrongEmailException e) {
+                request.setAttribute("wrongEmail", true);
             } catch (ServiceException e) {
                 request.setAttribute("serviceError", true);
             }

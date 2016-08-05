@@ -9,6 +9,7 @@ import by.epam.movierating.domain.Comment;
 import by.epam.movierating.domain.Movie;
 import by.epam.movierating.domain.User;
 import by.epam.movierating.service.exception.ServiceException;
+import by.epam.movierating.service.exception.ServiceWrongEmailException;
 import by.epam.movierating.service.interfaces.UserService;
 
 import java.util.List;
@@ -43,10 +44,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo) throws ServiceException {
+    public void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo) throws ServiceWrongEmailException, ServiceException {
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             UserDAO userDAO = daoFactory.getUserDAO();
+
+            User userWithThisEmail = userDAO.getUserByEmail(email);
+            if(userWithThisEmail != null && userWithThisEmail.getId() != id){
+                throw new ServiceWrongEmailException("Wrong email");
+            }
 
             User user = userDAO.getUserById(id);
             user.setEmail(email);
