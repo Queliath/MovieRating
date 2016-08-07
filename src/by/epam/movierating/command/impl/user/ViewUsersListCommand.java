@@ -11,6 +11,7 @@ import by.epam.movierating.service.interfaces.UserService;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,13 @@ public class ViewUsersListCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        String userStatus = (session == null) ? null : (String) session.getAttribute("userStatus");
+        if(userStatus == null || !userStatus.equals("admin")){
+            response.sendRedirect("/Controller?command=login&cause=timeout");
+            return;
+        }
+
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
         request.setAttribute("selectedLanguage", languageId);
@@ -75,7 +83,7 @@ public class ViewUsersListCommand implements Command {
                     searchFormLastName, searchFormMinDateOfRegistry, searchFormMaxDateOfRegistry, searchFormMinRating,
                     searchFormMaxRating, searchFormStatuses, from, USERS_PER_PAGE);
             request.setAttribute("users", users);
-            request.setAttribute("usersForm", from + 1);
+            request.setAttribute("usersFrom", from + 1);
             request.setAttribute("usersTo", from + users.size());
 
             List<Integer> pagination = new ArrayList<>();

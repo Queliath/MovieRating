@@ -12,6 +12,7 @@ import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.exception.ServiceWrongEmailException;
 import by.epam.movierating.service.interfaces.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,11 +96,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int getUsersCountByCriteria(String email, String firstName, String lastName, String minDateOfRegistry, String maxDateOfRegistry, Integer minRating, Integer maxRating, List<String> statuses) throws ServiceException {
-        return 0;
+        return 20;
     }
 
     @Override
     public List<User> getUsersByCriteria(String email, String firstName, String lastName, String minDateOfRegistry, String maxDateOfRegistry, Integer minRating, Integer maxRating, List<String> statuses, int from, int amount) throws ServiceException {
-        return null;
+        return new ArrayList<>();
     }
 }
