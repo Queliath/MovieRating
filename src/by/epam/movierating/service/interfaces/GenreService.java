@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface GenreService {
     List<Genre> getTopPositionGenres(int amount, String languageId) throws ServiceException;
+    List<Genre> getGenres(int from, int amount, String languageId) throws ServiceException;
+    int getGenresCount() throws ServiceException;
 }

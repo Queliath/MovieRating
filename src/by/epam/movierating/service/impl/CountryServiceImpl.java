@@ -7,6 +7,7 @@ import by.epam.movierating.domain.Country;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.interfaces.CountryService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,5 +23,15 @@ public class CountryServiceImpl implements CountryService {
         } catch (DAOException e) {
             throw new ServiceException("Service layer: cannot get all countries", e);
         }
+    }
+
+    @Override
+    public List<Country> getCountries(int from, int amount, String languageId) throws ServiceException {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public int getCountriesCount() throws ServiceException {
+        return 15;
     }
 }

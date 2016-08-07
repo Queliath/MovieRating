@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface CountryService {
     List<Country> getTopPositionCountries(int amount, String languageId) throws ServiceException;
+    List<Country> getCountries(int from, int amount, String languageId) throws ServiceException;
+    int getCountriesCount() throws ServiceException;
 }

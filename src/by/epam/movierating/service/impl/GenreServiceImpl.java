@@ -7,6 +7,7 @@ import by.epam.movierating.domain.Genre;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.interfaces.GenreService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,5 +23,15 @@ public class GenreServiceImpl implements GenreService {
         } catch (DAOException e) {
             throw new ServiceException("Service layer: cannot get all genres", e);
         }
+    }
+
+    @Override
+    public List<Genre> getGenres(int from, int amount, String languageId) throws ServiceException {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public int getGenresCount() throws ServiceException {
+        return 15;
     }
 }
