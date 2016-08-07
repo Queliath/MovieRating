@@ -6,15 +6,13 @@ package by.epam.movierating.domain;
 public class Country {
     private int id;
     private String name;
-    private String icon;
     private int position;
 
     public Country() {
     }
 
-    public Country(String name, String icon) {
+    public Country(String name) {
         this.name = name;
-        this.icon = icon;
     }
 
     public String getName() {
@@ -33,14 +31,6 @@ public class Country {
         this.id = id;
     }
 
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
     public int getPosition() {
         return position;
     }
@@ -57,8 +47,8 @@ public class Country {
         Country country = (Country) o;
 
         if (id != country.id) return false;
-        if (name != null ? !name.equals(country.name) : country.name != null) return false;
-        return icon != null ? icon.equals(country.icon) : country.icon == null;
+        if (position != country.position) return false;
+        return name != null ? name.equals(country.name) : country.name == null;
 
     }
 
@@ -66,7 +56,7 @@ public class Country {
     public int hashCode() {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (icon != null ? icon.hashCode() : 0);
+        result = 31 * result + position;
         return result;
     }
 
@@ -75,7 +65,6 @@ public class Country {
         return "Country{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", icon='" + icon + '\'' +
                 '}';
     }
 }

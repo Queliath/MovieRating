@@ -6,15 +6,13 @@ package by.epam.movierating.domain;
 public class Genre {
     private int id;
     private String name;
-    private String description;
     private int position;
 
     public Genre() {
     }
 
-    public Genre(String name, String description) {
+    public Genre(String name) {
         this.name = name;
-        this.description = description;
     }
 
     public int getId() {
@@ -33,14 +31,6 @@ public class Genre {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public int getPosition() {
         return position;
     }
@@ -57,8 +47,8 @@ public class Genre {
         Genre genre = (Genre) o;
 
         if (id != genre.id) return false;
-        if (name != null ? !name.equals(genre.name) : genre.name != null) return false;
-        return description != null ? description.equals(genre.description) : genre.description == null;
+        if (position != genre.position) return false;
+        return name != null ? name.equals(genre.name) : genre.name == null;
 
     }
 
@@ -66,7 +56,7 @@ public class Genre {
     public int hashCode() {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + position;
         return result;
     }
 
@@ -75,7 +65,6 @@ public class Genre {
         return "Genre{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
                 '}';
     }
 }

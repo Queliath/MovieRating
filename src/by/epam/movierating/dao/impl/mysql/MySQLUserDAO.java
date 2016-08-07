@@ -388,6 +388,95 @@ public class MySQLUserDAO implements UserDAO {
 
     @Override
     public int getUsersCountByCriteria(UserCriteria criteria) throws DAOException {
-        return 20;
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
+            StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM (SELECT * FROM user ");
+            boolean atLeastOneWhereCriteria = false;
+            if(criteria.getEmail() != null){
+                query.append("WHERE email LIKE '%");
+                query.append(criteria.getEmail());
+                query.append("%' ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getFirstName() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" first_name LIKE '%");
+                query.append(criteria.getFirstName());
+                query.append("%' ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getLastName() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" last_name LIKE '%");
+                query.append(criteria.getLastName());
+                query.append("%' ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getMinDateOfRegistry() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" date_of_registry > '");
+                query.append(criteria.getMinDateOfRegistry());
+                query.append("' ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getMaxDateOfRegistry() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" date_of_registry < '");
+                query.append(criteria.getMaxDateOfRegistry());
+                query.append("' ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getMinRating() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" rating > ");
+                query.append(criteria.getMinRating());
+                query.append(" ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getMaxRating() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" rating < ");
+                query.append(criteria.getMaxRating());
+                query.append(" ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getStatuses() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" status IN (");
+                for(String status : criteria.getStatuses()){
+                    query.append("'");
+                    query.append(status);
+                    query.append("'");
+                    query.append(',');
+                }
+                query.deleteCharAt(query.length() - 1);
+                query.append(") ");
+            }
+            query.append(") AS c");
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query.toString());
+
+            int usersCount = 0;
+            if(resultSet.next()){
+                usersCount = resultSet.getInt(1);
+            }
+            return usersCount;
+        } catch (SQLException e) {
+            throw new DAOException("DAO layer: cannot get users by criteria", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
+        }
     }
 }
