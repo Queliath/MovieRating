@@ -23,18 +23,18 @@
 <f:message bundle="${locale}" key="locale.genresPageName" var="genresPageName"/>
 <f:message bundle="${locale}" key="locale.countriesPageName" var="countriesPageName"/>
 <f:message bundle="${locale}" key="locale.serviceError" var="localeServiceError"/>
-<f:message bundle="${locale}" key="locale.editing" var="localeEditing"/>
 <f:message bundle="${locale}" key="locale.save" var="localeSave"/>
 <f:message bundle="${locale}" key="locale.saveSuccess" var="localeSaveSuccess"/>
 <f:message bundle="${locale}" key="locale.title" var="localeTitle"/>
 <f:message bundle="${locale}" key="locale.enterTitle" var="localeEnterTitle"/>
 <f:message bundle="${locale}" key="locale.content" var="localeContent"/>
 <f:message bundle="${locale}" key="locale.enterContent" var="localeEnterContent"/>
+<f:message bundle="${locale}" key="locale.commentForm" var="localeCommentForm"/>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>${localeEditing}</title>
+    <title>${localeCommentForm}</title>
     <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>-->
     <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
