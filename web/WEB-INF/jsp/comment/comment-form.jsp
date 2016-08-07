@@ -67,8 +67,8 @@
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">${localeOther} <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">${genresPageName}</a></li>
-                                    <li><a href="#">${countriesPageName}</a></li>
+                                    <li><a href="Controller?command=genres">${genresPageName}</a></li>
+                                    <li><a href="Controller?command=countries">${countriesPageName}</a></li>
                                 </ul>
                             </li>
                         </c:if>
