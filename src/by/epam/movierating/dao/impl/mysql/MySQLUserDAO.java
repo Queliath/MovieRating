@@ -5,6 +5,7 @@ import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.pool.mysql.MySQLConnectionPool;
 import by.epam.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 import by.epam.movierating.domain.User;
+import by.epam.movierating.domain.criteria.UserCriteria;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -272,5 +273,15 @@ public class MySQLUserDAO implements UserDAO {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
         }
+    }
+
+    @Override
+    public List<User> getUsersByCriteria(UserCriteria criteria, int from, int amount) throws DAOException {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public int getUsersCountByCriteria(UserCriteria criteria) throws DAOException {
+        return 20;
     }
 }

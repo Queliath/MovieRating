@@ -2,6 +2,7 @@ package by.epam.movierating.dao.interfaces;
 
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.domain.User;
+import by.epam.movierating.domain.criteria.UserCriteria;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface UserDAO {
     User getUserById(int id) throws DAOException;
     User getUserByEmail(String email) throws DAOException;
     List<User> getUsersByStatus(String status) throws DAOException;
+    List<User> getUsersByCriteria(UserCriteria criteria, int from, int amount) throws DAOException;
+    int getUsersCountByCriteria(UserCriteria criteria) throws DAOException;
 }

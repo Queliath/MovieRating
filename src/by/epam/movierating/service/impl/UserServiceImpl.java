@@ -8,6 +8,7 @@ import by.epam.movierating.dao.interfaces.UserDAO;
 import by.epam.movierating.domain.Comment;
 import by.epam.movierating.domain.Movie;
 import by.epam.movierating.domain.User;
+import by.epam.movierating.domain.criteria.UserCriteria;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.exception.ServiceWrongEmailException;
 import by.epam.movierating.service.interfaces.UserService;
@@ -96,11 +97,47 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int getUsersCountByCriteria(String email, String firstName, String lastName, String minDateOfRegistry, String maxDateOfRegistry, Integer minRating, Integer maxRating, List<String> statuses) throws ServiceException {
-        return 20;
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            UserDAO userDAO = daoFactory.getUserDAO();
+
+            UserCriteria criteria = new UserCriteria();
+            criteria.setEmail(email);
+            criteria.setFirstName(firstName);
+            criteria.setLastName(lastName);
+            criteria.setMinDateOfRegistry(minDateOfRegistry);
+            criteria.setMaxDateOfRegistry(maxDateOfRegistry);
+            criteria.setMinRating(minRating);
+            criteria.setMaxRating(maxRating);
+            criteria.setStatuses(statuses);
+
+            int usersCount = userDAO.getUsersCountByCriteria(criteria);
+            return usersCount;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get users count by criteria", e);
+        }
     }
 
     @Override
     public List<User> getUsersByCriteria(String email, String firstName, String lastName, String minDateOfRegistry, String maxDateOfRegistry, Integer minRating, Integer maxRating, List<String> statuses, int from, int amount) throws ServiceException {
-        return new ArrayList<>();
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            UserDAO userDAO = daoFactory.getUserDAO();
+
+            UserCriteria criteria = new UserCriteria();
+            criteria.setEmail(email);
+            criteria.setFirstName(firstName);
+            criteria.setLastName(lastName);
+            criteria.setMinDateOfRegistry(minDateOfRegistry);
+            criteria.setMaxDateOfRegistry(maxDateOfRegistry);
+            criteria.setMinRating(minRating);
+            criteria.setMaxRating(maxRating);
+            criteria.setStatuses(statuses);
+
+            List<User> users = userDAO.getUsersByCriteria(criteria, from, amount);
+            return users;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get users by criteria", e);
+        }
     }
 }

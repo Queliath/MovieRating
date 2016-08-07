@@ -112,4 +112,17 @@ public class MovieCriteria {
         result = 31 * result + maxRating;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "MovieCriteria{" +
+                "name='" + name + '\'' +
+                ", minYear=" + minYear +
+                ", maxYear=" + maxYear +
+                ", genreIds=" + genreIds +
+                ", countryIds=" + countryIds +
+                ", minRating=" + minRating +
+                ", maxRating=" + maxRating +
+                '}';
+    }
 }
