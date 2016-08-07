@@ -26,6 +26,11 @@
 <f:message bundle="${locale}" key="locale.displaying" var="localeDisplaying"/>
 <f:message bundle="${locale}" key="locale.of" var="localeOf"/>
 <f:message bundle="${locale}" key="locale.addNewGenre" var="localeAddNewGenre"/>
+<f:message bundle="${locale}" key="locale.edit" var="localeEdit"/>
+<f:message bundle="${locale}" key="locale.delete" var="localeDelete"/>
+<f:message bundle="${locale}" key="locale.deleteTitle" var="localeDeleteTitle"/>
+<f:message bundle="${locale}" key="locale.deleteBody" var="localeDeleteBody"/>
+<f:message bundle="${locale}" key="locale.cancel" var="localeCancel"/>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -106,6 +111,8 @@
         <c:forEach items="${requestScope.genres}" var="genre">
             <div class="well clearfix">
                 <h3>${genre.name}</h3>
+                <a href="#" class="btn btn-success btn-sm">${localeEdit}</a>
+                <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#genre-remove-modal" data-id="${genre.id}">${localeDelete}</a>
             </div>
         </c:forEach>
     </c:if>
@@ -116,10 +123,31 @@
             </c:forEach>
         </ul>
     </c:if>
+    <div id="genre-remove-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">${localeDeleteTitle}</h4>
+                </div>
+                <div class="modal-body">
+                    <p>${localeDeleteBody}</p>
+                </div>
+                <div class="modal-footer">
+                    <form action="#" method="post">
+                        <input type="hidden" name="id">
+                        <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                    </form>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 <footer class="container-fluid">
     <p class="text-center">EPAM Training Center, Java 5 2016, Kostevich Vladislav</p>
 </footer>
 <script src="js/pagination.js"></script>
+<script src="js/remove.js"></script>
 </body>
 </html>
