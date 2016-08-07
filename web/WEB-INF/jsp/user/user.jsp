@@ -71,7 +71,7 @@
                     <li><a href="Controller?command=persons">${personsPageName}</a></li>
                     <c:if test="${sessionScope.userId != null}">
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <li><a href="#">${usersPageName}</a></li>
+                            <li><a href="Controller?command=users">${usersPageName}</a></li>
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">${localeOther} <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
