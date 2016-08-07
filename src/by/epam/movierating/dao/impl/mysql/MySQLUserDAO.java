@@ -277,7 +277,113 @@ public class MySQLUserDAO implements UserDAO {
 
     @Override
     public List<User> getUsersByCriteria(UserCriteria criteria, int from, int amount) throws DAOException {
-        return new ArrayList<>();
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
+            StringBuilder query = new StringBuilder("SELECT * FROM user ");
+            boolean atLeastOneWhereCriteria = false;
+            if(criteria.getEmail() != null){
+                query.append("WHERE email LIKE '%");
+                query.append(criteria.getEmail());
+                query.append("%' ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getFirstName() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" first_name LIKE '%");
+                query.append(criteria.getFirstName());
+                query.append("%' ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getLastName() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" last_name LIKE '%");
+                query.append(criteria.getLastName());
+                query.append("%' ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getMinDateOfRegistry() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" date_of_registry > '");
+                query.append(criteria.getMinDateOfRegistry());
+                query.append("' ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getMaxDateOfRegistry() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" date_of_registry < '");
+                query.append(criteria.getMaxDateOfRegistry());
+                query.append("' ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getMinRating() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" rating > ");
+                query.append(criteria.getMinRating());
+                query.append(" ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getMaxRating() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" rating < ");
+                query.append(criteria.getMaxRating());
+                query.append(" ");
+                atLeastOneWhereCriteria = true;
+            }
+            if(criteria.getStatuses() != null){
+                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
+                query.append(" status IN (");
+                for(String status : criteria.getStatuses()){
+                    query.append("'");
+                    query.append(status);
+                    query.append("'");
+                    query.append(',');
+                }
+                query.deleteCharAt(query.length() - 1);
+                query.append(") ");
+            }
+            if(amount != 0){
+                query.append("LIMIT ");
+                query.append(from);
+                query.append(", ");
+                query.append(amount);
+                query.append(" ");
+            }
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query.toString());
+
+            List<User> users = new ArrayList<>();
+            while(resultSet.next()){
+                User user = new User();
+                user.setId(resultSet.getInt(1));
+                user.setEmail(resultSet.getString(2));
+                user.setPassword(resultSet.getString(3));
+                user.setFirstName(resultSet.getString(4));
+                user.setLastName(resultSet.getString(5));
+                user.setDateOfRegistry(resultSet.getDate(6));
+                user.setPhoto(resultSet.getString(7));
+                user.setRating(resultSet.getInt(8));
+                user.setStatus(resultSet.getString(9));
+
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException e) {
+            throw new DAOException("DAO layer: cannot get users by criteria", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
+        }
     }
 
     @Override
