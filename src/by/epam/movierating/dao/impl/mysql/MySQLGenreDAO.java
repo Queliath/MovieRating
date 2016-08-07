@@ -302,4 +302,79 @@ public class MySQLGenreDAO implements GenreDAO {
             }
         }
     }
+
+    @Override
+    public List<Genre> getGenres(int from, int amount, String languageId) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
+            ResultSet resultSet = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                Statement statement = connection.createStatement();
+                resultSet = statement.executeQuery("SELECT * FROM genre LIMIT " + from + ", " + amount);
+            }
+            else {
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT g.id, " +
+                        "coalesce(t.name, g.name), g.position FROM genre AS g " +
+                        "LEFT JOIN (SELECT * FROM tgenre WHERE language_id = ?) AS t USING(id) LIMIT " + from + ", " + amount);
+                preparedStatement.setString(1, languageId);
+                resultSet = preparedStatement.executeQuery();
+            }
+
+            List<Genre> allGenres = new ArrayList<>();
+            while (resultSet.next()){
+                Genre genre = new Genre();
+                genre.setId(resultSet.getInt(1));
+                genre.setName(resultSet.getString(2));
+                genre.setPosition(resultSet.getInt(3));
+
+                allGenres.add(genre);
+            }
+            return allGenres;
+        } catch (SQLException e) {
+            throw new DAOException("Error in DAO layer when getting genre", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
+        }
+    }
+
+    @Override
+    public int getGenresCount() throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM genre");
+
+            int genresCount = 0;
+            if(resultSet.next()){
+                genresCount = resultSet.getInt(1);
+            }
+            return genresCount;
+        } catch (SQLException e) {
+            throw new DAOException("DAO layer: cannot get countries count", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
+        }
+    }
 }

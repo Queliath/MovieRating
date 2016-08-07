@@ -27,11 +27,25 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public List<Country> getCountries(int from, int amount, String languageId) throws ServiceException {
-        return new ArrayList<>();
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            CountryDAO countryDAO = daoFactory.getCountryDAO();
+            List<Country> countries = countryDAO.getCountries(from, amount, languageId);
+            return countries;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get countries", e);
+        }
     }
 
     @Override
     public int getCountriesCount() throws ServiceException {
-        return 15;
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            CountryDAO countryDAO = daoFactory.getCountryDAO();
+            int countriesCount = countryDAO.getCountriesCount();
+            return countriesCount;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get countries count", e);
+        }
     }
 }

@@ -16,4 +16,6 @@ public interface CountryDAO {
     Country getCountryById(int id, String languageId) throws DAOException;
     List<Country> getCountriesByMovie(int movieId, String languageId) throws DAOException;
     List<Country> getTopPositionCountries(int amount, String languageId) throws DAOException;
+    List<Country> getCountries(int from, int amount, String languageId) throws DAOException;
+    int getCountriesCount() throws DAOException;
 }

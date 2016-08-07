@@ -306,4 +306,80 @@ public class MySQLCountryDAO implements CountryDAO {
             }
         }
     }
+
+    @Override
+    public List<Country> getCountries(int from, int amount, String languageId) throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
+            ResultSet resultSet = null;
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                Statement statement = connection.createStatement();
+                resultSet = statement.executeQuery("SELECT * FROM country LIMIT " + from + ", " + amount);
+            }
+            else {
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id, " +
+                        "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
+                        "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) LIMIT " + from + ", " + amount);
+                preparedStatement.setString(1, languageId);
+                resultSet = preparedStatement.executeQuery();
+            }
+
+            List<Country> allCountries = new ArrayList<>();
+            while (resultSet.next()){
+                Country country = new Country();
+                country.setId(resultSet.getInt(1));
+                country.setName(resultSet.getString(2));
+                country.setPosition(resultSet.getInt(3));
+
+                allCountries.add(country);
+            }
+
+            return allCountries;
+        } catch (SQLException e) {
+            throw new DAOException("Error in DAO layer when getting country", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
+        }
+    }
+
+    @Override
+    public int getCountriesCount() throws DAOException {
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        Connection connection = null;
+        try {
+            connection = mySQLConnectionPool.getConnection();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
+        }
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM country");
+
+            int countriesCount = 0;
+            if(resultSet.next()){
+                countriesCount = resultSet.getInt(1);
+            }
+            return countriesCount;
+        } catch (SQLException e) {
+            throw new DAOException("DAO layer: cannot get countries count", e);
+        } finally {
+            try {
+                mySQLConnectionPool.freeConnection(connection);
+            } catch (SQLException | MySQLConnectionPoolException e) {
+                throw new DAOException("Cannot free a connection from Connection Pool", e);
+            }
+        }
+    }
 }

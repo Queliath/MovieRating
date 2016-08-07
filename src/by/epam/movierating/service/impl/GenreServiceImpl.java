@@ -27,11 +27,25 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public List<Genre> getGenres(int from, int amount, String languageId) throws ServiceException {
-        return new ArrayList<>();
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            GenreDAO genreDAO = daoFactory.getGenreDAO();
+            List<Genre> genres = genreDAO.getGenres(from, amount, languageId);
+            return genres;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get genres", e);
+        }
     }
 
     @Override
     public int getGenresCount() throws ServiceException {
-        return 15;
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            GenreDAO genreDAO = daoFactory.getGenreDAO();
+            int genresCount = genreDAO.getGenresCount();
+            return genresCount;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get genres count", e);
+        }
     }
 }

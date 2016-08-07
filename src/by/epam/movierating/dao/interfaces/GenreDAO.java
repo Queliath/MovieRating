@@ -16,4 +16,6 @@ public interface GenreDAO {
     Genre getGenreById(int id, String languageId) throws DAOException;
     List<Genre> getGenresByMovie(int movieId, String languageId) throws DAOException;
     List<Genre> getTopPositionGenres(int amount, String languageId) throws DAOException;
+    List<Genre> getGenres(int from, int amount, String languageId) throws DAOException;
+    int getGenresCount() throws DAOException;
 }
