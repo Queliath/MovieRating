@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  * Created by Владислав on 03.08.2016.
  */
-public class UserCommand implements Command {
+public class ViewUserCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idStr = request.getParameter("id");

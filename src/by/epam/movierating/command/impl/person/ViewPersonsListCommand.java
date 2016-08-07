@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by Владислав on 25.07.2016.
  */
-public class PersonsCommand implements Command {
+public class ViewPersonsListCommand implements Command {
     private static final int PERSONS_PER_PAGE = 10;
 
     @Override

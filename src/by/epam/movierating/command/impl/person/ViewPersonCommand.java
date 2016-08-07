@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 /**
  * Created by Владислав on 25.07.2016.
  */
-public class PersonCommand implements Command {
+public class ViewPersonCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idStr = request.getParameter("id");

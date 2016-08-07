@@ -22,7 +22,7 @@ import java.util.*;
 /**
  * Created by Владислав on 19.07.2016.
  */
-public class MoviesCommand implements Command {
+public class ViewMoviesListCommand implements Command {
     private static final int AMOUNT_OF_TOP_POSITION_COUNTRIES = 5;
     private static final int AMOUNT_OF_TOP_POSITION_GENRES = 5;
 
