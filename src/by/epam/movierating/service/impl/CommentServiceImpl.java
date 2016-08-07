@@ -86,4 +86,15 @@ public class CommentServiceImpl implements CommentService {
             throw new ServiceException("Service layer: cannot get comment by id", e);
         }
     }
+
+    @Override
+    public void deleteComment(int id) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            CommentDAO commentDAO = daoFactory.getCommentDAO();
+            commentDAO.deleteComment(id);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot delete comment", e);
+        }
+    }
 }

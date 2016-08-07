@@ -13,4 +13,5 @@ public interface CommentService {
     void addComment(String title, String content, int movieId, int userId, String languageId) throws ServiceException;
     void editComment(int id, String title, String content) throws ServiceException;
     Comment getCommentById(int id) throws ServiceException;
+    void deleteComment(int id) throws ServiceException;
 }

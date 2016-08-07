@@ -11,4 +11,5 @@ public interface UserService {
     User getUserById(int id, String languageId) throws ServiceException;
     void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo) throws ServiceException;
     void editUserSecondInf(int id, int rating, String status) throws ServiceWrongEmailException, ServiceException;
+    void deleteUser(int id) throws ServiceException;
 }

@@ -81,4 +81,15 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Service layer: cannot edit user main inf", e);
         }
     }
+
+    @Override
+    public void deleteUser(int id) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            UserDAO userDAO = daoFactory.getUserDAO();
+            userDAO.deleteUser(id);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot delete user", e);
+        }
+    }
 }

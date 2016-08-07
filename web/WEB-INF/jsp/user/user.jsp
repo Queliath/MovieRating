@@ -129,7 +129,7 @@
                 <a href="Controller?command=edit-user&id=${requestScope.user.id}" class="btn btn-success">${localeEdit}</a>
             </c:if>
             <c:if test='${sessionScope.userId == requestScope.user.id}'>
-                <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#user-remove-modal">${localeDelete}</a>
+                <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#user-remove-modal" data-id="${requestScope.user.id}">${localeDelete}</a>
             </c:if>
             <c:if test="${requestScope.user.comments != null}">
                 <h3>${localeComments}</h3>
@@ -143,7 +143,7 @@
                         <p>${comment.content}</p>
                         <c:if test='${sessionScope.userId == requestScope.user.id}'>
                             <a href="Controller?command=edit-comment&id=${comment.id}" class="btn btn-success btn-sm">${localeEdit}</a>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#comment-remove-modal">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#comment-remove-modal" data-id="${comment.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -160,7 +160,7 @@
                         <p>${localeDeleteBody}</p>
                     </div>
                     <div class="modal-footer">
-                        <form action="Controller?command=delete-user">
+                        <form action="Controller?command=delete-user" method="post">
                             <input type="hidden" name="id">
                             <button type="submit" class="btn btn-danger">${localeDelete}</button>
                         </form>
@@ -180,7 +180,7 @@
                         <p>${localeDeleteBody}</p>
                     </div>
                     <div class="modal-footer">
-                        <form action="Controller?command=delete-comment">
+                        <form action="Controller?command=delete-comment" method="post">
                             <input type="hidden" name="id">
                             <button type="submit" class="btn btn-danger">${localeDelete}</button>
                         </form>
@@ -194,5 +194,6 @@
 <footer class="container-fluid">
     <p class="text-center">EPAM Training Center, Java 5 2016, Kostevich Vladislav</p>
 </footer>
+<script src="js/remove.js"></script>
 </body>
 </html>
