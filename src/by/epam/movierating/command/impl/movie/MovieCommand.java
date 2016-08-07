@@ -51,26 +51,6 @@ public class MovieCommand implements Command {
         String languageId = LanguageUtil.getLanguageId(request);
         request.setAttribute("selectedLanguage", languageId);
 
-        String commentFormTitle = request.getParameter("commentFormTitle");
-        String commentFormContent = request.getParameter("commentFormContent");
-        if(commentFormTitle != null && commentFormContent != null){
-            if(userId == null){
-                response.sendRedirect("Controller?command=login&cause=timeout");
-                return;
-            }
-            else {
-                try {
-                    ServiceFactory serviceFactory = ServiceFactory.getInstance();
-                    CommentService commentService = serviceFactory.getCommentService();
-                    commentService.addComment(commentFormTitle, commentFormContent, id, userId, languageId);
-                } catch (ServiceException e) {
-                    request.setAttribute("commentFormTitle", commentFormTitle);
-                    request.setAttribute("commentFormContent", commentFormContent);
-                    request.setAttribute("serviceError", true);
-                }
-            }
-        }
-
         try {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             MovieService movieService = serviceFactory.getMovieService();

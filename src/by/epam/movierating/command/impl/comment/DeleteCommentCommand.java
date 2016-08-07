@@ -34,7 +34,7 @@ public class DeleteCommentCommand implements Command {
 
             HttpSession session = request.getSession(false);
             if(session == null){
-                response.sendRedirect("/Controller?command=welcome");
+                response.sendRedirect("/Controller?command=login&cause=timeout");
             }
             else {
                 Integer userId = (Integer) session.getAttribute("userId");

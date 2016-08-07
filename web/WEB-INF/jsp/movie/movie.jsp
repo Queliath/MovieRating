@@ -180,14 +180,15 @@
         </div>
         <c:if test="${sessionScope.userId != null}">
             <h3>${localeWriteComment}</h3>
-            <form action="Controller?command=movie&id=${requestScope.movie.id}" method="post" role="form">
+            <form action="Controller?command=add-comment" method="post" role="form">
+                <input type="hidden" name="commentFormMovieId" value="${requestScope.movie.id}">
                 <div class="form-group">
                     <label for="title">${localeTitle}</label>
-                    <input name="commentFormTitle" value="${requestScope.commentFormTitle}" type="text" class="form-control" id="title" placeholder="${localeEnterTitle}">
+                    <input name="commentFormTitle" type="text" class="form-control" id="title" placeholder="${localeEnterTitle}">
                 </div>
                 <div class="form-group">
                     <label for="content">${localeContent}</label>
-                    <textarea name="commentFormContent" vocab="${requestScope.commentFormContent}" id="content" class="form-control" rows="5" placeholder="${localeEnterContent}"></textarea>
+                    <textarea name="commentFormContent" id="content" class="form-control" rows="5" placeholder="${localeEnterContent}"></textarea>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-default">${localeCommentButton}</button>
