@@ -92,4 +92,14 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Service layer: cannot delete user", e);
         }
     }
+
+    @Override
+    public int getUsersCountByCriteria(String email, String firstName, String lastName, String minDateOfRegistry, String maxDateOfRegistry, Integer minRating, Integer maxRating, List<String> statuses) throws ServiceException {
+        return 0;
+    }
+
+    @Override
+    public List<User> getUsersByCriteria(String email, String firstName, String lastName, String minDateOfRegistry, String maxDateOfRegistry, Integer minRating, Integer maxRating, List<String> statuses, int from, int amount) throws ServiceException {
+        return null;
+    }
 }
