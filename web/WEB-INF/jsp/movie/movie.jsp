@@ -162,7 +162,7 @@
             </div>
             <p>${requestScope.movie.annotation}</p>
             <c:if test="${sessionScope.userId != null}">
-                <div id="star-rating" data-url="${requestScope.currentUrl}" <c:if test="${requestScope.ratingValue != null}">data-value="${requestScope.ratingValue}"</c:if>></div>
+                <div id="star-rating" data-movie-id="${requestScope.movie.id}" data-url="Controller?command=add-rating" <c:if test="${requestScope.ratingValue != null}">data-value="${requestScope.ratingValue}"</c:if>></div>
             </c:if>
             <p>${localeRating}: ${requestScope.movie.averageRating}</p>
             <c:if test='${sessionScope.userStatus eq "admin"}'>

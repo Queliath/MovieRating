@@ -6,6 +6,7 @@ var starRating = {
     wrapper: document.getElementById("star-rating"),
     ratingValue: document.getElementById("star-rating").getAttribute("data-value"),
     currentUrl: document.getElementById("star-rating").getAttribute("data-url"),
+    movieId: document.getElementById("star-rating").getAttribute("data-movie-id"),
 
     stars: [],
 
@@ -39,7 +40,7 @@ var starRating = {
                 this.stars[i].onclick = function () {
                     var value = this.getAttribute("data-value");
                     var request = new XMLHttpRequest();
-                    request.open("GET", self.currentUrl + "&ratingValue=" + value);
+                    request.open("GET", self.currentUrl + "&ratingValue=" + value + "&movieId=" + self.movieId);
 
                     request.onreadystatechange = function () {
                         if(request.readyState == 4){

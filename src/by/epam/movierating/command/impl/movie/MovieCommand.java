@@ -23,27 +23,8 @@ public class MovieCommand implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idStr = request.getParameter("id");
         int id = (idStr == null) ? -1 : Integer.parseInt(idStr);
-
         if(id == -1){
             response.sendRedirect("/Controller?command=movies");
-            return;
-        }
-
-        HttpSession session = request.getSession(false);
-        Integer userId = (session == null) ? null : (Integer) session.getAttribute("userId");
-
-        String ratingValueStr = request.getParameter("ratingValue");
-        if(ratingValueStr != null){
-            if(userId == null){
-                response.sendRedirect("Controller?command=login&cause=timeout");
-            }
-            else {
-                try {
-                    ServiceFactory serviceFactory = ServiceFactory.getInstance();
-                    RatingService ratingService = serviceFactory.getRatingService();
-                    ratingService.addRating(Integer.parseInt(ratingValueStr), id, userId);
-                } catch (ServiceException ignored) {}
-            }
             return;
         }
 
@@ -59,8 +40,9 @@ public class MovieCommand implements Command {
                 request.setAttribute("movie", movie);
             }
 
+            HttpSession session = request.getSession(false);
+            Integer userId = (session == null) ? null : (Integer) session.getAttribute("userId");
             if(userId != null){
-                request.setAttribute("currentUrl", request.getRequestURI() + '?' + request.getQueryString());
                 RatingService ratingService = serviceFactory.getRatingService();
                 int ratingValue = ratingService.getRatingValueByMovieAndUser(id, userId);
                 if(ratingValue != -1){
