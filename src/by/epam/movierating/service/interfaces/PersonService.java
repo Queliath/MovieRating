@@ -15,4 +15,5 @@ public interface PersonService {
     void addPerson(String name, String dateOfBirth, String placeOfBirth, String photo) throws ServiceException;
     void editPerson(int id, String name, String dateOfBirth, String placeOfBirth, String photo,
                     String languageId) throws ServiceException;
+    void deletePerson(int id) throws ServiceException;
 }

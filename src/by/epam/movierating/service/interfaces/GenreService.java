@@ -15,4 +15,5 @@ public interface GenreService {
     Genre getGenreById(int id, String languageId) throws ServiceException;
     void addGenre(String name, int position) throws ServiceException;
     void editGenre(int id, String name, int position, String languageId) throws ServiceException;
+    void deleteGenre(int id) throws ServiceException;
 }

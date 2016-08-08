@@ -15,4 +15,5 @@ public interface CountryService {
     Country getCountryById(int id, String languageId) throws ServiceException;
     void addCountry(String name, int position) throws ServiceException;
     void editCountry(int id, String name, int position, String languageId) throws ServiceException;
+    void deleteCountry(int id) throws ServiceException;
 }

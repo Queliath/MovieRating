@@ -219,4 +219,9 @@ public class PersonServiceImpl implements PersonService {
             throw new ServiceException("Service layer: cannot edit a person", e);
         }
     }
+
+    @Override
+    public void deletePerson(int id) throws ServiceException {
+
+    }
 }

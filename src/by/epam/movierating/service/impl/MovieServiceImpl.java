@@ -216,4 +216,9 @@ public class MovieServiceImpl implements MovieService {
             throw new ServiceException("Service layer: cannot edit a movie", e);
         }
     }
+
+    @Override
+    public void deleteMovie(int id) throws ServiceException {
+
+    }
 }

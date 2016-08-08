@@ -93,4 +93,9 @@ public class CountryServiceImpl implements CountryService {
             throw new ServiceException("Service layer: cannot edit country", e);
         }
     }
+
+    @Override
+    public void deleteCountry(int id) throws ServiceException {
+
+    }
 }

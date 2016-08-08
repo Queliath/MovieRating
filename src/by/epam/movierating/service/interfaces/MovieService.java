@@ -20,4 +20,5 @@ public interface MovieService {
                   String annotation, String image) throws ServiceException;
     void editMovie(int id, String name, int year, String tagline, int budget, String premiere, int lasting,
                    String annotation, String image, String languageId) throws ServiceException;
+    void deleteMovie(int id) throws ServiceException;
 }

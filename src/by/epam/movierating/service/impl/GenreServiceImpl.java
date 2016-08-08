@@ -93,4 +93,9 @@ public class GenreServiceImpl implements GenreService {
             throw new ServiceException("Service layer: cannot get genre by id", e);
         }
     }
+
+    @Override
+    public void deleteGenre(int id) throws ServiceException {
+
+    }
 }
