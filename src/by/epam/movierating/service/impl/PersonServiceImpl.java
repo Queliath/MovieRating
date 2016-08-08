@@ -222,6 +222,12 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void deletePerson(int id) throws ServiceException {
-
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            PersonDAO personDAO = daoFactory.getPersonDAO();
+            personDAO.deletePerson(id);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot delete person", e);
+        }
     }
 }

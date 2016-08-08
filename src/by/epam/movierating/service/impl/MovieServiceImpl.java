@@ -219,6 +219,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void deleteMovie(int id) throws ServiceException {
-
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            MovieDAO movieDAO = daoFactory.getMovieDAO();
+            movieDAO.deleteMovie(id);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot delete movie", e);
+        }
     }
 }

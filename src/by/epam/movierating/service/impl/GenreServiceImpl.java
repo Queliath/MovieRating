@@ -96,6 +96,12 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public void deleteGenre(int id) throws ServiceException {
-
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            GenreDAO genreDAO = daoFactory.getGenreDAO();
+            genreDAO.deleteGenre(id);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot delete genre", e);
+        }
     }
 }

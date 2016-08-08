@@ -96,6 +96,12 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public void deleteCountry(int id) throws ServiceException {
-
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            CountryDAO countryDAO = daoFactory.getCountryDAO();
+            countryDAO.deleteCountry(id);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot delete country", e);
+        }
     }
 }
