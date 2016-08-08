@@ -177,4 +177,14 @@ public class PersonServiceImpl implements PersonService {
             throw new ServiceException("Service layer: cannot get persons count by a criteria", e);
         }
     }
+
+    @Override
+    public void addPerson(String name, String dateOfBirth, String placeOfBirth, String photo) throws ServiceException {
+
+    }
+
+    @Override
+    public void editPerson(int id, String name, String dateOfBirth, String placeOfBirth, String photo, String languageId) throws ServiceException {
+
+    }
 }
