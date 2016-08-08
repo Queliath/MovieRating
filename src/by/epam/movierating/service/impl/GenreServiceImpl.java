@@ -51,16 +51,46 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre getGenreById(int id, String languageId) throws ServiceException {
-        return null;
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            GenreDAO genreDAO = daoFactory.getGenreDAO();
+            Genre genre = genreDAO.getGenreById(id, languageId);
+            return genre;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get genre by id", e);
+        }
     }
 
     @Override
     public void addGenre(String name, int position) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            GenreDAO genreDAO = daoFactory.getGenreDAO();
 
+            Genre genre = new Genre();
+            genre.setName(name);
+            genre.setPosition(position);
+
+            genreDAO.addGenre(genre);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get genre by id", e);
+        }
     }
 
     @Override
     public void editGenre(int id, String name, int position, String languageId) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            GenreDAO genreDAO = daoFactory.getGenreDAO();
 
+            Genre genre = new Genre();
+            genre.setId(id);
+            genre.setName(name);
+            genre.setPosition(position);
+
+            genreDAO.updateGenre(genre, languageId);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get genre by id", e);
+        }
     }
 }

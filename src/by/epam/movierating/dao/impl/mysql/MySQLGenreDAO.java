@@ -17,7 +17,7 @@ public class MySQLGenreDAO implements GenreDAO {
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
     @Override
-    public void addGenre(Genre genre, String languageId) throws DAOException {
+    public void addGenre(Genre genre) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
@@ -27,20 +27,10 @@ public class MySQLGenreDAO implements GenreDAO {
         }
 
         try {
-            PreparedStatement statement = null;
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("INSERT INTO genre " +
-                        "(name, position) VALUES (?, ?, ?)");
-                statement.setString(1, genre.getName());
-                statement.setInt(2, genre.getPosition());
-            }
-            else {
-                statement = connection.prepareStatement("INSERT INTO tgenre " +
-                        "(language_id, id, name) VALUES (?, ?, ?, ?)");
-                statement.setString(1, languageId);
-                statement.setInt(2, genre.getId());
-                statement.setString(3, genre.getName());
-            }
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO genre " +
+                    "(name, position) VALUES (?, ?)");
+            statement.setString(1, genre.getName());
+            statement.setInt(2, genre.getPosition());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -74,11 +64,25 @@ public class MySQLGenreDAO implements GenreDAO {
                 statement.setInt(3, genre.getId());
             }
             else {
-                statement = connection.prepareStatement("UPDATE tgenre " +
-                        "SET name = ? WHERE language_id = ? AND id = ?");
-                statement.setString(1, genre.getName());
-                statement.setString(2, languageId);
-                statement.setInt(3, genre.getId());
+                PreparedStatement checkStatement = connection.prepareStatement("SELECT id FROM tgenre " +
+                        "WHERE language_id = ? AND id = ?");
+                checkStatement.setString(1, languageId);
+                checkStatement.setInt(2, genre.getId());
+                ResultSet resultSet = checkStatement.executeQuery();
+                if(resultSet.next()){
+                    statement = connection.prepareStatement("UPDATE tgenre " +
+                            "SET name = ? WHERE language_id = ? AND id = ?");
+                    statement.setString(1, genre.getName());
+                    statement.setString(2, languageId);
+                    statement.setInt(3, genre.getId());
+                }
+                else {
+                    statement = connection.prepareStatement("INSERT INTO tgenre " +
+                            "(language_id, id, name) VALUES (?, ?, ?)");
+                    statement.setString(1, languageId);
+                    statement.setInt(2, genre.getId());
+                    statement.setString(3, genre.getName());
+                }
             }
 
             statement.executeUpdate();

@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Владислав on 11.06.2016.
  */
 public interface GenreDAO {
-    void addGenre(Genre genre, String languageId) throws DAOException;
+    void addGenre(Genre genre) throws DAOException;
     void updateGenre(Genre genre, String languageId) throws DAOException;
     void deleteGenre(int id) throws DAOException;
     List<Genre> getAllGenres(String languageId) throws DAOException;

@@ -51,16 +51,46 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country getCountryById(int id, String languageId) throws ServiceException {
-        return null;
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            CountryDAO countryDAO = daoFactory.getCountryDAO();
+            Country country = countryDAO.getCountryById(id, languageId);
+            return country;
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot get country by id", e);
+        }
     }
 
     @Override
     public void addCountry(String name, int position) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            CountryDAO countryDAO = daoFactory.getCountryDAO();
 
+            Country country = new Country();
+            country.setName(name);
+            country.setPosition(position);
+
+            countryDAO.addCountry(country);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot add country", e);
+        }
     }
 
     @Override
     public void editCountry(int id, String name, int position, String languageId) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            CountryDAO countryDAO = daoFactory.getCountryDAO();
 
+            Country country = new Country();
+            country.setId(id);
+            country.setName(name);
+            country.setPosition(position);
+
+            countryDAO.updateCountry(country, languageId);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot edit country", e);
+        }
     }
 }

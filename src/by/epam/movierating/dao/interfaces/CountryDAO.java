@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Владислав on 18.06.2016.
  */
 public interface CountryDAO {
-    void addCountry(Country country, String languageId) throws DAOException;
+    void addCountry(Country country) throws DAOException;
     void updateCountry(Country country, String languageId) throws DAOException;
     void deleteCountry(int id) throws DAOException;
     List<Country> getAllCountries(String languageId) throws DAOException;

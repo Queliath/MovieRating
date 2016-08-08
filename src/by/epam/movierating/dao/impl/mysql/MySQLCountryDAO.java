@@ -17,7 +17,7 @@ public class MySQLCountryDAO implements CountryDAO {
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
     @Override
-    public void addCountry(Country country, String languageId) throws DAOException {
+    public void addCountry(Country country) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
@@ -27,20 +27,10 @@ public class MySQLCountryDAO implements CountryDAO {
         }
 
         try {
-            PreparedStatement statement = null;
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("INSERT INTO country " +
-                        "(name, position) VALUES (?, ?, ?)");
-                statement.setString(1, country.getName());
-                statement.setInt(2, country.getPosition());
-            }
-            else {
-                statement = connection.prepareStatement("INSERT INTO tcountry " +
-                        "(language_id, id, name) VALUES (?, ?, ?)");
-                statement.setString(1, languageId);
-                statement.setInt(2, country.getId());
-                statement.setString(3, country.getName());
-            }
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO country " +
+                    "(name, position) VALUES (?, ?)");
+            statement.setString(1, country.getName());
+            statement.setInt(2, country.getPosition());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -74,11 +64,25 @@ public class MySQLCountryDAO implements CountryDAO {
                 statement.setInt(3, country.getId());
             }
             else {
-                statement = connection.prepareStatement("UPDATE tcountry " +
-                        "SET name = ? WHERE language_id = ? AND id = ?");
-                statement.setString(1, country.getName());
-                statement.setString(2, languageId);
-                statement.setInt(3, country.getId());
+                PreparedStatement checkStatement = connection.prepareStatement("SELECT id FROM tcountry " +
+                        "WHERE language_id = ? AND id = ?");
+                checkStatement.setString(1, languageId);
+                checkStatement.setInt(2, country.getId());
+                ResultSet resultSet = checkStatement.executeQuery();
+                if(resultSet.next()){
+                    statement = connection.prepareStatement("UPDATE tcountry " +
+                            "SET name = ? WHERE language_id = ? AND id = ?");
+                    statement.setString(1, country.getName());
+                    statement.setString(2, languageId);
+                    statement.setInt(3, country.getId());
+                }
+                else {
+                    statement = connection.prepareStatement("INSERT INTO tcountry " +
+                            "(language_id, id, name) VALUES (?, ?, ?)");
+                    statement.setString(1, languageId);
+                    statement.setInt(2, country.getId());
+                    statement.setString(3, country.getName());
+                }
             }
 
             statement.executeUpdate();
