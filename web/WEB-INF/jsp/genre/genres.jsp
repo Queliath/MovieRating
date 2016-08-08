@@ -101,17 +101,13 @@
     <form action="Controller?command=genres" method="post" id="search-form">
         <input name="page" value="1" type="hidden">
     </form>
-    <form action="#" method="post" role="form">
-        <div class="form-group">
-            <button type="submit" class="btn btn-success btn-lg">${localeAddNewGenre}</button>
-        </div>
-    </form>
+    <a href="Controller?command=add-genre" class="btn btn-success btn-lg">${localeAddNewGenre}</a>
     <p>${localeDisplaying} ${requestScope.genresFrom}-${requestScope.genresTo} ${localeOf} ${requestScope.genresCount}</p>
     <c:if test="${requestScope.genres != null}">
         <c:forEach items="${requestScope.genres}" var="genre">
             <div class="well clearfix">
                 <h3>${genre.name}</h3>
-                <a href="#" class="btn btn-success btn-sm">${localeEdit}</a>
+                <a href="Controller?command=edit-genre&id=${genre.id}" class="btn btn-success btn-sm">${localeEdit}</a>
                 <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#genre-remove-modal" data-id="${genre.id}">${localeDelete}</a>
             </div>
         </c:forEach>

@@ -101,17 +101,13 @@
     <form action="Controller?command=countries" method="post" id="search-form">
         <input name="page" value="1" type="hidden">
     </form>
-    <form action="#" method="post" role="form">
-        <div class="form-group">
-            <button type="submit" class="btn btn-success btn-lg">${localeAddNewCountry}</button>
-        </div>
-    </form>
+    <a href="Controller?command=add-country" class="btn btn-success btn-lg">${localeAddNewCountry}</a>
     <p>${localeDisplaying} ${requestScope.countriesFrom}-${requestScope.countriesTo} ${localeOf} ${requestScope.countriesCount}</p>
     <c:if test="${requestScope.countries != null}">
         <c:forEach items="${requestScope.countries}" var="country">
             <div class="well clearfix">
                 <h3>${country.name}</h3>
-                <a href="#" class="btn btn-success btn-sm">${localeEdit}</a>
+                <a href="Controller?command=edit-country&id=${country.id}" class="btn btn-success btn-sm">${localeEdit}</a>
                 <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#country-remove-modal" data-id="${country.id}">${localeDelete}</a>
             </div>
         </c:forEach>
