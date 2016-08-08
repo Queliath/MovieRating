@@ -48,4 +48,19 @@ public class CountryServiceImpl implements CountryService {
             throw new ServiceException("Service layer: cannot get countries count", e);
         }
     }
+
+    @Override
+    public Country getCountryById(int id, String languageId) throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public void addCountry(String name, int position) throws ServiceException {
+
+    }
+
+    @Override
+    public void editCountry(int id, String name, int position, String languageId) throws ServiceException {
+
+    }
 }

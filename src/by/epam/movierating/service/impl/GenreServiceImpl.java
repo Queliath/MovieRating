@@ -48,4 +48,19 @@ public class GenreServiceImpl implements GenreService {
             throw new ServiceException("Service layer: cannot get genres count", e);
         }
     }
+
+    @Override
+    public Genre getGenreById(int id, String languageId) throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public void addGenre(String name, int position) throws ServiceException {
+
+    }
+
+    @Override
+    public void editGenre(int id, String name, int position, String languageId) throws ServiceException {
+
+    }
 }

@@ -12,4 +12,7 @@ public interface GenreService {
     List<Genre> getTopPositionGenres(int amount, String languageId) throws ServiceException;
     List<Genre> getGenres(int from, int amount, String languageId) throws ServiceException;
     int getGenresCount() throws ServiceException;
+    Genre getGenreById(int id, String languageId) throws ServiceException;
+    void addGenre(String name, int position) throws ServiceException;
+    void editGenre(int id, String name, int position, String languageId) throws ServiceException;
 }
