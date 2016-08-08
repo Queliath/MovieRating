@@ -15,11 +15,18 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 07.08.2016.
+ * Created by Владислав on 08.08.2016.
  */
-public class AddMovieCommand implements Command {
+public class EditMovieCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String idStr = request.getParameter("id");
+        int id = (idStr == null) ? -1 : Integer.parseInt(idStr);
+        if(id == -1){
+            response.sendRedirect("/Controller?command=welcome");
+            return;
+        }
+
         HttpSession session = request.getSession(false);
         String userStatus = (session == null) ? null : (String) session.getAttribute("userStatus");
         if(userStatus == null || !userStatus.equals("admin")){
@@ -31,6 +38,10 @@ public class AddMovieCommand implements Command {
         String languageId = LanguageUtil.getLanguageId(request);
         request.setAttribute("selectedLanguage", languageId);
 
+        String langParam = request.getParameter("lang");
+        String editingLanguageId = (langParam == null) ? "EN" : langParam;
+        request.setAttribute("editingLanguage", editingLanguageId);
+
         String movieFormName = request.getParameter("movieFormName");
         String movieFormYear = request.getParameter("movieFormYear");
         String movieFormTagline= request.getParameter("movieFormTagline");
@@ -40,28 +51,30 @@ public class AddMovieCommand implements Command {
         String movieFormAnnotation = request.getParameter("movieFormAnnotation");
         String movieFormImage = request.getParameter("movieFormImage");
         if(movieFormName != null && movieFormYear != null && movieFormTagline != null && movieFormBudget != null
-                && movieFormPremiere != null && movieFormLasting != null && movieFormAnnotation != null && movieFormImage != null){
+                && movieFormPremiere != null && movieFormLasting != null && movieFormAnnotation != null && movieFormImage != null) {
             try {
                 ServiceFactory serviceFactory = ServiceFactory.getInstance();
                 MovieService movieService = serviceFactory.getMovieService();
-                movieService.addMovie(movieFormName, Integer.parseInt(movieFormYear), movieFormTagline,
+                movieService.editMovie(id, movieFormName, Integer.parseInt(movieFormYear), movieFormTagline,
                         Integer.parseInt(movieFormBudget), movieFormPremiere, Integer.parseInt(movieFormLasting),
-                        movieFormAnnotation, movieFormImage);
-                response.sendRedirect("/Controller?command=movies");
-                return;
+                        movieFormAnnotation, movieFormImage, editingLanguageId);
+                request.setAttribute("saveSuccess", true);
             } catch (ServiceException e) {
                 request.setAttribute("serviceError", true);
-                request.setAttribute("movieFormName", movieFormName);
-                request.setAttribute("movieFormYear", movieFormYear);
-                request.setAttribute("movieFormTagline", movieFormTagline);
-                request.setAttribute("movieFormBudget", movieFormBudget);
-                request.setAttribute("movieFormPremiere", movieFormPremiere);
-                request.setAttribute("movieFormLasting", movieFormLasting);
-                request.setAttribute("movieFormAnnotation", movieFormAnnotation);
-                request.setAttribute("movieFormImage", movieFormImage);
             }
         }
 
-        request.getRequestDispatcher("WEB-INF/jsp/movie/add-movie-form.jsp").forward(request, response);
+        try {
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+            MovieService movieService = serviceFactory.getMovieService();
+            Movie movie = movieService.getMovieById(id, editingLanguageId);
+            if(movie != null){
+                request.setAttribute("movie", movie);
+            }
+        } catch (ServiceException e) {
+            request.setAttribute("serviceError", true);
+        }
+
+        request.getRequestDispatcher("WEB-INF/jsp/movie/edit-movie-form.jsp").forward(request, response);
     }
 }

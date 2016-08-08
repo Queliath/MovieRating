@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Владислав on 11.06.2016.
  */
 public interface MovieDAO {
-    void addMovie(Movie movie, String languageId) throws DAOException;
+    void addMovie(Movie movie) throws DAOException;
     void updateMovie(Movie movie, String languageId) throws DAOException;
     void deleteMovie(int id) throws DAOException;
     List<Movie> getAllMovies(String languageId) throws DAOException;

@@ -16,4 +16,8 @@ public interface MovieService {
     int getMoviesCountByCriteria(String name, int minYear, int maxYear, List<Integer> genreIds,
                                  List<Integer> countyIds, int minRating, int maxRating, String languageId) throws ServiceException;
     Movie getMovieById(int id, String languageId) throws ServiceException;
+    void addMovie(String name, int year, String tagline, int budget, String premiere, int lasting,
+                  String annotation, String image) throws ServiceException;
+    void editMovie(int id, String name, int year, String tagline, int budget, String premiere, int lasting,
+                   String annotation, String image, String languageId) throws ServiceException;
 }

@@ -33,6 +33,10 @@
 .jumbotron img.img-circle{
     height: 200px;
 }
+.jumbotron > .nav-tabs{
+    padding-left: 5px;
+    margin-bottom: 10px;
+}
 .jumbotron ul{
     list-style: none;
     padding-left: 0;

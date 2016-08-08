@@ -77,6 +77,6 @@ public class EditCommentCommand implements Command {
             request.setAttribute("serviceError", true);
         }
 
-        request.getRequestDispatcher("WEB-INF/jsp/comment/comment-form.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/jsp/comment/edit-comment-form.jsp").forward(request, response);
     }
 }

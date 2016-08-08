@@ -24,13 +24,11 @@
 <f:message bundle="${locale}" key="locale.countriesPageName" var="countriesPageName"/>
 <f:message bundle="${locale}" key="locale.serviceError" var="localeServiceError"/>
 <f:message bundle="${locale}" key="locale.save" var="localeSave"/>
-<f:message bundle="${locale}" key="locale.saveSuccess" var="localeSaveSuccess"/>
 <f:message bundle="${locale}" key="locale.year" var="localeYear"/>
 <f:message bundle="${locale}" key="locale.budget" var="localeBudget"/>
 <f:message bundle="${locale}" key="locale.premiere" var="localePremiere"/>
 <f:message bundle="${locale}" key="locale.lasting" var="localeLasting"/>
 <f:message bundle="${locale}" key="locale.minute" var="localeMinute"/>
-<f:message bundle="${locale}" key="locale.noMovie" var="localeNoMovie"/>
 <f:message bundle="${locale}" key="locale.tagline" var="localeTagline"/>
 <f:message bundle="${locale}" key="locale.movieForm" var="localeMovieForm"/>
 <f:message bundle="${locale}" key="locale.name" var="localeName"/>
@@ -110,59 +108,48 @@
                 ${localeServiceError}
         </div>
     </c:if>
-    <c:if test="${requestScope.movie == null}">
-        <div class="alert alert-info fade in">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                ${localeNoMovie}
-        </div>
-    </c:if>
-    <c:if test="${requestScope.movie != null}">
-        <div class="jumbotron">
-            <form method="post" role="form">
-                <div class="form-group">
-                    <label for="name">${localeName}</label>
-                    <input name="movieFormName" value="${requestScope.movie.name}" type="text" class="form-control" id="name" placeholder="${localeEnterName}">
-                </div>
-                <div class="form-group">
-                    <label for="year">${localeYear}</label>
-                    <input name="movieFormYear" value="${requestScope.movie.year}" type="number" class="form-control" id="year" placeholder="${localeEnterYear}">
-                </div>
-                <div class="form-group">
-                    <label for="tagline">${localeTagline}</label>
-                    <textarea name="movieFormTagline" class="form-control" id="tagline" placeholder="${localeEnterTagline}">${requestScope.movie.tagline}</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="budget">${localeBudget}</label>
-                    <input name="movieFormBudget" value="${requestScope.movie.budget}" type="number" class="form-control" id="budget" placeholder="${localeEnterBudget}">
-                </div>
-                <div class="form-group">
-                    <label for="premiere">${localePremiere}</label>
-                    <input name="movieFormPremiere" value="${requestScope.movie.premiere}" type="date" class="form-control" id="premiere">
-                </div>
-                <div class="form-group">
-                    <label for="lasting">${localeLasting} (${localeMinute})</label>
-                    <input name="movieFormLasting" value="${requestScope.movie.lasting}" type="number" class="form-control" id="lasting" placeholder="${localeEnterLasting}">
-                </div>
-                <div class="form-group">
-                    <label for="annotation">${localeAnnotation}</label>
-                    <textarea name="movieFormAnnotation" class="form-control" id="annotation" placeholder="${localeEnterAnnotation}" rows="10">${requestScope.movie.annotation}</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="image">${localeImage}</label>
-                    <input name="movieFormImage" value="${requestScope.movie.image}" type="text" class="form-control" id="image" placeholder="${localeEnterImage}">
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">${localeSave}</button>
-                </div>
-            </form>
-            <c:if test="${requestScope.saveSuccess}">
-                <div class="alert alert-success fade in">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        ${localeSaveSuccess}
-                </div>
-            </c:if>
-        </div>
-    </c:if>
+    <div class="jumbotron">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="Controller?command=add-movie">EN</a></li>
+        </ul>
+        <form action="Controller?command=add-movie" method="post" role="form">
+            <div class="form-group">
+                <label for="name">${localeName}</label>
+                <input name="movieFormName" value="${requestScope.movieFormName}" type="text" class="form-control" id="name" placeholder="${localeEnterName}">
+            </div>
+            <div class="form-group">
+                <label for="year">${localeYear}</label>
+                <input name="movieFormYear" value="${requestScope.movieFormYear}" type="number" class="form-control" id="year" placeholder="${localeEnterYear}">
+            </div>
+            <div class="form-group">
+                <label for="tagline">${localeTagline}</label>
+                <textarea name="movieFormTagline" class="form-control" id="tagline" placeholder="${localeEnterTagline}">${requestScope.movieFormTagline}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="budget">${localeBudget}</label>
+                <input name="movieFormBudget" value="${requestScope.movieFormBudget}" type="number" class="form-control" id="budget" placeholder="${localeEnterBudget}">
+            </div>
+            <div class="form-group">
+                <label for="premiere">${localePremiere}</label>
+                <input name="movieFormPremiere" value="${requestScope.movieFormPremiere}" type="date" class="form-control" id="premiere">
+            </div>
+            <div class="form-group">
+                <label for="lasting">${localeLasting} (${localeMinute})</label>
+                <input name="movieFormLasting" value="${requestScope.movieFormLasting}" type="number" class="form-control" id="lasting" placeholder="${localeEnterLasting}">
+            </div>
+            <div class="form-group">
+                <label for="annotation">${localeAnnotation}</label>
+                <textarea name="movieFormAnnotation" class="form-control" id="annotation" placeholder="${localeEnterAnnotation}" rows="10">${requestScope.movieFormAnnotation}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="image">${localeImage}</label>
+                <input name="movieFormImage" value="${requestScope.movieFormImage}" type="text" class="form-control" id="image" placeholder="${localeEnterImage}">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">${localeSave}</button>
+            </div>
+        </form>
+    </div>
 </main>
 <footer class="container-fluid">
     <p class="text-center">EPAM Training Center, Java 5 2016, Kostevich Vladislav</p>

@@ -18,7 +18,7 @@ public class MySQLMovieDAO implements MovieDAO {
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
     @Override
-    public void addMovie(Movie movie, String languageId) throws DAOException {
+    public void addMovie(Movie movie) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
@@ -28,31 +28,17 @@ public class MySQLMovieDAO implements MovieDAO {
         }
 
         try {
-            PreparedStatement statement = null;
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement(
-                        "INSERT INTO movie (name, year, tagline, budget, premiere," +
-                                "lasting, annotation, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                statement.setString(1, movie.getName());
-                statement.setInt(2, movie.getYear());
-                statement.setString(3, movie.getTagline());
-                statement.setInt(4, movie.getBudget());
-                statement.setDate(5, new Date(movie.getPremiere().getTime()));
-                statement.setInt(6, movie.getLasting());
-                statement.setString(7, movie.getAnnotation());
-                statement.setString(8, movie.getImage());
-            }
-            else {
-                statement = connection.prepareStatement(
-                        "INSERT INTO tmovie (language_id, id, name, tagline, " +
-                                "annotation, image) VALUES (?, ?, ?, ?, ?, ?)");
-                statement.setString(1, languageId);
-                statement.setInt(2, movie.getId());
-                statement.setString(3, movie.getName());
-                statement.setString(4, movie.getTagline());
-                statement.setString(5, movie.getAnnotation());
-                statement.setString(6, movie.getImage());
-            }
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO movie (name, year, tagline, budget, premiere," +
+                            "lasting, annotation, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            statement.setString(1, movie.getName());
+            statement.setInt(2, movie.getYear());
+            statement.setString(3, movie.getTagline());
+            statement.setInt(4, movie.getBudget());
+            statement.setDate(5, new Date(movie.getPremiere().getTime()));
+            statement.setInt(6, movie.getLasting());
+            statement.setString(7, movie.getAnnotation());
+            statement.setString(8, movie.getImage());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -93,14 +79,32 @@ public class MySQLMovieDAO implements MovieDAO {
                 statement.setInt(9, movie.getId());
             }
             else {
-                statement = connection.prepareStatement("UPDATE tmovie SET name = ?, tagline = ?, " +
-                        "annotation = ?, image = ? WHERE language_id = ? AND id = ?");
-                statement.setString(1, movie.getName());
-                statement.setString(2, movie.getTagline());
-                statement.setString(3, movie.getAnnotation());
-                statement.setString(4, movie.getImage());
-                statement.setString(5, languageId);
-                statement.setInt(6, movie.getId());
+                PreparedStatement checkStatement = connection.prepareStatement("SELECT id FROM tmovie " +
+                        "WHERE language_id = ? AND id = ?");
+                checkStatement.setString(1, languageId);
+                checkStatement.setInt(2, movie.getId());
+                ResultSet resultSet = checkStatement.executeQuery();
+                if(resultSet.next()){
+                    statement = connection.prepareStatement("UPDATE tmovie SET name = ?, tagline = ?, " +
+                            "annotation = ?, image = ? WHERE language_id = ? AND id = ?");
+                    statement.setString(1, movie.getName());
+                    statement.setString(2, movie.getTagline());
+                    statement.setString(3, movie.getAnnotation());
+                    statement.setString(4, movie.getImage());
+                    statement.setString(5, languageId);
+                    statement.setInt(6, movie.getId());
+                }
+                else {
+                    statement = connection.prepareStatement(
+                            "INSERT INTO tmovie (language_id, id, name, tagline, " +
+                                    "annotation, image) VALUES (?, ?, ?, ?, ?, ?)");
+                    statement.setString(1, languageId);
+                    statement.setInt(2, movie.getId());
+                    statement.setString(3, movie.getName());
+                    statement.setString(4, movie.getTagline());
+                    statement.setString(5, movie.getAnnotation());
+                    statement.setString(6, movie.getImage());
+                }
             }
 
             statement.executeUpdate();

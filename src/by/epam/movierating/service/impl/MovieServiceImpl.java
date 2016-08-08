@@ -8,6 +8,9 @@ import by.epam.movierating.domain.criteria.MovieCriteria;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.interfaces.MovieService;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -164,6 +167,53 @@ public class MovieServiceImpl implements MovieService {
             return movie;
         } catch (DAOException e) {
             throw new ServiceException("Service layer: cannot get movie by Id", e);
+        }
+    }
+
+    @Override
+    public void addMovie(String name, int year, String tagline, int budget, String premiere, int lasting, String annotation, String image) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            MovieDAO movieDAO = daoFactory.getMovieDAO();
+
+            Movie movie = new Movie();
+            movie.setName(name);
+            movie.setYear(year);
+            movie.setTagline(tagline);
+            movie.setBudget(budget);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            movie.setPremiere(dateFormat.parse(premiere));
+            movie.setLasting(lasting);
+            movie.setAnnotation(annotation);
+            movie.setImage(image);
+
+            movieDAO.addMovie(movie);
+        } catch (DAOException | ParseException e) {
+            throw new ServiceException("Service layer: cannot add a movie", e);
+        }
+    }
+
+    @Override
+    public void editMovie(int id, String name, int year, String tagline, int budget, String premiere, int lasting, String annotation, String image, String languageId) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            MovieDAO movieDAO = daoFactory.getMovieDAO();
+
+            Movie movie = new Movie();
+            movie.setId(id);
+            movie.setName(name);
+            movie.setYear(year);
+            movie.setTagline(tagline);
+            movie.setBudget(budget);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            movie.setPremiere(dateFormat.parse(premiere));
+            movie.setLasting(lasting);
+            movie.setAnnotation(annotation);
+            movie.setImage(image);
+
+            movieDAO.updateMovie(movie, languageId);
+        } catch (DAOException | ParseException e) {
+            throw new ServiceException("Service layer: cannot add a movie", e);
         }
     }
 }
