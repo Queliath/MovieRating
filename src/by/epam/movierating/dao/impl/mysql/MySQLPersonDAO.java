@@ -17,7 +17,7 @@ public class MySQLPersonDAO implements PersonDAO {
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
     @Override
-    public void addPerson(Person person, String languageId) throws DAOException {
+    public void addPerson(Person person) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         try {
@@ -27,23 +27,12 @@ public class MySQLPersonDAO implements PersonDAO {
         }
 
         try{
-            PreparedStatement statement = null;
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("INSERT INTO person " +
-                        "(name, date_of_birth, place_of_birth, photo) VALUES (?, ?, ?, ?)");
-                statement.setString(1, person.getName());
-                statement.setDate(2, new Date(person.getDateOfBirth().getTime()));
-                statement.setString(3, person.getPlaceOfBirth());
-                statement.setString(4, person.getPhoto());
-            }
-            else {
-                statement = connection.prepareStatement("INSERT INTO tperson " +
-                        "(language_id, id, name, place_of_birth) VALUES (?, ?, ?, ?)");
-                statement.setString(1, languageId);
-                statement.setInt(2, person.getId());
-                statement.setString(3, person.getName());
-                statement.setString(4, person.getPlaceOfBirth());
-            }
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO person " +
+                    "(name, date_of_birth, place_of_birth, photo) VALUES (?, ?, ?, ?)");
+            statement.setString(1, person.getName());
+            statement.setDate(2, new Date(person.getDateOfBirth().getTime()));
+            statement.setString(3, person.getPlaceOfBirth());
+            statement.setString(4, person.getPhoto());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -79,12 +68,27 @@ public class MySQLPersonDAO implements PersonDAO {
                 statement.setInt(5, person.getId());
             }
             else {
-                statement = connection.prepareStatement("UPDATE tperson " +
-                        "SET name = ?, place_of_birth = ? WHERE language_id = ? AND id = ?");
-                statement.setString(1, person.getName());
-                statement.setString(2, person.getPlaceOfBirth());
-                statement.setString(3, languageId);
-                statement.setInt(4, person.getId());
+                PreparedStatement checkStatement = connection.prepareStatement("SELECT id FROM tperson " +
+                        "WHERE language_id = ? AND id = ?");
+                checkStatement.setString(1, languageId);
+                checkStatement.setInt(2, person.getId());
+                ResultSet resultSet = checkStatement.executeQuery();
+                if(resultSet.next()){
+                    statement = connection.prepareStatement("UPDATE tperson " +
+                            "SET name = ?, place_of_birth = ? WHERE language_id = ? AND id = ?");
+                    statement.setString(1, person.getName());
+                    statement.setString(2, person.getPlaceOfBirth());
+                    statement.setString(3, languageId);
+                    statement.setInt(4, person.getId());
+                }
+                else {
+                    statement = connection.prepareStatement("INSERT INTO tperson " +
+                            "(language_id, id, name, place_of_birth) VALUES (?, ?, ?, ?)");
+                    statement.setString(1, languageId);
+                    statement.setInt(2, person.getId());
+                    statement.setString(3, person.getName());
+                    statement.setString(4, person.getPlaceOfBirth());
+                }
             }
 
             statement.executeUpdate();

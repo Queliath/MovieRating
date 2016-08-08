@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Владислав on 11.06.2016.
  */
 public interface PersonDAO {
-    void addPerson(Person person, String languageId) throws DAOException;
+    void addPerson(Person person) throws DAOException;
     void updatePerson(Person person, String languageId) throws DAOException;
     void deletePerson(int id) throws DAOException;
     List<Person> getAllPersons(String languageId) throws DAOException;

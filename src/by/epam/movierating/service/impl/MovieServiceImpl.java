@@ -213,7 +213,7 @@ public class MovieServiceImpl implements MovieService {
 
             movieDAO.updateMovie(movie, languageId);
         } catch (DAOException | ParseException e) {
-            throw new ServiceException("Service layer: cannot add a movie", e);
+            throw new ServiceException("Service layer: cannot edit a movie", e);
         }
     }
 }

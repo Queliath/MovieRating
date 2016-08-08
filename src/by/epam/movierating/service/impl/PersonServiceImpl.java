@@ -10,6 +10,9 @@ import by.epam.movierating.domain.Person;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.interfaces.PersonService;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -180,11 +183,40 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void addPerson(String name, String dateOfBirth, String placeOfBirth, String photo) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            PersonDAO personDAO = daoFactory.getPersonDAO();
 
+            Person person = new Person();
+            person.setName(name);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            person.setDateOfBirth(dateFormat.parse(dateOfBirth));
+            person.setPlaceOfBirth(placeOfBirth);
+            person.setPhoto(photo);
+
+            personDAO.addPerson(person);
+        } catch (DAOException | ParseException e) {
+            throw new ServiceException("Service layer: cannot add a person", e);
+        }
     }
 
     @Override
     public void editPerson(int id, String name, String dateOfBirth, String placeOfBirth, String photo, String languageId) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            PersonDAO personDAO = daoFactory.getPersonDAO();
 
+            Person person = new Person();
+            person.setId(id);
+            person.setName(name);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            person.setDateOfBirth(dateFormat.parse(dateOfBirth));
+            person.setPlaceOfBirth(placeOfBirth);
+            person.setPhoto(photo);
+
+            personDAO.updatePerson(person, languageId);
+        } catch (DAOException | ParseException e) {
+            throw new ServiceException("Service layer: cannot edit a person", e);
+        }
     }
 }
