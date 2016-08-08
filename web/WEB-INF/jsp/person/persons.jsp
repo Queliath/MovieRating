@@ -117,11 +117,7 @@
     </div>
     <c:if test="${sessionScope.userId != null}">
         <c:if test='${sessionScope.userStatus eq "admin"}'>
-            <form action="#" method="post" role="form">
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success btn-lg">${localeAddPerson}</button>
-                </div>
-            </form>
+            <a href="Controller?command=add-person" class="btn btn-success btn-lg">${localeAddPerson}</a>
         </c:if>
     </c:if>
     <c:if test="${requestScope.personsCount == 0}">

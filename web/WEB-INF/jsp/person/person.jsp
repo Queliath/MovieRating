@@ -135,16 +135,8 @@
                 </ul>
             </div>
             <c:if test='${sessionScope.userStatus eq "admin"}'>
-                <form action="#" method="post" role="form">
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success">${localeEdit}</button>
-                    </div>
-                </form>
-                <form action="#" method="post" role="form">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove-modal">${localeDelete}</button>
-                    </div>
-                </form>
+                <a href="Controller?command=edit-person&id=${requestScope.person.id}" class="btn btn-success">${localeEdit}</a>
+                <a class="btn btn-danger" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
             </c:if>
             <c:if test='${requestScope.person.moviesAsActor != null || sessionScope.userStatus eq "admin"}'>
                 <h3>${localeAsActor}</h3>
