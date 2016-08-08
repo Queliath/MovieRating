@@ -143,16 +143,16 @@
             <div class="clearfix">
                 <img src="img/${requestScope.movie.image}" class="img-rounded" alt="${requestScope.movie.name}">
                 <ul>
-                    <c:if test='${requestScope.movie.actors != null || sessionScope.userStatus eq "admin"}'><li>${localeActors}: <c:forEach items="${requestScope.movie.actors}" var="actor"><a href="Controller?command=person&id=${actor.id}">${actor.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddActor}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.directors != null || sessionScope.userStatus eq "admin"}'><li>${localeDirectors}: <c:forEach items="${requestScope.movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddDirector}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.producers != null || sessionScope.userStatus eq "admin"}'><li>${localeProducers}: <c:forEach items="${requestScope.movie.producers}" var="producer"><a href="Controller?command=person&id=${producer.id}">${producer.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddProducer}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.writers != null || sessionScope.userStatus eq "admin"}'><li>${localeWriters}: <c:forEach items="${requestScope.movie.writers}" var="writer"><a href="Controller?command=person&id=${writer.id}">${writer.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddWriter}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.painters != null || sessionScope.userStatus eq "admin"}'><li>${localePainters}: <c:forEach items="${requestScope.movie.painters}" var="painter"><a href="Controller?command=person&id=${painter.id}">${painter.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddPainter}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.operators != null || sessionScope.userStatus eq "admin"}'><li>${localeOperators}: <c:forEach items="${requestScope.movie.operators}" var="operator"><a href="Controller?command=person&id=${operator.id}">${operator.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddOperator}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.editors != null || sessionScope.userStatus eq "admin"}'><li>${localeEditors}: <c:forEach items="${requestScope.movie.editors}" var="editor"><a href="Controller?command=person&id=${editor.id}">${editor.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddEditor}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.composers != null || sessionScope.userStatus eq "admin"}'><li>${localeComposers}: <c:forEach items="${requestScope.movie.composers}" var="composers"><a href="Controller?command=person&id=${composers.id}">${composers.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddComposer}</a></c:if></li></c:if>
-                    <li>${localeCountry}: <c:forEach items="${requestScope.movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddCountry}</a></c:if></li>
-                    <li>${localeGenre}: <c:forEach items="${requestScope.movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#remove-modal"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddGenre}</a></c:if></li>
+                    <c:if test='${requestScope.movie.actors != null || sessionScope.userStatus eq "admin"}'><li>${localeActors}: <c:forEach items="${requestScope.movie.actors}" var="actor"><a href="Controller?command=person&id=${actor.id}">${actor.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${actor.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddActor}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.directors != null || sessionScope.userStatus eq "admin"}'><li>${localeDirectors}: <c:forEach items="${requestScope.movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${director.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddDirector}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.producers != null || sessionScope.userStatus eq "admin"}'><li>${localeProducers}: <c:forEach items="${requestScope.movie.producers}" var="producer"><a href="Controller?command=person&id=${producer.id}">${producer.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${producer.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddProducer}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.writers != null || sessionScope.userStatus eq "admin"}'><li>${localeWriters}: <c:forEach items="${requestScope.movie.writers}" var="writer"><a href="Controller?command=person&id=${writer.id}">${writer.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${writer.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddWriter}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.painters != null || sessionScope.userStatus eq "admin"}'><li>${localePainters}: <c:forEach items="${requestScope.movie.painters}" var="painter"><a href="Controller?command=person&id=${painter.id}">${painter.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${painter.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddPainter}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.operators != null || sessionScope.userStatus eq "admin"}'><li>${localeOperators}: <c:forEach items="${requestScope.movie.operators}" var="operator"><a href="Controller?command=person&id=${operator.id}">${operator.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${operator.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddOperator}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.editors != null || sessionScope.userStatus eq "admin"}'><li>${localeEditors}: <c:forEach items="${requestScope.movie.editors}" var="editor"><a href="Controller?command=person&id=${editor.id}">${editor.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${editor.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddEditor}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.composers != null || sessionScope.userStatus eq "admin"}'><li>${localeComposers}: <c:forEach items="${requestScope.movie.composers}" var="composers"><a href="Controller?command=person&id=${composers.id}">${composers.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${composers.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddComposer}</a></c:if></li></c:if>
+                    <li>${localeCountry}: <c:forEach items="${requestScope.movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mc-remove-modal" data-id="${country.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddCountry}</a></c:if></li>
+                    <li>${localeGenre}: <c:forEach items="${requestScope.movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mg-remove-modal" data-id="${genre.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" class="btn btn-success btn-xs">${localeAddGenre}</a></c:if></li>
                     <li>${localeYear}: ${requestScope.movie.year}</li>
                     <li>${localeTagline}: ${requestScope.movie.tagline}</li>
                     <li>${localeBudget}: ${requestScope.movie.budget} $</li>
@@ -167,7 +167,7 @@
             <p>${localeRating}: ${requestScope.movie.averageRating}</p>
             <c:if test='${sessionScope.userStatus eq "admin"}'>
                 <a href="Controller?command=edit-movie&id=${requestScope.movie.id}" class="btn btn-success">${localeEdit}</a>
-                <a class="btn btn-danger" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
+                <a class="btn btn-danger" data-toggle="modal" data-target="#movie-remove-modal" data-id="${requestScope.movie.id}">${localeDelete}</a>
             </c:if>
         </div>
         <c:if test="${sessionScope.userId != null}">
@@ -200,7 +200,7 @@
                 </div>
             </c:forEach>
         </c:if>
-        <div id="remove-modal" class="modal fade" role="dialog">
+        <div id="movie-remove-modal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -211,7 +211,70 @@
                         <p>${localeDeleteBody}</p>
                     </div>
                     <div class="modal-footer">
-                        <a href="#" class="btn btn-danger">${localeDelete}</a>
+                        <form action="Controller?command=delete-movie" method="post">
+                            <input type="hidden" name="id">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mg-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="#" method="post">
+                            <input type="hidden" name="id">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mc-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="#" method="post">
+                            <input type="hidden" name="id">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="#" method="post">
+                            <input type="hidden" name="id">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
                         <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
                     </div>
                 </div>
@@ -222,6 +285,7 @@
 <footer class="container-fluid">
     <p class="text-center">EPAM Training Center, Java 5 2016, Kostevich Vladislav</p>
 </footer>
+<script src="js/remove.js"></script>
 <script src="js/script.js"></script>
 </body>
 </html>

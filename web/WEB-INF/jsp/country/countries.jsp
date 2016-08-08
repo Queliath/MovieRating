@@ -130,7 +130,7 @@
                     <p>${localeDeleteBody}</p>
                 </div>
                 <div class="modal-footer">
-                    <form action="#" method="post">
+                    <form action="Controller?command=delete-country" method="post">
                         <input type="hidden" name="id">
                         <button type="submit" class="btn btn-danger">${localeDelete}</button>
                     </form>

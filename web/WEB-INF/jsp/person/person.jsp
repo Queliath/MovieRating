@@ -136,7 +136,7 @@
             </div>
             <c:if test='${sessionScope.userStatus eq "admin"}'>
                 <a href="Controller?command=edit-person&id=${requestScope.person.id}" class="btn btn-success">${localeEdit}</a>
-                <a class="btn btn-danger" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
+                <a class="btn btn-danger" data-toggle="modal" data-target="#person-remove-modal" data-id="${requestScope.person.id}">${localeDelete}</a>
             </c:if>
             <c:if test='${requestScope.person.moviesAsActor != null || sessionScope.userStatus eq "admin"}'>
                 <h3>${localeAsActor}</h3>
@@ -165,7 +165,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -197,7 +197,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -229,7 +229,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -261,7 +261,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -293,7 +293,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -325,7 +325,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -357,7 +357,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -389,13 +389,13 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-modal">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
             </c:if>
         </div>
-        <div id="remove-modal" class="modal fade" role="dialog">
+        <div id="person-remove-modal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -406,7 +406,30 @@
                         <p>${localeDeleteBody}</p>
                     </div>
                     <div class="modal-footer">
-                        <a href="#" class="btn btn-danger">${localeDelete}</a>
+                        <form action="Controller?command=delete-person" method="post">
+                            <input type="hidden" name="id">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="#" method="post">
+                            <input type="hidden" name="id">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
                         <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
                     </div>
                 </div>
@@ -417,5 +440,6 @@
 <footer class="container-fluid">
     <p class="text-center">EPAM Training Center, Java 5 2016, Kostevich Vladislav</p>
 </footer>
+<script src="js/remove.js"></script>
 </body>
 </html>
