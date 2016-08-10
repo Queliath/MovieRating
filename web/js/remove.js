@@ -2,7 +2,7 @@
  * Created by Владислав on 06.08.2016.
  */
 var remove = {
-    removeButtons: document.querySelectorAll(".btn[data-toggle='modal']"),
+    removeButtons: document.querySelectorAll(".btn[data-toggle='modal'], a[data-toggle='modal'"),
     
     init: function () {
         for(var i = 0; i < this.removeButtons.length; i++){

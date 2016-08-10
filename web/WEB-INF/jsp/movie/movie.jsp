@@ -143,14 +143,14 @@
             <div class="clearfix">
                 <img src="img/${requestScope.movie.image}" class="img-rounded" alt="${requestScope.movie.name}">
                 <ul>
-                    <c:if test='${requestScope.movie.actors != null || sessionScope.userStatus eq "admin"}'><li>${localeActors}: <c:forEach items="${requestScope.movie.actors}" var="actor"><a href="Controller?command=person&id=${actor.id}">${actor.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${actor.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=1" class="btn btn-success btn-xs">${localeAddActor}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.directors != null || sessionScope.userStatus eq "admin"}'><li>${localeDirectors}: <c:forEach items="${requestScope.movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${director.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=2" class="btn btn-success btn-xs">${localeAddDirector}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.producers != null || sessionScope.userStatus eq "admin"}'><li>${localeProducers}: <c:forEach items="${requestScope.movie.producers}" var="producer"><a href="Controller?command=person&id=${producer.id}">${producer.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${producer.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=3" class="btn btn-success btn-xs">${localeAddProducer}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.writers != null || sessionScope.userStatus eq "admin"}'><li>${localeWriters}: <c:forEach items="${requestScope.movie.writers}" var="writer"><a href="Controller?command=person&id=${writer.id}">${writer.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${writer.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=4" class="btn btn-success btn-xs">${localeAddWriter}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.painters != null || sessionScope.userStatus eq "admin"}'><li>${localePainters}: <c:forEach items="${requestScope.movie.painters}" var="painter"><a href="Controller?command=person&id=${painter.id}">${painter.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${painter.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=6" class="btn btn-success btn-xs">${localeAddPainter}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.operators != null || sessionScope.userStatus eq "admin"}'><li>${localeOperators}: <c:forEach items="${requestScope.movie.operators}" var="operator"><a href="Controller?command=person&id=${operator.id}">${operator.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${operator.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=5" class="btn btn-success btn-xs">${localeAddOperator}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.editors != null || sessionScope.userStatus eq "admin"}'><li>${localeEditors}: <c:forEach items="${requestScope.movie.editors}" var="editor"><a href="Controller?command=person&id=${editor.id}">${editor.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${editor.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=7" class="btn btn-success btn-xs">${localeAddEditor}</a></c:if></li></c:if>
-                    <c:if test='${requestScope.movie.composers != null || sessionScope.userStatus eq "admin"}'><li>${localeComposers}: <c:forEach items="${requestScope.movie.composers}" var="composers"><a href="Controller?command=person&id=${composers.id}">${composers.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${composers.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=8" class="btn btn-success btn-xs">${localeAddComposer}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.actors != null || sessionScope.userStatus eq "admin"}'><li>${localeActors}: <c:forEach items="${requestScope.movie.actors}" var="actor"><a href="Controller?command=person&id=${actor.id}">${actor.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr1-remove-modal" data-id="${actor.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=1" class="btn btn-success btn-xs">${localeAddActor}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.directors != null || sessionScope.userStatus eq "admin"}'><li>${localeDirectors}: <c:forEach items="${requestScope.movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr2-remove-modal" data-id="${director.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=2" class="btn btn-success btn-xs">${localeAddDirector}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.producers != null || sessionScope.userStatus eq "admin"}'><li>${localeProducers}: <c:forEach items="${requestScope.movie.producers}" var="producer"><a href="Controller?command=person&id=${producer.id}">${producer.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr3-remove-modal" data-id="${producer.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=3" class="btn btn-success btn-xs">${localeAddProducer}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.writers != null || sessionScope.userStatus eq "admin"}'><li>${localeWriters}: <c:forEach items="${requestScope.movie.writers}" var="writer"><a href="Controller?command=person&id=${writer.id}">${writer.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr4-remove-modal" data-id="${writer.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=4" class="btn btn-success btn-xs">${localeAddWriter}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.painters != null || sessionScope.userStatus eq "admin"}'><li>${localePainters}: <c:forEach items="${requestScope.movie.painters}" var="painter"><a href="Controller?command=person&id=${painter.id}">${painter.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr6-remove-modal" data-id="${painter.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=6" class="btn btn-success btn-xs">${localeAddPainter}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.operators != null || sessionScope.userStatus eq "admin"}'><li>${localeOperators}: <c:forEach items="${requestScope.movie.operators}" var="operator"><a href="Controller?command=person&id=${operator.id}">${operator.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr5-remove-modal" data-id="${operator.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=5" class="btn btn-success btn-xs">${localeAddOperator}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.editors != null || sessionScope.userStatus eq "admin"}'><li>${localeEditors}: <c:forEach items="${requestScope.movie.editors}" var="editor"><a href="Controller?command=person&id=${editor.id}">${editor.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr7-remove-modal" data-id="${editor.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=7" class="btn btn-success btn-xs">${localeAddEditor}</a></c:if></li></c:if>
+                    <c:if test='${requestScope.movie.composers != null || sessionScope.userStatus eq "admin"}'><li>${localeComposers}: <c:forEach items="${requestScope.movie.composers}" var="composers"><a href="Controller?command=person&id=${composers.id}">${composers.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mpr8-remove-modal" data-id="${composers.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=8" class="btn btn-success btn-xs">${localeAddComposer}</a></c:if></li></c:if>
                     <li>${localeCountry}: <c:forEach items="${requestScope.movie.countries}" var="country"><a href="Controller?command=movies&searchFormCountries[]=${country.id}">${country.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mc-remove-modal" data-id="${country.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=countries&movie=${requestScope.movie.id}" class="btn btn-success btn-xs">${localeAddCountry}</a></c:if></li>
                     <li>${localeGenre}: <c:forEach items="${requestScope.movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> <c:if test='${sessionScope.userStatus eq "admin"}'><a href="#" data-toggle="modal" data-target="#mg-remove-modal" data-id="${genre.id}"><span class="glyphicon glyphicon-remove"></span></a> </c:if></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'><a href="Controller?command=genres&movie=${requestScope.movie.id}" class="btn btn-success btn-xs">${localeAddGenre}</a></c:if></li>
                     <li>${localeYear}: ${requestScope.movie.year}</li>
@@ -231,8 +231,9 @@
                         <p>${localeDeleteBody}</p>
                     </div>
                     <div class="modal-footer">
-                        <form action="#" method="post">
+                        <form action="Controller?command=delete-mg" method="post">
                             <input type="hidden" name="id">
+                            <input type="hidden" name="movieId" value="${requestScope.movie.id}">
                             <button type="submit" class="btn btn-danger">${localeDelete}</button>
                         </form>
                         <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
@@ -251,8 +252,9 @@
                         <p>${localeDeleteBody}</p>
                     </div>
                     <div class="modal-footer">
-                        <form action="#" method="post">
+                        <form action="Controller?command=delete-mc" method="post">
                             <input type="hidden" name="id">
+                            <input type="hidden" name="movieId" value="${requestScope.movie.id}">
                             <button type="submit" class="btn btn-danger">${localeDelete}</button>
                         </form>
                         <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
@@ -260,7 +262,7 @@
                 </div>
             </div>
         </div>
-        <div id="mpr-remove-modal" class="modal fade" role="dialog">
+        <div id="mpr1-remove-modal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -271,8 +273,172 @@
                         <p>${localeDeleteBody}</p>
                     </div>
                     <div class="modal-footer">
-                        <form action="#" method="post">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="page" value="movie">
                             <input type="hidden" name="id">
+                            <input type="hidden" name="movieId" value="${requestScope.movie.id}">
+                            <input type="hidden" name="relationType" value="1">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr2-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="page" value="movie">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="movieId" value="${requestScope.movie.id}">
+                            <input type="hidden" name="relationType" value="2">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr3-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="page" value="movie">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="movieId" value="${requestScope.movie.id}">
+                            <input type="hidden" name="relationType" value="3">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr4-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="page" value="movie">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="movieId" value="${requestScope.movie.id}">
+                            <input type="hidden" name="relationType" value="4">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr5-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="page" value="movie">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="movieId" value="${requestScope.movie.id}">
+                            <input type="hidden" name="relationType" value="5">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr6-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="page" value="movie">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="movieId" value="${requestScope.movie.id}">
+                            <input type="hidden" name="relationType" value="6">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr7-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="page" value="movie">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="movieId" value="${requestScope.movie.id}">
+                            <input type="hidden" name="relationType" value="7">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr8-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="page" value="movie">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="movieId" value="${requestScope.movie.id}">
+                            <input type="hidden" name="relationType" value="8">
                             <button type="submit" class="btn btn-danger">${localeDelete}</button>
                         </form>
                         <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
