@@ -20,6 +20,7 @@ public class ServiceFactory {
     private static final String RATING_SERVICE_IMPL_KEY = "rating-service";
     private static final String PERSON_SERVICE_IMPL_KEY = "person-service";
     private static final String USER_SERVICE_IMPL_KEY = "user-service";
+    private static final String RELATION_SERVICE_IMPL_KEY = "relation-service";
 
     private static ServiceFactory instance;
 
@@ -32,6 +33,7 @@ public class ServiceFactory {
     private RatingService ratingService;
     private PersonService personService;
     private UserService userService;
+    private RelationService relationService;
 
     private ServiceFactory() throws ServiceException {
         ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
@@ -44,6 +46,7 @@ public class ServiceFactory {
         String ratingServiceImplClassName = resourceBundle.getString(RATING_SERVICE_IMPL_KEY);
         String personServiceImplClassName = resourceBundle.getString(PERSON_SERVICE_IMPL_KEY);
         String userServiceImplClassName = resourceBundle.getString(USER_SERVICE_IMPL_KEY);
+        String relationServiceImplClassName = resourceBundle.getString(RELATION_SERVICE_IMPL_KEY);
 
         try {
             siteService = (SiteService) Class.forName(siteServiceImplClassName).newInstance();
@@ -55,6 +58,7 @@ public class ServiceFactory {
             ratingService = (RatingService) Class.forName(ratingServiceImplClassName).newInstance();
             personService = (PersonService) Class.forName(personServiceImplClassName).newInstance();
             userService = (UserService) Class.forName(userServiceImplClassName).newInstance();
+            relationService = (RelationService) Class.forName(relationServiceImplClassName).newInstance();
         } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
             throw new ServiceException("Cannot init ServiceFactory", e);
         }
@@ -101,5 +105,9 @@ public class ServiceFactory {
 
     public UserService getUserService() {
         return userService;
+    }
+
+    public RelationService getRelationService() {
+        return relationService;
     }
 }
