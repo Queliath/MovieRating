@@ -141,7 +141,7 @@
         <div class="jumbotron">
             <h3>${requestScope.movie.name}</h3>
             <div class="clearfix">
-                <img src="img/${requestScope.movie.image}" class="img-rounded" alt="${requestScope.movie.name}">
+                <img src="${requestScope.movie.image}" class="img-rounded" alt="${requestScope.movie.name}">
                 <ul>
                     <c:if test='${requestScope.movie.actors != null || sessionScope.userStatus eq "admin"}'><li>${localeActors}:<c:forEach items="${requestScope.movie.actors}" var="actor"> <span class="comma"><a href="Controller?command=person&id=${actor.id}">${actor.name}</a><c:if test='${sessionScope.userStatus eq "admin"}'> <a href="#" data-toggle="modal" data-target="#mpr1-remove-modal" data-id="${actor.id}"><span class="glyphicon glyphicon-remove"></span></a></c:if></span></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'> <a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=1" class="btn btn-success btn-xs">${localeAddActor}</a></c:if></li></c:if>
                     <c:if test='${requestScope.movie.directors != null || sessionScope.userStatus eq "admin"}'><li>${localeDirectors}:<c:forEach items="${requestScope.movie.directors}" var="director"> <span class="comma"><a href="Controller?command=person&id=${director.id}">${director.name}</a><c:if test='${sessionScope.userStatus eq "admin"}'> <a href="#" data-toggle="modal" data-target="#mpr2-remove-modal" data-id="${director.id}"><span class="glyphicon glyphicon-remove"></span></a></c:if></span></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'> <a href="Controller?command=persons&movie=${requestScope.movie.id}&rel=2" class="btn btn-success btn-xs">${localeAddDirector}</a></c:if></li></c:if>
@@ -192,7 +192,7 @@
             <c:forEach items="${requestScope.movie.comments}" var="comment">
                 <div class="well clearfix">
                     <a href="Controller?command=user&id=${comment.user.id}">
-                        <img src="img/${comment.user.photo}" class="img-circle" alt="${comment.user.firstName} ${comment.user.lastName}">
+                        <img src="${comment.user.photo}" class="img-circle" alt="${comment.user.firstName} ${comment.user.lastName}">
                     </a>
                     <h3>${comment.title}</h3>
                     <p><a href="Controller?command=user&id=${comment.user.id}">${comment.user.firstName} ${comment.user.lastName}</a> ${comment.dateOfPublication}</p>

@@ -50,14 +50,15 @@ public class EditUserCommand implements Command {
         String userFormPassword = request.getParameter("userFormPassword");
         String userFormFirstName = request.getParameter("userFormFirstName");
         String userFormLastName = request.getParameter("userFormLastName");
+        String userFormPhoto = request.getParameter("userFormPhoto");
         String userFormRating = request.getParameter("userFormRating");
         String userFormStatus = request.getParameter("userFormStatus");
 
-        if(userFormEmail != null && userFormPassword != null && userFormFirstName != null && userFormLastName != null){
+        if(userFormEmail != null && userFormPassword != null && userFormFirstName != null && userFormLastName != null && userFormPhoto != null){
             try {
                 ServiceFactory serviceFactory = ServiceFactory.getInstance();
                 UserService userService = serviceFactory.getUserService();
-                userService.editUserMainInf(id, userFormEmail, userFormPassword, userFormFirstName, userFormLastName, "user" + id + ".jpg");
+                userService.editUserMainInf(id, userFormEmail, userFormPassword, userFormFirstName, userFormLastName, userFormPhoto);
                 request.setAttribute("saveSuccess", true);
             } catch (ServiceWrongEmailException e) {
                 request.setAttribute("wrongEmail", true);

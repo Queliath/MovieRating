@@ -145,7 +145,7 @@
                 <c:forEach items="${requestScope.movies}" var="movie">
                     <div class="well clearfix">
                         <a href="Controller?command=movie&id=${movie.id}">
-                            <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
+                            <img src="${movie.image}" class="img-rounded" alt="${movie.name}">
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
@@ -169,7 +169,7 @@
                 <c:forEach items="${requestScope.comments}" var="comment">
                     <div class="well clearfix">
                         <a href="Controller?command=user&id=${comment.user.id}">
-                            <img src="img/${comment.user.photo}" class="img-circle" alt="${comment.user.firstName} ${comment.user.lastName}">
+                            <img src="${comment.user.photo}" class="img-circle" alt="${comment.user.firstName} ${comment.user.lastName}">
                         </a>
                         <h3>${comment.title}</h3>
                         <p><a href="Controller?command=user&id=${comment.user.id}">${comment.user.firstName} ${comment.user.lastName}</a> ${localeToMovie} <a href="Controller?command=movie&id=${comment.movie.id}">${comment.movie.name}</a></p>

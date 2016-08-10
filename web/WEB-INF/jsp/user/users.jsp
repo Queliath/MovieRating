@@ -179,7 +179,7 @@
             <c:forEach items="${requestScope.users}" var="user">
                 <div class="well clearfix">
                     <a href="Controller?command=user&id=${user.id}">
-                        <img src="img/${user.photo}" class="img-rounded" alt="${user.firstName} ${user.lastName}">
+                        <img src="${user.photo}" class="img-rounded" alt="${user.firstName} ${user.lastName}">
                     </a>
                     <a href="Controller?command=user&id=${user.id}"><h3>${user.firstName} ${user.lastName}</h3></a>
                     <ul>

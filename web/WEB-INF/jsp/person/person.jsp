@@ -127,7 +127,7 @@
         <div class="jumbotron">
             <h3>${requestScope.person.name}</h3>
             <div class="clearfix">
-                <img src="img/${requestScope.person.photo}" class="img-rounded" alt="${requestScope.person.name}">
+                <img src="${requestScope.person.photo}" class="img-rounded" alt="${requestScope.person.name}">
                 <ul>
                     <li>${localeMoviesTotal}: ${requestScope.person.moviesTotal}</li>
                     <li>${localeDateOfBirth}: ${requestScope.person.dateOfBirth}</li>
@@ -146,7 +146,7 @@
                 <c:forEach items="${requestScope.person.moviesAsActor}" var="movie">
                     <div class="well clearfix">
                         <a href="Controller?command=movie&id=${movie.id}">
-                            <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
+                            <img src="${movie.image}" class="img-rounded" alt="${movie.name}">
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
@@ -174,7 +174,7 @@
                 <c:forEach items="${requestScope.person.moviesAsDirector}" var="movie">
                     <div class="well clearfix">
                         <a href="Controller?command=movie&id=${movie.id}">
-                            <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
+                            <img src="${movie.image}" class="img-rounded" alt="${movie.name}">
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
@@ -202,7 +202,7 @@
                 <c:forEach items="${requestScope.person.moviesAsProducer}" var="movie">
                     <div class="well clearfix">
                         <a href="Controller?command=movie&id=${movie.id}">
-                            <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
+                            <img src="${movie.image}" class="img-rounded" alt="${movie.name}">
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
@@ -230,7 +230,7 @@
                 <c:forEach items="${requestScope.person.moviesAsWriter}" var="movie">
                     <div class="well clearfix">
                         <a href="Controller?command=movie&id=${movie.id}">
-                            <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
+                            <img src="${movie.image}" class="img-rounded" alt="${movie.name}">
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
@@ -258,7 +258,7 @@
                 <c:forEach items="${requestScope.person.moviesAsPainter}" var="movie">
                     <div class="well clearfix">
                         <a href="Controller?command=movie&id=${movie.id}">
-                            <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
+                            <img src="${movie.image}" class="img-rounded" alt="${movie.name}">
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
@@ -286,7 +286,7 @@
                 <c:forEach items="${requestScope.person.moviesAsOperator}" var="movie">
                     <div class="well clearfix">
                         <a href="Controller?command=movie&id=${movie.id}">
-                            <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
+                            <img src="${movie.image}" class="img-rounded" alt="${movie.name}">
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
@@ -314,7 +314,7 @@
                 <c:forEach items="${requestScope.person.moviesAsEditor}" var="movie">
                     <div class="well clearfix">
                         <a href="Controller?command=movie&id=${movie.id}">
-                            <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
+                            <img src="${movie.image}" class="img-rounded" alt="${movie.name}">
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>
@@ -342,7 +342,7 @@
                 <c:forEach items="${requestScope.person.moviesAsComposer}" var="movie">
                     <div class="well clearfix">
                         <a href="Controller?command=movie&id=${movie.id}">
-                            <img src="img/${movie.image}" class="img-rounded" alt="${movie.name}">
+                            <img src="${movie.image}" class="img-rounded" alt="${movie.name}">
                         </a>
                         <a href="Controller?command=movie&id=${movie.id}"><h3>${movie.name}</h3></a>
                         <ul>

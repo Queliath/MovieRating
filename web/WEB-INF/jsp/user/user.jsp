@@ -115,7 +115,7 @@
         <div class="jumbotron">
             <h3>${requestScope.user.firstName} ${requestScope.user.lastName}</h3>
             <div class="clearfix">
-                <img src="img/${requestScope.user.photo}" class="img-circle" alt="${requestScope.user.firstName} ${requestScope.user.lastName}">
+                <img src="${requestScope.user.photo}" class="img-circle" alt="${requestScope.user.firstName} ${requestScope.user.lastName}">
                 <ul>
                     <c:if test='${sessionScope.userId == requestScope.user.id || sessionScope.userStatus eq "admin"}'>
                         <li>${localeEmail}: ${requestScope.user.email}</li>
@@ -136,7 +136,7 @@
                 <c:forEach items="${requestScope.user.comments}" var="comment">
                     <div class="well clearfix">
                         <a href="Controller?command=user&id=${requestScope.user.id}">
-                            <img src="img/${requestScope.user.photo}" class="img-circle" alt="${requestScope.user.firstName} ${requestScope.user.lastName}">
+                            <img src="${requestScope.user.photo}" class="img-circle" alt="${requestScope.user.firstName} ${requestScope.user.lastName}">
                         </a>
                         <h3>${comment.title}</h3>
                         <p>${comment.dateOfPublication} ${localeToMovie} <a href="Controller?command=movie&id=${comment.movie.id}">${comment.movie.name}</a></p>

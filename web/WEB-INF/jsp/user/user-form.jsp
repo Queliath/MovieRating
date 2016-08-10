@@ -42,6 +42,7 @@
 <f:message bundle="${locale}" key="locale.save" var="localeSave"/>
 <f:message bundle="${locale}" key="locale.saveSuccess" var="localeSaveSuccess"/>
 <f:message bundle="${locale}" key="locale.userForm" var="localeUserForm"/>
+<f:message bundle="${locale}" key="locale.enterPhoto" var="localeEnterPhoto"/>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -137,7 +138,7 @@
                     </div>
                     <div class="form-group">
                         <label for="photo">${localePhoto}</label>
-                        <input type="file" class="form-control" id="photo">
+                        <input name="userFormPhoto" value="${requestScope.user.photo}" type="text" class="form-control" id="photo" placeholder="${localeEnterPhoto}">
                     </div>
                 </c:if>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
