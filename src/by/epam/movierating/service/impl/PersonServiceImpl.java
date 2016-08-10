@@ -28,6 +28,8 @@ public class PersonServiceImpl implements PersonService {
     private static final int EDITOR = 7;
     private static final int COMPOSER = 8;
 
+    private static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd";
+
     @Override
     public Person getPersonById(int id, String languageId) throws ServiceException {
         try {
@@ -189,7 +191,7 @@ public class PersonServiceImpl implements PersonService {
 
             Person person = new Person();
             person.setName(name);
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
             person.setDateOfBirth(dateFormat.parse(dateOfBirth));
             person.setPlaceOfBirth(placeOfBirth);
             person.setPhoto(photo);
@@ -209,7 +211,7 @@ public class PersonServiceImpl implements PersonService {
             Person person = new Person();
             person.setId(id);
             person.setName(name);
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
             person.setDateOfBirth(dateFormat.parse(dateOfBirth));
             person.setPlaceOfBirth(placeOfBirth);
             person.setPhoto(photo);

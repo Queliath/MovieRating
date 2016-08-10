@@ -9,6 +9,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 public class ConnectionPoolListener implements ServletContextListener {
+    private static final String INIT_EXCEPTION_ATTRIBUTE = "initPoolException";
 
     // Public constructor is required by servlet spec
     public ConnectionPoolListener() {
@@ -23,7 +24,7 @@ public class ConnectionPoolListener implements ServletContextListener {
             PoolService poolService = serviceFactory.getPoolService();
             poolService.init();
         } catch (ServiceException e) {
-            sce.getServletContext().setAttribute("initPoolException", true);
+            sce.getServletContext().setAttribute(INIT_EXCEPTION_ATTRIBUTE, true);
         }
     }
 

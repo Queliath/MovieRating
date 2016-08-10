@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(password);
             user.setFirstName(firstName);
             user.setLastName(lastName);
+            user.setPhoto(photo);
 
             userDAO.updateUser(user);
         } catch (DAOException e) {

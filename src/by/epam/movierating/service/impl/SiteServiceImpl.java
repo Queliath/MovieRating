@@ -15,6 +15,8 @@ import java.util.Date;
  * Created by Владислав on 15.07.2016.
  */
 public class SiteServiceImpl implements SiteService {
+    private static final String DEFAULT_USER_STATUS = "normal";
+
     @Override
     public User login(String email, String password) throws ServiceWrongEmailException, ServiceWrongPasswordException, ServiceException {
         try {
@@ -50,7 +52,7 @@ public class SiteServiceImpl implements SiteService {
             newUser.setFirstName(firstName);
             newUser.setLastName(lastName);
             newUser.setDateOfRegistry(new Date());
-            newUser.setStatus("normal");
+            newUser.setStatus(DEFAULT_USER_STATUS);
             userDAO.addUser(newUser);
 
             return newUser;

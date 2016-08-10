@@ -21,19 +21,35 @@ import java.util.List;
  * Created by Владислав on 04.08.2016.
  */
 public class EditCommentCommand implements Command {
+    private static final String JSP_PAGE_PATH = "WEB-INF/jsp/comment/edit-comment-form.jsp";
+
+    private static final String SESSION_TIMEOUT_PAGE = "/Controller?command=login&cause=timeout";
+    private static final String WELCOME_PAGE = "/Controller?command=welcome";
+
+    private static final String USER_ID_SESSION_ATTRIBUTE = "userId";
+
+    private static final String REQUEST_ID_PARAM = "id";
+    private static final String COMMENT_FORM_TITLE_PARAM = "commentFormTitle";
+    private static final String COMMENT_FORM_CONTENT_PARAM = "commentFormContent";
+
+    private static final String SERVICE_ERROR_REQUEST_ATTR = "serviceError";
+    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "languageId";
+    private static final String SAVE_SUCCESS_REQUEST_ATTR = "saveSuccess";
+    private static final String COMMENT_REQUEST_ATTR = "comment";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String idStr = request.getParameter("id");
+        String idStr = request.getParameter(REQUEST_ID_PARAM);
         int id = (idStr == null) ? -1 : Integer.parseInt(idStr);
         if(id == -1){
-            response.sendRedirect("/Controller?command=welcome");
+            response.sendRedirect(WELCOME_PAGE);
             return;
         }
 
         HttpSession session = request.getSession(false);
-        Integer userId = (session == null) ? null : (Integer) session.getAttribute("userId");
+        Integer userId = (session == null) ? null : (Integer) session.getAttribute(USER_ID_SESSION_ATTRIBUTE);
         if(userId == null){
-            response.sendRedirect("/Controller?command=login&cause=timeout");
+            response.sendRedirect(SESSION_TIMEOUT_PAGE);
             return;
         }
         else {
@@ -42,29 +58,29 @@ public class EditCommentCommand implements Command {
                 CommentService commentService = serviceFactory.getCommentService();
                 Comment comment = commentService.getCommentById(id);
                 if(comment == null || comment.getUserId() != userId){
-                    response.sendRedirect("/Controller?command=welcome");
+                    response.sendRedirect(WELCOME_PAGE);
                     return;
                 }
             } catch (ServiceException e) {
-                request.setAttribute("serviceError", true);
+                request.setAttribute(SERVICE_ERROR_REQUEST_ATTR, true);
                 return;
             }
         }
 
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        request.setAttribute("selectedLanguage", languageId);
+        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
-        String commentFormTitle = request.getParameter("commentFormTitle");
-        String commentFormContent = request.getParameter("commentFormContent");
+        String commentFormTitle = request.getParameter(COMMENT_FORM_TITLE_PARAM);
+        String commentFormContent = request.getParameter(COMMENT_FORM_CONTENT_PARAM);
         if(commentFormTitle != null && commentFormContent != null){
             try {
                 ServiceFactory serviceFactory = ServiceFactory.getInstance();
                 CommentService commentService = serviceFactory.getCommentService();
                 commentService.editComment(id, commentFormTitle, commentFormContent);
-                request.setAttribute("saveSuccess", true);
+                request.setAttribute(SAVE_SUCCESS_REQUEST_ATTR, true);
             } catch (ServiceException e) {
-                request.setAttribute("serviceError", true);
+                request.setAttribute(SERVICE_ERROR_REQUEST_ATTR, true);
             }
         }
 
@@ -72,11 +88,11 @@ public class EditCommentCommand implements Command {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             CommentService commentService = serviceFactory.getCommentService();
             Comment comment = commentService.getCommentById(id);
-            request.setAttribute("comment", comment);
+            request.setAttribute(COMMENT_REQUEST_ATTR, comment);
         } catch (ServiceException e) {
-            request.setAttribute("serviceError", true);
+            request.setAttribute(SERVICE_ERROR_REQUEST_ATTR, true);
         }
 
-        request.getRequestDispatcher("WEB-INF/jsp/comment/edit-comment-form.jsp").forward(request, response);
+        request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
     }
 }

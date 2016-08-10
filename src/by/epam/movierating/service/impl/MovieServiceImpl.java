@@ -26,6 +26,8 @@ public class MovieServiceImpl implements MovieService {
     private static final int EDITOR = 7;
     private static final int COMPOSER = 8;
 
+    private static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd";
+
     @Override
     public List<Movie> getRecentAddedMovies(int amount, String languageId) throws ServiceException {
         try {
@@ -181,7 +183,7 @@ public class MovieServiceImpl implements MovieService {
             movie.setYear(year);
             movie.setTagline(tagline);
             movie.setBudget(budget);
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
             movie.setPremiere(dateFormat.parse(premiere));
             movie.setLasting(lasting);
             movie.setAnnotation(annotation);
@@ -205,7 +207,7 @@ public class MovieServiceImpl implements MovieService {
             movie.setYear(year);
             movie.setTagline(tagline);
             movie.setBudget(budget);
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
             movie.setPremiere(dateFormat.parse(premiere));
             movie.setLasting(lasting);
             movie.setAnnotation(annotation);
