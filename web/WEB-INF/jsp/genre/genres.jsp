@@ -31,6 +31,7 @@
 <f:message bundle="${locale}" key="locale.deleteTitle" var="localeDeleteTitle"/>
 <f:message bundle="${locale}" key="locale.deleteBody" var="localeDeleteBody"/>
 <f:message bundle="${locale}" key="locale.cancel" var="localeCancel"/>
+<f:message bundle="${locale}" key="locale.add" var="localeAdd"/>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -100,15 +101,27 @@
     </c:if>
     <form action="Controller?command=genres" method="post" id="search-form">
         <input name="page" value="1" type="hidden">
+        <input name="movie" value="${requestScope.movieId}" type="hidden">
     </form>
-    <a href="Controller?command=add-genre" class="btn btn-success btn-lg">${localeAddNewGenre}</a>
+    <c:if test="${requestScope.movieId == null}">
+        <a href="Controller?command=add-genre" class="btn btn-success btn-lg">${localeAddNewGenre}</a>
+    </c:if>
     <p>${localeDisplaying} ${requestScope.genresFrom}-${requestScope.genresTo} ${localeOf} ${requestScope.genresCount}</p>
     <c:if test="${requestScope.genres != null}">
         <c:forEach items="${requestScope.genres}" var="genre">
             <div class="well clearfix">
                 <h3>${genre.name}</h3>
-                <a href="Controller?command=edit-genre&id=${genre.id}" class="btn btn-success btn-sm">${localeEdit}</a>
-                <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#genre-remove-modal" data-id="${genre.id}">${localeDelete}</a>
+                <c:if test="${requestScope.movieId == null}">
+                    <a href="Controller?command=edit-genre&id=${genre.id}" class="btn btn-success btn-sm">${localeEdit}</a>
+                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#genre-remove-modal" data-id="${genre.id}">${localeDelete}</a>
+                </c:if>
+                <c:if test="${requestScope.movieId != null}">
+                    <form action="Controller?command=add-mg" method="post" role="form">
+                        <input name="movieId" value="${requestScope.movieId}" type="hidden">
+                        <input name="genreId" value="${genre.id}" type="hidden">
+                        <button type="submit" class="btn btn-success btn-sm">${localeAdd}</button>
+                    </form>
+                </c:if>
             </div>
         </c:forEach>
     </c:if>

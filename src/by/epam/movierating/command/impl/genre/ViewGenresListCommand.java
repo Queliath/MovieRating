@@ -37,6 +37,10 @@ public class ViewGenresListCommand implements Command {
 
         String pageStr = request.getParameter("page");
         int page = (pageStr == null) ? 1 : Integer.parseInt(pageStr);
+        String movieParam = request.getParameter("movie");
+        Integer movieId = (movieParam == null || movieParam.isEmpty()) ? null : Integer.parseInt(movieParam);
+
+        request.setAttribute("movieId", movieId);
 
         try {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();

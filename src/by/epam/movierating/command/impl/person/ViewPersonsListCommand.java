@@ -31,8 +31,14 @@ public class ViewPersonsListCommand implements Command {
         int page = (pageStr == null) ? 1 : Integer.parseInt(pageStr);
         String searchFormNameParam = request.getParameter("searchFormName");
         String searchFormName = (searchFormNameParam == null || searchFormNameParam.isEmpty()) ? null : searchFormNameParam;
+        String movieParam = request.getParameter("movie");
+        Integer movieId = (movieParam == null || movieParam.isEmpty()) ? null : Integer.parseInt(movieParam);
+        String relParam = request.getParameter("rel");
+        Integer relationType = (relParam == null || relParam.isEmpty()) ? null : Integer.parseInt(relParam);
 
         request.setAttribute("searchFormName", searchFormNameParam);
+        request.setAttribute("movieId", movieId);
+        request.setAttribute("relationType", relationType);
 
         try {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
