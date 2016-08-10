@@ -161,7 +161,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr1-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -189,7 +189,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr2-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -217,7 +217,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr3-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -245,7 +245,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr4-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -273,7 +273,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr6-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -301,7 +301,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr5-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -329,7 +329,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr7-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -357,7 +357,7 @@
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
-                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr-remove-modal" data-id="${movie.id}">${localeDelete}</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mpr8-remove-modal" data-id="${movie.id}">${localeDelete}</a>
                         </c:if>
                     </div>
                 </c:forEach>
@@ -383,7 +383,7 @@
                 </div>
             </div>
         </div>
-        <div id="mpr-remove-modal" class="modal fade" role="dialog">
+        <div id="mpr1-remove-modal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -394,8 +394,164 @@
                         <p>${localeDeleteBody}</p>
                     </div>
                     <div class="modal-footer">
-                        <form action="#" method="post">
+                        <form action="Controller?command=delete-mpr" method="post">
                             <input type="hidden" name="id">
+                            <input type="hidden" name="personId" value="${requestScope.person.id}">
+                            <input type="hidden" name="relationType" value="1">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr2-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="personId" value="${requestScope.person.id}">
+                            <input type="hidden" name="relationType" value="2">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr3-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="personId" value="${requestScope.person.id}">
+                            <input type="hidden" name="relationType" value="3">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr4-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="personId" value="${requestScope.person.id}">
+                            <input type="hidden" name="relationType" value="4">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr5-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="personId" value="${requestScope.person.id}">
+                            <input type="hidden" name="relationType" value="5">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr6-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="personId" value="${requestScope.person.id}">
+                            <input type="hidden" name="relationType" value="6">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr7-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="personId" value="${requestScope.person.id}">
+                            <input type="hidden" name="relationType" value="7">
+                            <button type="submit" class="btn btn-danger">${localeDelete}</button>
+                        </form>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mpr8-remove-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">${localeDeleteTitle}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${localeDeleteBody}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="Controller?command=delete-mpr" method="post">
+                            <input type="hidden" name="id">
+                            <input type="hidden" name="personId" value="${requestScope.person.id}">
+                            <input type="hidden" name="relationType" value="8">
                             <button type="submit" class="btn btn-danger">${localeDelete}</button>
                         </form>
                         <button type="button" class="btn btn-default" data-dismiss="modal">${localeCancel}</button>

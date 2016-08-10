@@ -274,7 +274,6 @@
                     </div>
                     <div class="modal-footer">
                         <form action="Controller?command=delete-mpr" method="post">
-                            <input type="hidden" name="page" value="movie">
                             <input type="hidden" name="id">
                             <input type="hidden" name="movieId" value="${requestScope.movie.id}">
                             <input type="hidden" name="relationType" value="1">
@@ -297,7 +296,6 @@
                     </div>
                     <div class="modal-footer">
                         <form action="Controller?command=delete-mpr" method="post">
-                            <input type="hidden" name="page" value="movie">
                             <input type="hidden" name="id">
                             <input type="hidden" name="movieId" value="${requestScope.movie.id}">
                             <input type="hidden" name="relationType" value="2">
@@ -320,7 +318,6 @@
                     </div>
                     <div class="modal-footer">
                         <form action="Controller?command=delete-mpr" method="post">
-                            <input type="hidden" name="page" value="movie">
                             <input type="hidden" name="id">
                             <input type="hidden" name="movieId" value="${requestScope.movie.id}">
                             <input type="hidden" name="relationType" value="3">
@@ -343,7 +340,6 @@
                     </div>
                     <div class="modal-footer">
                         <form action="Controller?command=delete-mpr" method="post">
-                            <input type="hidden" name="page" value="movie">
                             <input type="hidden" name="id">
                             <input type="hidden" name="movieId" value="${requestScope.movie.id}">
                             <input type="hidden" name="relationType" value="4">
@@ -366,7 +362,6 @@
                     </div>
                     <div class="modal-footer">
                         <form action="Controller?command=delete-mpr" method="post">
-                            <input type="hidden" name="page" value="movie">
                             <input type="hidden" name="id">
                             <input type="hidden" name="movieId" value="${requestScope.movie.id}">
                             <input type="hidden" name="relationType" value="5">
@@ -389,7 +384,6 @@
                     </div>
                     <div class="modal-footer">
                         <form action="Controller?command=delete-mpr" method="post">
-                            <input type="hidden" name="page" value="movie">
                             <input type="hidden" name="id">
                             <input type="hidden" name="movieId" value="${requestScope.movie.id}">
                             <input type="hidden" name="relationType" value="6">
@@ -412,7 +406,6 @@
                     </div>
                     <div class="modal-footer">
                         <form action="Controller?command=delete-mpr" method="post">
-                            <input type="hidden" name="page" value="movie">
                             <input type="hidden" name="id">
                             <input type="hidden" name="movieId" value="${requestScope.movie.id}">
                             <input type="hidden" name="relationType" value="7">
@@ -435,7 +428,6 @@
                     </div>
                     <div class="modal-footer">
                         <form action="Controller?command=delete-mpr" method="post">
-                            <input type="hidden" name="page" value="movie">
                             <input type="hidden" name="id">
                             <input type="hidden" name="movieId" value="${requestScope.movie.id}">
                             <input type="hidden" name="relationType" value="8">

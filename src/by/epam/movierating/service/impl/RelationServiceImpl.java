@@ -44,4 +44,37 @@ public class RelationServiceImpl implements RelationService {
             throw new ServiceException("Service layer: cannot add genre to movie", e);
         }
     }
+
+    @Override
+    public void deletePersonFromMovie(int movieId, int personId, int relationType) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            MoviePersonRelationDAO moviePersonRelationDAO = daoFactory.getMoviePersonRelationDAO();
+            moviePersonRelationDAO.deleteMovieFromPersonWithRelation(movieId, personId, relationType);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot delete person from movie", e);
+        }
+    }
+
+    @Override
+    public void deleteCountryFromMovie(int movieId, int countryId) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            MovieCountryDAO movieCountryDAO = daoFactory.getMovieCountryDAO();
+            movieCountryDAO.deleteMovieFromCountry(movieId, countryId);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot delete country from movie", e);
+        }
+    }
+
+    @Override
+    public void deleteGenreFromMovie(int movieId, int genreId) throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            MovieGenreDAO movieGenreDAO = daoFactory.getMovieGenreDAO();
+            movieGenreDAO.deleteMovieFromGenre(movieId, genreId);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot delete genre from movie", e);
+        }
+    }
 }
