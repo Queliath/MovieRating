@@ -141,11 +141,7 @@
             <c:if test='${requestScope.person.moviesAsActor != null || sessionScope.userStatus eq "admin"}'>
                 <h3>${localeAsActor}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
-                    <form action="#" method="post" role="form">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
-                        </div>
-                    </form>
+                    <a href="Controller?command=movies&person=${requestScope.person.id}&rel=1" class="btn btn-success">${localeAddMovieToPerson}</a>
                 </c:if>
                 <c:forEach items="${requestScope.person.moviesAsActor}" var="movie">
                     <div class="well clearfix">
@@ -173,11 +169,7 @@
             <c:if test='${requestScope.person.moviesAsDirector != null || sessionScope.userStatus eq "admin"}'>
                 <h3>${localeAsDirector}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
-                    <form action="#" method="post" role="form">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
-                        </div>
-                    </form>
+                    <a href="Controller?command=movies&person=${requestScope.person.id}&rel=2" class="btn btn-success">${localeAddMovieToPerson}</a>
                 </c:if>
                 <c:forEach items="${requestScope.person.moviesAsDirector}" var="movie">
                     <div class="well clearfix">
@@ -205,11 +197,7 @@
             <c:if test='${requestScope.person.moviesAsProducer != null || sessionScope.userStatus eq "admin"}'>
                 <h3>${localeAsProducer}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
-                    <form action="#" method="post" role="form">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
-                        </div>
-                    </form>
+                    <a href="Controller?command=movies&person=${requestScope.person.id}&rel=3" class="btn btn-success">${localeAddMovieToPerson}</a>
                 </c:if>
                 <c:forEach items="${requestScope.person.moviesAsProducer}" var="movie">
                     <div class="well clearfix">
@@ -237,11 +225,7 @@
             <c:if test='${requestScope.person.moviesAsWriter != null || sessionScope.userStatus eq "admin"}'>
                 <h3>${localeAsWriter}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
-                    <form action="#" method="post" role="form">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
-                        </div>
-                    </form>
+                    <a href="Controller?command=movies&person=${requestScope.person.id}&rel=4" class="btn btn-success">${localeAddMovieToPerson}</a>
                 </c:if>
                 <c:forEach items="${requestScope.person.moviesAsWriter}" var="movie">
                     <div class="well clearfix">
@@ -269,11 +253,7 @@
             <c:if test='${requestScope.person.moviesAsPainter != null || sessionScope.userStatus eq "admin"}'>
                 <h3>${localeAsPainter}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
-                    <form action="#" method="post" role="form">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
-                        </div>
-                    </form>
+                    <a href="Controller?command=movies&person=${requestScope.person.id}&rel=6" class="btn btn-success">${localeAddMovieToPerson}</a>
                 </c:if>
                 <c:forEach items="${requestScope.person.moviesAsPainter}" var="movie">
                     <div class="well clearfix">
@@ -301,11 +281,7 @@
             <c:if test='${requestScope.person.moviesAsOperator != null || sessionScope.userStatus eq "admin"}'>
                 <h3>${localeAsOperator}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
-                    <form action="#" method="post" role="form">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
-                        </div>
-                    </form>
+                    <a href="Controller?command=movies&person=${requestScope.person.id}&rel=5" class="btn btn-success">${localeAddMovieToPerson}</a>
                 </c:if>
                 <c:forEach items="${requestScope.person.moviesAsOperator}" var="movie">
                     <div class="well clearfix">
@@ -333,11 +309,7 @@
             <c:if test='${requestScope.person.moviesAsEditor != null || sessionScope.userStatus eq "admin"}'>
                 <h3>${localeAsEditor}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
-                    <form action="#" method="post" role="form">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
-                        </div>
-                    </form>
+                    <a href="Controller?command=movies&person=${requestScope.person.id}&rel=7" class="btn btn-success">${localeAddMovieToPerson}</a>
                 </c:if>
                 <c:forEach items="${requestScope.person.moviesAsEditor}" var="movie">
                     <div class="well clearfix">
@@ -365,11 +337,7 @@
             <c:if test='${requestScope.person.moviesAsComposer != null || sessionScope.userStatus eq "admin"}'>
                 <h3>${localeAsComposer}</h3>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
-                    <form action="#" method="post" role="form">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success">${localeAddMovieToPerson}</button>
-                        </div>
-                    </form>
+                    <a href="Controller?command=movies&person=${requestScope.person.id}&rel=8" class="btn btn-success">${localeAddMovieToPerson}</a>
                 </c:if>
                 <c:forEach items="${requestScope.person.moviesAsComposer}" var="movie">
                     <div class="well clearfix">

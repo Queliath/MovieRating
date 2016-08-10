@@ -41,6 +41,7 @@
 <f:message bundle="${locale}" key="locale.noResults" var="localeNoResults"/>
 <f:message bundle="${locale}" key="locale.displaying" var="localeDisplaying"/>
 <f:message bundle="${locale}" key="locale.of" var="localeOf"/>
+<f:message bundle="${locale}" key="locale.add" var="localeAdd"/>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -113,6 +114,8 @@
         <h3>${localeSearchCriteria}</h3>
         <form action="Controller?command=movies" method="post" role="form" id="search-form">
             <input name="page" value="1" type="hidden">
+            <input name="person" value="${requestScope.personId}" type="hidden">
+            <input name="rel" value="${requestScope.relationType}" type="hidden">
             <div class="row">
                 <div class="form-group col-sm-6">
                     <label for="name">${localeName}:</label>
@@ -172,7 +175,9 @@
     </div>
     <c:if test="${sessionScope.userId != null}">
         <c:if test='${sessionScope.userStatus eq "admin"}'>
-            <a href="Controller?command=add-movie" class="btn btn-success btn-lg">${localeAddMovie}</a>
+            <c:if test="${requestScope.personId == null && requestScope.relationType == null}">
+                <a href="Controller?command=add-movie" class="btn btn-success btn-lg">${localeAddMovie}</a>
+            </c:if>
         </c:if>
     </c:if>
     <c:if test="${requestScope.moviesCount == 0}">
@@ -201,6 +206,14 @@
                         <li>${localeRating}: ${movie.averageRating}</li>
                     </ul>
                     <p>${movie.annotation}</p>
+                    <c:if test='${sessionScope.userStatus eq "admin" && requestScope.personId != null && requestScope.relationType != null}'>
+                        <form action="Controller?command=add-mpr" method="post" role="form">
+                            <input name="movieId" value="${movie.id}" type="hidden">
+                            <input name="personId" value="${requestScope.personId}" type="hidden">
+                            <input name="relationType" value="${requestScope.relationType}" type="hidden">
+                            <button type="submit" class="btn btn-success btn-sm">${localeAdd}</button>
+                        </form>
+                    </c:if>
                 </div>
             </c:forEach>
         </c:if>

@@ -62,6 +62,10 @@ public class ViewMoviesListCommand implements Command {
         int searchFormMinRating = (searchFormMinRatingStr == null || searchFormMinRatingStr.isEmpty()) ? 0 : Integer.parseInt(searchFormMinRatingStr);
         String searchFormMaxRatingStr = request.getParameter("searchFormMaxRating");
         int searchFormMaxRating = (searchFormMaxRatingStr == null || searchFormMaxRatingStr.isEmpty()) ? 0 : Integer.parseInt(searchFormMaxRatingStr);
+        String personParam = request.getParameter("person");
+        Integer personId = (personParam == null || personParam.isEmpty()) ? null : Integer.parseInt(personParam);
+        String relParam = request.getParameter("rel");
+        Integer relationType = (relParam == null || relParam.isEmpty()) ? null : Integer.parseInt(relParam);
 
         request.setAttribute("searchFormName", searchFormNameParam);
         request.setAttribute("searchFormMinYear", searchFormMinYearStr);
@@ -70,6 +74,8 @@ public class ViewMoviesListCommand implements Command {
         request.setAttribute("searchFormCountries", searchFormCountries);
         request.setAttribute("searchFormMinRating", searchFormMinRatingStr);
         request.setAttribute("searchFormMaxRating", searchFormMaxRatingStr);
+        request.setAttribute("personId", personId);
+        request.setAttribute("relationType", relationType);
 
         try {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
