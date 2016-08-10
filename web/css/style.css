@@ -51,7 +51,7 @@
         padding-left: 220px;
     }
 }
-.jumbotron ul li a::after{
+.jumbotron ul li .comma::after{
     content: ',';
 }
 .jumbotron ul li :last-child::after{
