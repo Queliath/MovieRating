@@ -15,6 +15,61 @@ import java.util.List;
  * Created by Владислав on 11.06.2016.
  */
 public class MySQLMovieDAO implements MovieDAO {
+    private static final String ADD_MOVIE_QUERY = "INSERT INTO movie (name, year, tagline, budget, premiere," +
+            "lasting, annotation, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_MOVIE_QUERY = "UPDATE movie SET name = ?, year = ?, tagline = ?," +
+            "budget = ?, premiere = ?, lasting = ?, annotation = ?, image = ? WHERE id = ?";
+    private static final String TMOVIE_CHECK_QUERY = "SELECT id FROM tmovie " +
+            "WHERE language_id = ? AND id = ?";
+    private static final String ADD_TMOVIE_QUERY = "INSERT INTO tmovie (language_id, id, name, tagline, " +
+            "annotation, image) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_TMOVIE_QUERY = "UPDATE tmovie SET name = ?, tagline = ?, " +
+            "annotation = ?, image = ? WHERE language_id = ? AND id = ?";
+    private static final String DELETE_MOVIE_QUERY = "DELETE FROM movie WHERE id = ?";
+    private static final String GET_ALL_MOVIES_QUERY = "SELECT * FROM movie";
+    private static final String GET_ALL_MOVIES_NOT_DEFAULT_LANG_QUERY = "SELECT m.id, " +
+            "coalesce(t.name, m.name), m.year, coalesce(t.tagline, m.tagline), " +
+            "m.budget, m.premiere, m.lasting, coalesce(t.annotation, m.annotation), " +
+            "coalesce(t.image, m.image) FROM movie AS m LEFT JOIN (SELECT * FROM tmovie " +
+            "WHERE language_id = ?) AS t USING(id)";
+    private static final String GET_MOVIE_BY_ID_QUERY = "SELECT * FROM movie WHERE id = ?";
+    private static final String GET_MOVIE_BY_ID_NOT_DEFAULT_LANG_QUERY = "SELECT m.id, " +
+            "coalesce(t.name, m.name), m.year, coalesce(t.tagline, m.tagline), " +
+            "m.budget, m.premiere, m.lasting, coalesce(t.annotation, m.annotation), " +
+            "coalesce(t.image, m.image) FROM movie AS m LEFT JOIN (SELECT * FROM tmovie " +
+            "WHERE language_id = ?) AS t USING(id) WHERE m.id = ?";
+    private static final String GET_MOVIES_BY_COUNTRY_QUERY = "SELECT movie.* FROM movie " +
+            "INNER JOIN movie_country ON movie.id = movie_country.movie_id WHERE movie_country.country_id = ? ";
+    private static final String GET_MOVIES_BY_COUNTRY_NOT_DEFAULT_LANG_QUERY = "SELECT m.id, coalesce(t.name, m.name), m.year, " +
+            "coalesce(t.tagline, m.tagline), m.budget, m.premiere, m.lasting, " +
+            "coalesce(t.annotation, m.annotation), coalesce(t.image, m.image) " +
+            "FROM movie AS m INNER JOIN movie_country AS mc ON m.id = mc.movie_id " +
+            "LEFT JOIN (SELECT * FROM tmovie WHERE language_id = ?) AS t USING(id) " +
+            "WHERE mc.country_id = ?;";
+    private static final String GET_MOVIES_BY_GENRE_QUERY = "SELECT movie.* FROM movie " +
+            "INNER JOIN movie_genre ON movie.id = movie_genre.movie_id WHERE movie_genre.genre_id = ? ";
+    private static final String GET_MOVIES_BY_GENRE_NOT_DEFAULT_LANG_QUERY = "SELECT m.id, coalesce(t.name, m.name), m.year, " +
+            "coalesce(t.tagline, m.tagline), m.budget, m.premiere, m.lasting, " +
+            "coalesce(t.annotation, m.annotation), coalesce(t.image, m.image) " +
+            "FROM movie AS m INNER JOIN movie_genre AS mg ON m.id = mg.movie_id " +
+            "LEFT JOIN (SELECT * FROM tmovie WHERE language_id = ?) AS t USING(id) " +
+            "WHERE mg.genre_id = ?";
+    private static final String GET_MOVIES_BY_PERSON_QUERY = "SELECT movie.* FROM movie " +
+            "INNER JOIN movie_person_relation ON movie.id = movie_person_relation.movie_id WHERE " +
+            "movie_person_relation.person_id = ? AND movie_person_relation.relation_type = ?";
+    private static final String GET_MOVIES_BY_PERSON_NOT_DEFAULT_LANG_QUERY = "SELECT m.id, coalesce(t.name, m.name), m.year, " +
+            "coalesce(t.tagline, m.tagline), m.budget, m.premiere, m.lasting, " +
+            "coalesce(t.annotation, m.annotation), coalesce(t.image, m.image) " +
+            "FROM movie AS m INNER JOIN movie_person_relation AS mpr ON m.id = mpr.movie_id " +
+            "LEFT JOIN (SELECT * FROM tmovie WHERE language_id = ?) AS t USING(id) " +
+            "WHERE mpr.person_id = ? AND mpr.relation_type = ?;";
+    private static final String GET_RECENT_ADDED_MOVIES_QUERY = "SELECT * FROM movie ORDER BY id DESC LIMIT ";
+    private static final String GET_RECENT_ADDED_MOVIES_NOT_DEFAULT_LANG_QUERY = "SELECT m.id, " +
+            "coalesce(t.name, m.name), m.year, coalesce(t.tagline, m.tagline), " +
+            "m.budget, m.premiere, m.lasting, coalesce(t.annotation, m.annotation), " +
+            "coalesce(t.image, m.image) FROM movie AS m LEFT JOIN (SELECT * FROM tmovie " +
+            "WHERE language_id = ?) AS t USING(id) ORDER BY id DESC LIMIT ";
+
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
     @Override
@@ -28,9 +83,7 @@ public class MySQLMovieDAO implements MovieDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO movie (name, year, tagline, budget, premiere," +
-                            "lasting, annotation, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement(ADD_MOVIE_QUERY);
             statement.setString(1, movie.getName());
             statement.setInt(2, movie.getYear());
             statement.setString(3, movie.getTagline());
@@ -65,9 +118,7 @@ public class MySQLMovieDAO implements MovieDAO {
         try {
             PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement(
-                        "UPDATE movie SET name = ?, year = ?, tagline = ?," +
-                                "budget = ?, premiere = ?, lasting = ?, annotation = ?, image = ? WHERE id = ?");
+                statement = connection.prepareStatement(UPDATE_MOVIE_QUERY);
                 statement.setString(1, movie.getName());
                 statement.setInt(2, movie.getYear());
                 statement.setString(3, movie.getTagline());
@@ -79,14 +130,12 @@ public class MySQLMovieDAO implements MovieDAO {
                 statement.setInt(9, movie.getId());
             }
             else {
-                PreparedStatement checkStatement = connection.prepareStatement("SELECT id FROM tmovie " +
-                        "WHERE language_id = ? AND id = ?");
+                PreparedStatement checkStatement = connection.prepareStatement(TMOVIE_CHECK_QUERY);
                 checkStatement.setString(1, languageId);
                 checkStatement.setInt(2, movie.getId());
                 ResultSet resultSet = checkStatement.executeQuery();
                 if(resultSet.next()){
-                    statement = connection.prepareStatement("UPDATE tmovie SET name = ?, tagline = ?, " +
-                            "annotation = ?, image = ? WHERE language_id = ? AND id = ?");
+                    statement = connection.prepareStatement(UPDATE_TMOVIE_QUERY);
                     statement.setString(1, movie.getName());
                     statement.setString(2, movie.getTagline());
                     statement.setString(3, movie.getAnnotation());
@@ -95,9 +144,7 @@ public class MySQLMovieDAO implements MovieDAO {
                     statement.setInt(6, movie.getId());
                 }
                 else {
-                    statement = connection.prepareStatement(
-                            "INSERT INTO tmovie (language_id, id, name, tagline, " +
-                                    "annotation, image) VALUES (?, ?, ?, ?, ?, ?)");
+                    statement = connection.prepareStatement(ADD_TMOVIE_QUERY);
                     statement.setString(1, languageId);
                     statement.setInt(2, movie.getId());
                     statement.setString(3, movie.getName());
@@ -130,7 +177,7 @@ public class MySQLMovieDAO implements MovieDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM movie WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement(DELETE_MOVIE_QUERY);
             statement.setInt(1, id);
 
             statement.executeUpdate();
@@ -159,14 +206,10 @@ public class MySQLMovieDAO implements MovieDAO {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 Statement statement = connection.createStatement();
-                resultSet = statement.executeQuery("SELECT * FROM movie");
+                resultSet = statement.executeQuery(GET_ALL_MOVIES_QUERY);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT m.id, " +
-                        "coalesce(t.name, m.name), m.year, coalesce(t.tagline, m.tagline), " +
-                        "m.budget, m.premiere, m.lasting, coalesce(t.annotation, m.annotation), " +
-                        "coalesce(t.image, m.image) FROM movie AS m LEFT JOIN (SELECT * FROM tmovie " +
-                        "WHERE language_id = ?) AS t USING(id)");
+                PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_MOVIES_NOT_DEFAULT_LANG_QUERY);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -212,15 +255,11 @@ public class MySQLMovieDAO implements MovieDAO {
         try {
             PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("SELECT * FROM movie WHERE id = ?");
+                statement = connection.prepareStatement(GET_MOVIE_BY_ID_QUERY);
                 statement.setInt(1, id);
             }
             else {
-                statement = connection.prepareStatement("SELECT m.id, " +
-                        "coalesce(t.name, m.name), m.year, coalesce(t.tagline, m.tagline), " +
-                        "m.budget, m.premiere, m.lasting, coalesce(t.annotation, m.annotation), " +
-                        "coalesce(t.image, m.image) FROM movie AS m LEFT JOIN (SELECT * FROM tmovie " +
-                        "WHERE language_id = ?) AS t USING(id) WHERE m.id = ?");
+                statement = connection.prepareStatement(GET_MOVIE_BY_ID_NOT_DEFAULT_LANG_QUERY);
                 statement.setString(1, languageId);
                 statement.setInt(2, id);
             }
@@ -264,17 +303,11 @@ public class MySQLMovieDAO implements MovieDAO {
         try {
             PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("SELECT movie.* FROM movie " +
-                        "INNER JOIN movie_genre ON movie.id = movie_genre.movie_id WHERE movie_genre.genre_id = ? ");
+                statement = connection.prepareStatement(GET_MOVIES_BY_GENRE_QUERY);
                 statement.setInt(1, genreId);
             }
             else {
-                statement = connection.prepareStatement("SELECT m.id, coalesce(t.name, m.name), m.year, " +
-                        "coalesce(t.tagline, m.tagline), m.budget, m.premiere, m.lasting, " +
-                        "coalesce(t.annotation, m.annotation), coalesce(t.image, m.image) " +
-                        "FROM movie AS m INNER JOIN movie_genre AS mg ON m.id = mg.movie_id " +
-                        "LEFT JOIN (SELECT * FROM tmovie WHERE language_id = ?) AS t USING(id) " +
-                        "WHERE mg.genre_id = ?");
+                statement = connection.prepareStatement(GET_MOVIES_BY_GENRE_NOT_DEFAULT_LANG_QUERY);
                 statement.setString(1, languageId);
                 statement.setInt(2, genreId);
             }
@@ -321,17 +354,11 @@ public class MySQLMovieDAO implements MovieDAO {
         try {
             PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("SELECT movie.* FROM movie " +
-                        "INNER JOIN movie_country ON movie.id = movie_country.movie_id WHERE movie_country.country_id = ? ");
+                statement = connection.prepareStatement(GET_MOVIES_BY_COUNTRY_QUERY);
                 statement.setInt(1, countryId);
             }
             else {
-                statement = connection.prepareStatement("SELECT m.id, coalesce(t.name, m.name), m.year, " +
-                        "coalesce(t.tagline, m.tagline), m.budget, m.premiere, m.lasting, " +
-                        "coalesce(t.annotation, m.annotation), coalesce(t.image, m.image) " +
-                        "FROM movie AS m INNER JOIN movie_country AS mc ON m.id = mc.movie_id " +
-                        "LEFT JOIN (SELECT * FROM tmovie WHERE language_id = ?) AS t USING(id) " +
-                        "WHERE mc.country_id = ?;");
+                statement = connection.prepareStatement(GET_MOVIES_BY_COUNTRY_NOT_DEFAULT_LANG_QUERY);
                 statement.setString(1, languageId);
                 statement.setInt(2, countryId);
             }
@@ -378,19 +405,12 @@ public class MySQLMovieDAO implements MovieDAO {
         try {
             PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("SELECT movie.* FROM movie " +
-                        "INNER JOIN movie_person_relation ON movie.id = movie_person_relation.movie_id WHERE " +
-                        "movie_person_relation.person_id = ? AND movie_person_relation.relation_type = ?");
+                statement = connection.prepareStatement(GET_MOVIES_BY_PERSON_QUERY);
                 statement.setInt(1, personId);
                 statement.setInt(2, relationType);
             }
             else {
-                statement = connection.prepareStatement("SELECT m.id, coalesce(t.name, m.name), m.year, " +
-                        "coalesce(t.tagline, m.tagline), m.budget, m.premiere, m.lasting, " +
-                        "coalesce(t.annotation, m.annotation), coalesce(t.image, m.image) " +
-                        "FROM movie AS m INNER JOIN movie_person_relation AS mpr ON m.id = mpr.movie_id " +
-                        "LEFT JOIN (SELECT * FROM tmovie WHERE language_id = ?) AS t USING(id) " +
-                        "WHERE mpr.person_id = ? AND mpr.relation_type = ?;");
+                statement = connection.prepareStatement(GET_MOVIES_BY_PERSON_NOT_DEFAULT_LANG_QUERY);
                 statement.setString(1, languageId);
                 statement.setInt(2, personId);
                 statement.setInt(3, relationType);
@@ -439,14 +459,10 @@ public class MySQLMovieDAO implements MovieDAO {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 Statement statement = connection.createStatement();
-                resultSet = statement.executeQuery("SELECT * FROM movie ORDER BY id DESC LIMIT " + amount);
+                resultSet = statement.executeQuery(GET_RECENT_ADDED_MOVIES_QUERY + amount);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT m.id, " +
-                        "coalesce(t.name, m.name), m.year, coalesce(t.tagline, m.tagline), " +
-                        "m.budget, m.premiere, m.lasting, coalesce(t.annotation, m.annotation), " +
-                        "coalesce(t.image, m.image) FROM movie AS m LEFT JOIN (SELECT * FROM tmovie " +
-                        "WHERE language_id = ?) AS t USING(id) ORDER BY id DESC LIMIT " + amount);
+                PreparedStatement preparedStatement = connection.prepareStatement(GET_RECENT_ADDED_MOVIES_NOT_DEFAULT_LANG_QUERY + amount);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
