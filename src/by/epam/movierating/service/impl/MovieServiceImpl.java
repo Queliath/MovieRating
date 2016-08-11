@@ -28,8 +28,15 @@ public class MovieServiceImpl implements MovieService {
 
     private static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd";
 
+    private static final int NAME_MAX_LENGTH = 45;
+    private static final int IMAGE_MAX_LENGTH = 150;
+
     @Override
     public List<Movie> getRecentAddedMovies(int amount, String languageId) throws ServiceException {
+        if(amount <= 0){
+            throw new ServiceException("Wrong amount value");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             MovieDAO movieDAO = daoFactory.getMovieDAO();
@@ -120,6 +127,10 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie getMovieById(int id, String languageId) throws ServiceException {
+        if(id <= 0){
+            throw new ServiceException("Wrong id for getting movie");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             MovieDAO movieDAO = daoFactory.getMovieDAO();
@@ -174,6 +185,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void addMovie(String name, int year, String tagline, int budget, String premiere, int lasting, String annotation, String image) throws ServiceException {
+        if(name.isEmpty() || name.length() > NAME_MAX_LENGTH || year <= 0 || tagline.isEmpty() ||
+                budget <= 0 || premiere.isEmpty() || lasting <= 0 || annotation.isEmpty() || image.isEmpty() ||
+                image.length() > IMAGE_MAX_LENGTH){
+            throw new ServiceException("Wrong parameters for adding movie");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             MovieDAO movieDAO = daoFactory.getMovieDAO();
@@ -197,6 +214,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void editMovie(int id, String name, int year, String tagline, int budget, String premiere, int lasting, String annotation, String image, String languageId) throws ServiceException {
+        if(id <= 0 || name.isEmpty() || name.length() > NAME_MAX_LENGTH || year <= 0 || tagline.isEmpty() ||
+                budget <= 0 || premiere.isEmpty() || lasting <= 0 || annotation.isEmpty() || image.isEmpty() ||
+                image.length() > IMAGE_MAX_LENGTH){
+            throw new ServiceException("Wrong parameters for editing movie");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             MovieDAO movieDAO = daoFactory.getMovieDAO();
@@ -221,6 +244,10 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void deleteMovie(int id) throws ServiceException {
+        if(id <= 0){
+            throw new ServiceException("Wrong id for deleting movie");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             MovieDAO movieDAO = daoFactory.getMovieDAO();

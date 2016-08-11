@@ -20,8 +20,18 @@ import java.util.List;
  * Created by Владислав on 03.08.2016.
  */
 public class UserServiceImpl implements UserService {
+    private static final int EMAIL_MAX_LENGTH = 45;
+    private static final int PASSWORD_MAX_LENGTH = 45;
+    private static final int FIRST_NAME_MAX_LENGTH = 25;
+    private static final int LAST_NAME_MAX_LENGTH = 25;
+    private static final int PHOTO_MAX_LENGTH = 150;
+
     @Override
     public User getUserById(int id, String languageId) throws ServiceException {
+        if(id <= 0){
+            throw new ServiceException("Wrong id for getting user");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             UserDAO userDAO = daoFactory.getUserDAO();
@@ -47,6 +57,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo) throws ServiceWrongEmailException, ServiceException {
+        if(id <= 0 || email.isEmpty() || email.length() > EMAIL_MAX_LENGTH || password.isEmpty() ||
+                password.length() > PASSWORD_MAX_LENGTH || firstName.isEmpty() || firstName.length() > FIRST_NAME_MAX_LENGTH ||
+                lastName.isEmpty() || lastName.length() > LAST_NAME_MAX_LENGTH || photo.isEmpty() || photo.length() > PHOTO_MAX_LENGTH){
+            throw new ServiceException("Wrong parameters for editing user main inf");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             UserDAO userDAO = daoFactory.getUserDAO();
@@ -71,6 +87,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editUserSecondInf(int id, int rating, String status) throws ServiceException {
+        if(id <= 0 || status.isEmpty()){
+            throw new ServiceException("Wrong parameters for editing user second inf");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             UserDAO userDAO = daoFactory.getUserDAO();
@@ -87,6 +107,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(int id) throws ServiceException {
+        if(id <= 0){
+            throw new ServiceException("Wrong id for deleting user");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             UserDAO userDAO = daoFactory.getUserDAO();

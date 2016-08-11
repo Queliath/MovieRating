@@ -11,6 +11,9 @@ import by.epam.movierating.service.interfaces.RatingService;
  * Created by Владислав on 21.07.2016.
  */
 public class RatingServiceImpl implements RatingService {
+    private static final int MIN_VALUE = 0;
+    private static final int MAX_VALUE = 10;
+
     @Override
     public int getRatingValueByMovieAndUser(int movieId, int userId) throws ServiceException {
         try {
@@ -25,6 +28,10 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public void addRating(int value, int movieId, int userId) throws ServiceException {
+        if(value < MIN_VALUE || value > MAX_VALUE || movieId <= 0 || userId <= 0){
+            throw new ServiceException("Wrong parameters for adding rating");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             RatingDAO ratingDAO = daoFactory.getRatingDAO();

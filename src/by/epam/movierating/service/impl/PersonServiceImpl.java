@@ -30,8 +30,16 @@ public class PersonServiceImpl implements PersonService {
 
     private static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd";
 
+    private static final int NAME_MAX_LENGTH = 70;
+    private static final int PLACE_OF_BIRTH_MAX_LENGTH = 45;
+    private static final int PHOTO_MAX_LENGTH = 150;
+
     @Override
     public Person getPersonById(int id, String languageId) throws ServiceException {
+        if(id <= 0){
+            throw new ServiceException("Wrong id for getting person");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             PersonDAO personDAO = daoFactory.getPersonDAO();
@@ -185,6 +193,11 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void addPerson(String name, String dateOfBirth, String placeOfBirth, String photo) throws ServiceException {
+        if(name.isEmpty() || name.length() > NAME_MAX_LENGTH || dateOfBirth.isEmpty() || placeOfBirth.isEmpty() ||
+                placeOfBirth.length() > PLACE_OF_BIRTH_MAX_LENGTH || photo.isEmpty() || photo.length() > PHOTO_MAX_LENGTH){
+            throw new ServiceException("Wrong parameters for adding person");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             PersonDAO personDAO = daoFactory.getPersonDAO();
@@ -204,6 +217,11 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void editPerson(int id, String name, String dateOfBirth, String placeOfBirth, String photo, String languageId) throws ServiceException {
+        if(id <= 0 || name.isEmpty() || name.length() > NAME_MAX_LENGTH || dateOfBirth.isEmpty() || placeOfBirth.isEmpty() ||
+                placeOfBirth.length() > PLACE_OF_BIRTH_MAX_LENGTH || photo.isEmpty() || photo.length() > PHOTO_MAX_LENGTH){
+            throw new ServiceException("Wrong parameters for editing person");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             PersonDAO personDAO = daoFactory.getPersonDAO();
@@ -224,6 +242,10 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void deletePerson(int id) throws ServiceException {
+        if(id <= 0){
+            throw new ServiceException("Wrong id for deleting person");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             PersonDAO personDAO = daoFactory.getPersonDAO();
