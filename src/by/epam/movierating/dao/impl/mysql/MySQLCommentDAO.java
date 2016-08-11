@@ -14,6 +14,21 @@ import java.util.List;
  * Created by Владислав on 11.06.2016.
  */
 public class MySQLCommentDAO implements CommentDAO {
+    private static final String ADD_COMMENT_QUERY = "INSERT INTO " +
+            "comment (movie_id, user_id, title, content, date_of_publication, language_id) " +
+            "VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_COMMENT_QUERY = "UPDATE comment " +
+            "SET movie_id = ?, user_id = ?, title = ?, content = ?, date_of_publication = ? WHERE id = ?";
+    private static final String DELETE_COMMENT_QUERY = "DELETE FROM comment WHERE id = ?";
+    private static final String GET_ALL_COMMENTS_QUERY = "SELECT * FROM comment WHERE language_id = ?";
+    private static final String GET_COMMENT_BY_ID_QUERY = "SELECT * FROM comment WHERE id = ?";
+    private static final String GET_COMMENTS_BY_MOVIE_QUERY = "SELECT * FROM comment WHERE movie_id = ? " +
+            "AND language_id = ?";
+    private static final String GET_COMMENTS_BY_USER_QUERY = "SELECT * FROM comment WHERE user_id = ? " +
+            "AND language_id = ?";
+    private static final String GET_RECENT_ADDED_COMMENTS_QUERY = "SELECT * FROM comment " +
+            "WHERE language_id = ? ORDER BY id DESC LIMIT ";
+
     @Override
     public void addComment(Comment comment, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -25,9 +40,7 @@ public class MySQLCommentDAO implements CommentDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO " +
-                    "comment (movie_id, user_id, title, content, date_of_publication, language_id) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement(ADD_COMMENT_QUERY);
             statement.setInt(1, comment.getMovieId());
             statement.setInt(2, comment.getUserId());
             statement.setString(3, comment.getTitle());
@@ -58,8 +71,7 @@ public class MySQLCommentDAO implements CommentDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE comment " +
-                    "SET movie_id = ?, user_id = ?, title = ?, content = ?, date_of_publication = ? WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement(UPDATE_COMMENT_QUERY);
             statement.setInt(1, comment.getMovieId());
             statement.setInt(2, comment.getUserId());
             statement.setString(3, comment.getTitle());
@@ -90,7 +102,7 @@ public class MySQLCommentDAO implements CommentDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM comment WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement(DELETE_COMMENT_QUERY);
             statement.setInt(1, id);
 
             statement.executeUpdate();
@@ -116,7 +128,7 @@ public class MySQLCommentDAO implements CommentDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM comment WHERE language_id = ?");
+            PreparedStatement statement = connection.prepareStatement(GET_ALL_COMMENTS_QUERY);
             statement.setString(1, languageId);
             ResultSet resultSet = statement.executeQuery();
 
@@ -155,7 +167,7 @@ public class MySQLCommentDAO implements CommentDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM comment WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement(GET_COMMENT_BY_ID_QUERY);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
 
@@ -192,8 +204,7 @@ public class MySQLCommentDAO implements CommentDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM comment WHERE movie_id = ? " +
-                    "AND language_id = ?");
+            PreparedStatement statement = connection.prepareStatement(GET_COMMENTS_BY_MOVIE_QUERY);
             statement.setInt(1, movieId);
             statement.setString(2, languageId);
             ResultSet resultSet = statement.executeQuery();
@@ -233,8 +244,7 @@ public class MySQLCommentDAO implements CommentDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM comment WHERE user_id = ? " +
-                    "AND language_id = ?");
+            PreparedStatement statement = connection.prepareStatement(GET_COMMENTS_BY_USER_QUERY);
             statement.setInt(1, userId);
             statement.setString(2, languageId);
             ResultSet resultSet = statement.executeQuery();
@@ -274,8 +284,7 @@ public class MySQLCommentDAO implements CommentDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM comment " +
-                    "WHERE language_id = ? ORDER BY id DESC LIMIT " + amount);
+            PreparedStatement statement = connection.prepareStatement(GET_RECENT_ADDED_COMMENTS_QUERY + amount);
             statement.setString(1, languageId);
             ResultSet resultSet = statement.executeQuery();
 
