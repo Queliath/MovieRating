@@ -34,7 +34,7 @@ public class WelcomeCommand implements Command {
     private static final String GENRES_REQUEST_ATTR = "genres";
     private static final String COUNTRIES_REQUEST_ATTR = "countries";
     private static final String MOVIES_REQUEST_ATTR = "movies";
-    private static final String COMMENTS_REQUEST_ATTR = "comment";
+    private static final String COMMENTS_REQUEST_ATTR = "comments";
 
     private static final int AMOUNT_OF_RECENT_ADDED_MOVIES = 3;
     private static final int AMOUNT_OF_RECENT_ADDED_COMMENTS = 3;
