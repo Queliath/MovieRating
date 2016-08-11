@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface UserService {
     User getUserById(int id, String languageId) throws ServiceException;
-    void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo) throws ServiceWrongEmailException, ServiceException;
+    void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo, String languageId) throws ServiceWrongEmailException, ServiceException;
     void editUserSecondInf(int id, int rating, String status) throws ServiceException;
     void deleteUser(int id) throws ServiceException;
     int getUsersCountByCriteria(String email, String firstName, String lastName,

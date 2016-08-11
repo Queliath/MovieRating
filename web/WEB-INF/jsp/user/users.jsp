@@ -39,6 +39,7 @@
 <f:message bundle="${locale}" key="locale.of" var="localeOf"/>
 <f:message bundle="${locale}" key="locale.firstName" var="localeFirstName"/>
 <f:message bundle="${locale}" key="locale.lastName" var="localeLastName"/>
+<f:message bundle="${locale}" key="locale.language" var="localeLanguage"/>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -187,6 +188,7 @@
                         <li>${localeDateOfRegistration}: ${user.dateOfRegistry}</li>
                         <li>${localeRating}: ${user.rating}</li>
                         <li>${localeStatus}: <c:if test='${user.status eq "normal"}'>${localeStatusNormal}</c:if><c:if test='${user.status eq "banned"}'>${localeStatusBanned}</c:if><c:if test='${user.status eq "admin"}'>${localeStatusAdmin}</c:if></li>
+                        <li>${localeLanguage}: ${user.languageId}</li>
                     </ul>
                 </div>
             </c:forEach>

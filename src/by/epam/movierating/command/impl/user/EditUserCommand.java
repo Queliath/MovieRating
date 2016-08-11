@@ -26,6 +26,7 @@ public class EditUserCommand implements Command {
 
     private static final String USER_ID_SESSION_ATTRIBUTE = "userId";
     private static final String USER_STATUS_SESSION_ATTRIBUTE = "userStatus";
+    private static final String LANGUAGE_ID_SESSION_ATTRIBUTE = "languageId";
     private static final String ADMIN_USER_STATUS = "admin";
 
     private static final String REQUEST_ID_PARAM = "id";
@@ -34,6 +35,7 @@ public class EditUserCommand implements Command {
     private static final String USER_FORM_FIRST_NAME_PARAM = "userFormFirstName";
     private static final String USER_FORM_LAST_NAME_PARAM = "userFormLastName";
     private static final String USER_FORM_PHOTO_PARAM = "userFormPhoto";
+    private static final String USER_FORM_LANGUAGE_ID_PARAM = "userFormLanguageId";
     private static final String USER_FORM_RATING_PARAM = "userFormRating";
     private static final String USER_FORM_STATUS_PARAM = "userFormStatus";
 
@@ -66,24 +68,22 @@ public class EditUserCommand implements Command {
             }
         }
 
-        QueryUtil.saveCurrentQueryToSession(request);
-        String languageId = LanguageUtil.getLanguageId(request);
-        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
-
         String userFormEmail = request.getParameter(USER_FORM_EMAIL_PARAM);
         String userFormPassword = request.getParameter(USER_FORM_PASSWORD_PARAM);
         String userFormFirstName = request.getParameter(USER_FORM_FIRST_NAME_PARAM);
         String userFormLastName = request.getParameter(USER_FORM_LAST_NAME_PARAM);
         String userFormPhoto = request.getParameter(USER_FORM_PHOTO_PARAM);
+        String userFormLanguageId = request.getParameter(USER_FORM_LANGUAGE_ID_PARAM);
         String userFormRating = request.getParameter(USER_FORM_RATING_PARAM);
         String userFormStatus = request.getParameter(USER_FORM_STATUS_PARAM);
 
-        if(userFormEmail != null && userFormPassword != null && userFormFirstName != null && userFormLastName != null && userFormPhoto != null){
+        if(userFormEmail != null && userFormPassword != null && userFormFirstName != null && userFormLastName != null && userFormPhoto != null && userFormLanguageId != null){
             try {
                 ServiceFactory serviceFactory = ServiceFactory.getInstance();
                 UserService userService = serviceFactory.getUserService();
-                userService.editUserMainInf(id, userFormEmail, userFormPassword, userFormFirstName, userFormLastName, userFormPhoto);
+                userService.editUserMainInf(id, userFormEmail, userFormPassword, userFormFirstName, userFormLastName, userFormPhoto, userFormLanguageId);
                 request.setAttribute(SAVE_SUCCESS_REQUEST_ATTR, true);
+                session.setAttribute(LANGUAGE_ID_SESSION_ATTRIBUTE, userFormLanguageId);
             } catch (ServiceWrongEmailException e) {
                 request.setAttribute(WRONG_EMAIL_REQUEST_ATTR, true);
             } catch (ServiceException e) {
@@ -100,6 +100,10 @@ public class EditUserCommand implements Command {
                 request.setAttribute(SERVICE_ERROR_REQUEST_ATTR, true);
             }
         }
+
+        QueryUtil.saveCurrentQueryToSession(request);
+        String languageId = LanguageUtil.getLanguageId(request);
+        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
         try {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();

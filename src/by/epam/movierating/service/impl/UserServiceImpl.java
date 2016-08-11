@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo) throws ServiceWrongEmailException, ServiceException {
+    public void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo, String languageId) throws ServiceWrongEmailException, ServiceException {
         if(id <= 0 || email.isEmpty() || email.length() > EMAIL_MAX_LENGTH || password.isEmpty() ||
                 password.length() > PASSWORD_MAX_LENGTH || firstName.isEmpty() || firstName.length() > FIRST_NAME_MAX_LENGTH ||
                 lastName.isEmpty() || lastName.length() > LAST_NAME_MAX_LENGTH || photo.isEmpty() || photo.length() > PHOTO_MAX_LENGTH){
@@ -78,6 +78,7 @@ public class UserServiceImpl implements UserService {
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setPhoto(photo);
+            user.setLanguageId(languageId);
 
             userDAO.updateUser(user);
         } catch (DAOException e) {

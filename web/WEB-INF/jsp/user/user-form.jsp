@@ -43,6 +43,7 @@
 <f:message bundle="${locale}" key="locale.saveSuccess" var="localeSaveSuccess"/>
 <f:message bundle="${locale}" key="locale.userForm" var="localeUserForm"/>
 <f:message bundle="${locale}" key="locale.enterPhoto" var="localeEnterPhoto"/>
+<f:message bundle="${locale}" key="locale.language" var="localeLanguage"/>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -139,6 +140,13 @@
                     <div class="form-group">
                         <label for="photo">${localePhoto}</label>
                         <input name="userFormPhoto" value="${requestScope.user.photo}" type="text" maxlength="150" class="form-control" id="photo" placeholder="${localeEnterPhoto}">
+                    </div>
+                    <div class="form-group">
+                        <label for="language-id">${localeLanguage}</label>
+                        <select name="userFormLanguageId" class="form-control" id="language-id">
+                            <option value="EN" <c:if test='${requestScope.user.languageId eq "EN"}'>selected</c:if>>EN</option>
+                            <option value="RU" <c:if test='${requestScope.user.languageId eq "RU"}'>selected</c:if>>RU</option>
+                        </select>
                     </div>
                 </c:if>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>
