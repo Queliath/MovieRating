@@ -45,7 +45,7 @@ public class SiteServiceImpl implements SiteService {
     }
 
     @Override
-    public User registration(String email, String password, String firstName, String lastName) throws ServiceWrongEmailException, ServiceException {
+    public User registration(String email, String password, String firstName, String lastName, String languageId) throws ServiceWrongEmailException, ServiceException {
         if(email.isEmpty() || email.length() > EMAIL_MAX_LENGTH || password.isEmpty() || password.length() > PASSWORD_MAX_LENGTH ||
                 firstName.isEmpty() || firstName.length() > FIRST_NAME_MAX_LENGTH || lastName.isEmpty() || lastName.length() > LAST_NAME_MAX_LENGTH){
             throw new ServiceException("Wrong parameters for registration");
@@ -67,6 +67,8 @@ public class SiteServiceImpl implements SiteService {
             newUser.setLastName(lastName);
             newUser.setDateOfRegistry(new Date());
             newUser.setStatus(DEFAULT_USER_STATUS);
+            newUser.setLanguageId(languageId);
+
             userDAO.addUser(newUser);
 
             return newUser;

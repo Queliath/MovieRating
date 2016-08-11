@@ -28,6 +28,7 @@ public class LoginCommand implements Command {
 
     private static final String USER_ID_SESSION_ATTRIBUTE = "userId";
     private static final String USER_STATUS_SESSION_ATTRIBUTE = "userStatus";
+    private static final String LANGUAGE_ID_SESSION_ATTRIBUTE = "languageId";
 
     private static final String LOGIN_FORM_EMAIL_PARAM = "loginFormEmail";
     private static final String LOGIN_FORM_PASSWORD_PARAM = "loginFormPassword";
@@ -53,6 +54,7 @@ public class LoginCommand implements Command {
                 HttpSession session = request.getSession(true);
                 session.setAttribute(USER_ID_SESSION_ATTRIBUTE, user.getId());
                 session.setAttribute(USER_STATUS_SESSION_ATTRIBUTE, user.getStatus());
+                session.setAttribute(LANGUAGE_ID_SESSION_ATTRIBUTE, user.getLanguageId());
                 response.sendRedirect(WELCOME_PAGE);
             } catch (ServiceWrongEmailException e) {
                 String languageId = LanguageUtil.getLanguageId(request);

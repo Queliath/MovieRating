@@ -16,11 +16,11 @@ import java.util.List;
  */
 public class MySQLUserDAO implements UserDAO {
     private static final String ADD_USER_QUERY = "INSERT INTO user " +
-            "(email, password, first_name, last_name, date_of_registry, photo, rating, status) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            "(email, password, first_name, last_name, date_of_registry, photo, rating, status, language_id) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_USER_QUERY = "UPDATE user " +
             "SET email = ?, password = ?, first_name = ?, last_name = ?, date_of_registry = ?, " +
-            "photo = ?, rating = ?, status = ? WHERE id = ?";
+            "photo = ?, rating = ?, status = ?, language_id = ? WHERE id = ?";
     private static final String DELETE_USER_QUERY = "DELETE FROM user WHERE id = ?";
     private static final String GET_ALL_USERS_QUERY = "SELECT * FROM user";
     private static final String GET_USER_BY_ID_QUERY = "SELECT * FROM user WHERE id = ?";
@@ -47,6 +47,7 @@ public class MySQLUserDAO implements UserDAO {
             statement.setString(6, user.getPhoto());
             statement.setInt(7, user.getRating());
             statement.setString(8, user.getStatus());
+            statement.setString(9, user.getLanguageId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -80,7 +81,8 @@ public class MySQLUserDAO implements UserDAO {
             statement.setString(6, user.getPhoto());
             statement.setInt(7, user.getRating());
             statement.setString(8, user.getStatus());
-            statement.setInt(9, user.getId());
+            statement.setString(9, user.getLanguageId());
+            statement.setInt(10, user.getId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -146,6 +148,7 @@ public class MySQLUserDAO implements UserDAO {
                 user.setPhoto(resultSet.getString(7));
                 user.setRating(resultSet.getInt(8));
                 user.setStatus(resultSet.getString(9));
+                user.setLanguageId(resultSet.getString(10));
 
                 allUsers.add(user);
             }
@@ -188,6 +191,7 @@ public class MySQLUserDAO implements UserDAO {
                 user.setPhoto(resultSet.getString(7));
                 user.setRating(resultSet.getInt(8));
                 user.setStatus(resultSet.getString(9));
+                user.setLanguageId(resultSet.getString(10));
             }
             return user;
         } catch (SQLException e) {
@@ -228,6 +232,7 @@ public class MySQLUserDAO implements UserDAO {
                 user.setPhoto(resultSet.getString(7));
                 user.setRating(resultSet.getInt(8));
                 user.setStatus(resultSet.getString(9));
+                user.setLanguageId(resultSet.getString(10));
             }
             return user;
         } catch (SQLException e) {
@@ -268,6 +273,7 @@ public class MySQLUserDAO implements UserDAO {
                 user.setPhoto(resultSet.getString(7));
                 user.setRating(resultSet.getInt(8));
                 user.setStatus(resultSet.getString(9));
+                user.setLanguageId(resultSet.getString(10));
 
                 usersByStatus.add(user);
             }
@@ -379,6 +385,7 @@ public class MySQLUserDAO implements UserDAO {
                 user.setPhoto(resultSet.getString(7));
                 user.setRating(resultSet.getInt(8));
                 user.setStatus(resultSet.getString(9));
+                user.setLanguageId(resultSet.getString(10));
 
                 users.add(user);
             }

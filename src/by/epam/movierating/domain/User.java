@@ -16,6 +16,7 @@ public class User {
     private String photo;
     private int rating;
     private String status;
+    private String languageId;
 
     private List<Comment> comments;
 
@@ -104,6 +105,14 @@ public class User {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getLanguageId() {
+        return languageId;
+    }
+
+    public void setLanguageId(String languageId) {
+        this.languageId = languageId;
     }
 
     public List<Comment> getComments() {

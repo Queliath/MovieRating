@@ -27,6 +27,7 @@ public class RegistrationCommand implements Command {
 
     private static final String USER_ID_SESSION_ATTRIBUTE = "userId";
     private static final String USER_STATUS_SESSION_ATTRIBUTE = "userStatus";
+    private static final String LANGUAGE_ID_SESSION_ATTRIBUTE = "languageId";
 
     private static final String REGISTRATION_FORM_EMAIL_PARAM = "registrationFormEmail";
     private static final String REGISTRATION_FORM_PASSWORD_PARAM = "registrationFormPassword";
@@ -39,6 +40,7 @@ public class RegistrationCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String languageId = LanguageUtil.getLanguageId(request);
         String registrationFormEmail = request.getParameter(REGISTRATION_FORM_EMAIL_PARAM);
         String registrationFormPassword = request.getParameter(REGISTRATION_FORM_PASSWORD_PARAM);
         String registrationFormFirstName = request.getParameter(REGISTRATION_FORM_FIRST_NAME_PARAM);
@@ -49,13 +51,13 @@ public class RegistrationCommand implements Command {
             try {
                 ServiceFactory serviceFactory = ServiceFactory.getInstance();
                 SiteService siteService = serviceFactory.getSiteService();
-                User user = siteService.registration(registrationFormEmail, registrationFormPassword, registrationFormFirstName, registrationFormLastName);
+                User user = siteService.registration(registrationFormEmail, registrationFormPassword, registrationFormFirstName, registrationFormLastName, languageId);
                 HttpSession session = request.getSession(true);
                 session.setAttribute(USER_ID_SESSION_ATTRIBUTE, user.getId());
                 session.setAttribute(USER_STATUS_SESSION_ATTRIBUTE, user.getStatus());
+                session.setAttribute(LANGUAGE_ID_SESSION_ATTRIBUTE, user.getLanguageId());
                 response.sendRedirect(WELCOME_PAGE);
             } catch (ServiceWrongEmailException e) {
-                String languageId = LanguageUtil.getLanguageId(request);
                 request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
                 request.setAttribute(REGISTRATION_FORM_EMAIL_PARAM, registrationFormEmail);
                 request.setAttribute(REGISTRATION_FORM_PASSWORD_PARAM, registrationFormPassword);
@@ -64,7 +66,6 @@ public class RegistrationCommand implements Command {
                 request.setAttribute(WRONG_EMAIL_REQUEST_ATTR, true);
                 request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
             } catch (ServiceException e) {
-                String languageId = LanguageUtil.getLanguageId(request);
                 request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
                 request.setAttribute(REGISTRATION_FORM_EMAIL_PARAM, registrationFormEmail);
                 request.setAttribute(REGISTRATION_FORM_PASSWORD_PARAM, registrationFormPassword);
@@ -76,7 +77,6 @@ public class RegistrationCommand implements Command {
         }
         else {
             QueryUtil.saveCurrentQueryToSession(request);
-            String languageId = LanguageUtil.getLanguageId(request);
             request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
             request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);

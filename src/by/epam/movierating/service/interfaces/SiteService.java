@@ -10,5 +10,5 @@ import by.epam.movierating.service.exception.ServiceWrongPasswordException;
  */
 public interface SiteService {
     User login(String email, String password) throws ServiceWrongEmailException, ServiceWrongPasswordException, ServiceException;
-    User registration(String email, String password, String firstName, String lastName) throws ServiceWrongEmailException, ServiceException;
+    User registration(String email, String password, String firstName, String lastName, String languageId) throws ServiceWrongEmailException, ServiceException;
 }
