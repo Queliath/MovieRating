@@ -14,6 +14,43 @@ import java.util.List;
  * Created by Владислав on 11.06.2016.
  */
 public class MySQLGenreDAO implements GenreDAO {
+    private static final String ADD_GENRE_QUERY = "INSERT INTO genre " +
+            "(name, position) VALUES (?, ?)";
+    private static final String UPDATE_GENRE_QUERY = "UPDATE genre " +
+            "SET name = ?, position = ? WHERE id = ?";
+    private static final String TGENRE_CHECK_QUERY = "SELECT id FROM tgenre " +
+            "WHERE language_id = ? AND id = ?";
+    private static final String ADD_TGENRE_QUERY = "INSERT INTO tgenre " +
+            "(language_id, id, name) VALUES (?, ?, ?)";
+    private static final String UPDATE_TGENRE_QUERY = "UPDATE tgenre " +
+            "SET name = ? WHERE language_id = ? AND id = ?";
+    private static final String DELETE_GENRE_QUERY = "DELETE FROM genre WHERE id = ?";
+    private static final String GET_ALL_GENRES_QUERY = "SELECT * FROM genre";
+    private static final String GET_ALL_GENRES_NOT_DEFAULT_LANG_QUERY = "SELECT g.id, " +
+            "coalesce(t.name, g.name), g.position FROM genre AS g " +
+            "LEFT JOIN (SELECT * FROM tgenre WHERE language_id = ?) AS t USING(id)";
+    private static final String GET_GENRE_BY_ID_QUERY = "SELECT * FROM genre WHERE id = ?";
+    private static final String GET_GENRE_BY_ID_NOT_DEFAULT_LANG_QUERY = "SELECT g.id, coalesce(t.name, g.name), " +
+            " g.position FROM genre AS g LEFT JOIN " +
+            "(SELECT * FROM tgenre WHERE language_id = ?) AS t USING(id) WHERE g.id = ?";
+    private static final String GET_GENRES_BY_MOVIE_QUERY = "SELECT genre.* FROM genre " +
+            "INNER JOIN movie_genre ON genre.id = movie_genre.genre_id " +
+            "WHERE movie_genre.movie_id = ?";
+    private static final String GET_GENRES_BY_MOVIE_NOT_DEFAULT_LANG_QUERY = "SELECT g.id, coalesce(t.name, g.name), " +
+            " g.position FROM genre AS g INNER JOIN movie_genre AS mg " +
+            "ON g.id = mg.genre_id LEFT JOIN (SELECT * FROM tgenre WHERE language_id = ?) AS t " +
+            "USING(id) WHERE mg.movie_id = ?";
+    private static final String GET_TOP_POSITION_GENRES_QUERY = "SELECT * FROM genre ORDER BY position LIMIT ";
+    private static final String GET_TOP_POSITION_GENRES_NOT_DEFAULT_LANG_QUERY = "SELECT g.id, " +
+            "coalesce(t.name, g.name), g.position FROM genre AS g " +
+            "LEFT JOIN (SELECT * FROM tgenre WHERE language_id = ?) AS t USING(id) " +
+            "ORDER BY g.position LIMIT ";
+    private static final String GET_GENRES_QUERY = "SELECT * FROM genre LIMIT ";
+    private static final String GET_GENRES_NOT_DEFAULT_LANG_QUERY = "SELECT g.id, " +
+            "coalesce(t.name, g.name), g.position FROM genre AS g " +
+            "LEFT JOIN (SELECT * FROM tgenre WHERE language_id = ?) AS t USING(id) LIMIT ";
+    private static final String GET_GENRES_COUNT_QUERY = "SELECT COUNT(*) FROM genre";
+
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
     @Override
@@ -27,8 +64,7 @@ public class MySQLGenreDAO implements GenreDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO genre " +
-                    "(name, position) VALUES (?, ?)");
+            PreparedStatement statement = connection.prepareStatement(ADD_GENRE_QUERY);
             statement.setString(1, genre.getName());
             statement.setInt(2, genre.getPosition());
 
@@ -57,28 +93,24 @@ public class MySQLGenreDAO implements GenreDAO {
         try {
             PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("UPDATE genre " +
-                        "SET name = ?, position = ? WHERE id = ?");
+                statement = connection.prepareStatement(UPDATE_GENRE_QUERY);
                 statement.setString(1, genre.getName());
                 statement.setInt(2, genre.getPosition());
                 statement.setInt(3, genre.getId());
             }
             else {
-                PreparedStatement checkStatement = connection.prepareStatement("SELECT id FROM tgenre " +
-                        "WHERE language_id = ? AND id = ?");
+                PreparedStatement checkStatement = connection.prepareStatement(TGENRE_CHECK_QUERY);
                 checkStatement.setString(1, languageId);
                 checkStatement.setInt(2, genre.getId());
                 ResultSet resultSet = checkStatement.executeQuery();
                 if(resultSet.next()){
-                    statement = connection.prepareStatement("UPDATE tgenre " +
-                            "SET name = ? WHERE language_id = ? AND id = ?");
+                    statement = connection.prepareStatement(UPDATE_TGENRE_QUERY);
                     statement.setString(1, genre.getName());
                     statement.setString(2, languageId);
                     statement.setInt(3, genre.getId());
                 }
                 else {
-                    statement = connection.prepareStatement("INSERT INTO tgenre " +
-                            "(language_id, id, name) VALUES (?, ?, ?)");
+                    statement = connection.prepareStatement(ADD_TGENRE_QUERY);
                     statement.setString(1, languageId);
                     statement.setInt(2, genre.getId());
                     statement.setString(3, genre.getName());
@@ -108,7 +140,7 @@ public class MySQLGenreDAO implements GenreDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM genre WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement(DELETE_GENRE_QUERY);
             statement.setInt(1, id);
 
             statement.executeUpdate();
@@ -137,12 +169,10 @@ public class MySQLGenreDAO implements GenreDAO {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 Statement statement = connection.createStatement();
-                resultSet = statement.executeQuery("SELECT * FROM genre");
+                resultSet = statement.executeQuery(GET_ALL_GENRES_QUERY);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT g.id, " +
-                        "coalesce(t.name, g.name), g.position FROM genre AS g " +
-                        "LEFT JOIN (SELECT * FROM tgenre WHERE language_id = ?) AS t USING(id)");
+                PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_GENRES_NOT_DEFAULT_LANG_QUERY);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -181,13 +211,11 @@ public class MySQLGenreDAO implements GenreDAO {
         try {
             PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("SELECT * FROM genre WHERE id = ?");
+                statement = connection.prepareStatement(GET_GENRE_BY_ID_QUERY);
                 statement.setInt(1, id);
             }
             else {
-                statement = connection.prepareStatement("SELECT g.id, coalesce(t.name, g.name), " +
-                        " g.position FROM genre AS g LEFT JOIN " +
-                        "(SELECT * FROM tgenre WHERE language_id = ?) AS t USING(id) WHERE g.id = ?");
+                statement = connection.prepareStatement(GET_GENRE_BY_ID_NOT_DEFAULT_LANG_QUERY);
                 statement.setString(1, languageId);
                 statement.setInt(2, id);
             }
@@ -225,16 +253,11 @@ public class MySQLGenreDAO implements GenreDAO {
         try {
             PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("SELECT genre.* FROM genre " +
-                        "INNER JOIN movie_genre ON genre.id = movie_genre.genre_id " +
-                        "WHERE movie_genre.movie_id = ?");
+                statement = connection.prepareStatement(GET_GENRES_BY_MOVIE_QUERY);
                 statement.setInt(1, movieId);
             }
             else {
-                statement = connection.prepareStatement("SELECT g.id, coalesce(t.name, g.name), " +
-                        " g.position FROM genre AS g INNER JOIN movie_genre AS mg " +
-                        "ON g.id = mg.genre_id LEFT JOIN (SELECT * FROM tgenre WHERE language_id = ?) AS t " +
-                        "USING(id) WHERE mg.movie_id = ?");
+                statement = connection.prepareStatement(GET_GENRES_BY_MOVIE_NOT_DEFAULT_LANG_QUERY);
                 statement.setString(1, languageId);
                 statement.setInt(2, movieId);
             }
@@ -275,13 +298,10 @@ public class MySQLGenreDAO implements GenreDAO {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 Statement statement = connection.createStatement();
-                resultSet = statement.executeQuery("SELECT * FROM genre ORDER BY position LIMIT " + amount);
+                resultSet = statement.executeQuery(GET_TOP_POSITION_GENRES_QUERY + amount);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT g.id, " +
-                        "coalesce(t.name, g.name), g.position FROM genre AS g " +
-                        "LEFT JOIN (SELECT * FROM tgenre WHERE language_id = ?) AS t USING(id) " +
-                        "ORDER BY g.position LIMIT " + amount);
+                PreparedStatement preparedStatement = connection.prepareStatement(GET_TOP_POSITION_GENRES_NOT_DEFAULT_LANG_QUERY + amount);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -321,12 +341,10 @@ public class MySQLGenreDAO implements GenreDAO {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 Statement statement = connection.createStatement();
-                resultSet = statement.executeQuery("SELECT * FROM genre LIMIT " + from + ", " + amount);
+                resultSet = statement.executeQuery(GET_GENRES_QUERY + from + ", " + amount);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT g.id, " +
-                        "coalesce(t.name, g.name), g.position FROM genre AS g " +
-                        "LEFT JOIN (SELECT * FROM tgenre WHERE language_id = ?) AS t USING(id) LIMIT " + from + ", " + amount);
+                PreparedStatement preparedStatement = connection.prepareStatement(GET_GENRES_NOT_DEFAULT_LANG_QUERY + from + ", " + amount);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -364,7 +382,7 @@ public class MySQLGenreDAO implements GenreDAO {
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM genre");
+            ResultSet resultSet = statement.executeQuery(GET_GENRES_COUNT_QUERY);
 
             int genresCount = 0;
             if(resultSet.next()){
