@@ -21,12 +21,28 @@ import java.util.ResourceBundle;
  * Created by Владислав on 15.07.2016.
  */
 public class RegistrationCommand implements Command {
+    private static final String JSP_PAGE_PATH = "WEB-INF/jsp/registration.jsp";
+
+    private static final String WELCOME_PAGE = "/Controller?command=welcome";
+
+    private static final String USER_ID_SESSION_ATTRIBUTE = "userId";
+    private static final String USER_STATUS_SESSION_ATTRIBUTE = "userStatus";
+
+    private static final String REGISTRATION_FORM_EMAIL_PARAM = "registrationFormEmail";
+    private static final String REGISTRATION_FORM_PASSWORD_PARAM = "registrationFormPassword";
+    private static final String REGISTRATION_FORM_FIRST_NAME_PARAM = "registrationFormFirstName";
+    private static final String REGISTRATION_FORM_LAST_NAME_PARAM = "registrationFormLastName";
+
+    private static final String SERVICE_ERROR_REQUEST_ATTR = "serviceError";
+    private static final String WRONG_EMAIL_REQUEST_ATTR = "wrongEmail";
+    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String registrationFormEmail = request.getParameter("registrationFormEmail");
-        String registrationFormPassword = request.getParameter("registrationFormPassword");
-        String registrationFormFirstName = request.getParameter("registrationFormFirstName");
-        String registrationFormLastName = request.getParameter("registrationFormLastName");
+        String registrationFormEmail = request.getParameter(REGISTRATION_FORM_EMAIL_PARAM);
+        String registrationFormPassword = request.getParameter(REGISTRATION_FORM_PASSWORD_PARAM);
+        String registrationFormFirstName = request.getParameter(REGISTRATION_FORM_FIRST_NAME_PARAM);
+        String registrationFormLastName = request.getParameter(REGISTRATION_FORM_LAST_NAME_PARAM);
 
         if(registrationFormEmail != null && registrationFormPassword != null &&
                 registrationFormFirstName != null && registrationFormLastName != null){
@@ -35,35 +51,35 @@ public class RegistrationCommand implements Command {
                 SiteService siteService = serviceFactory.getSiteService();
                 User user = siteService.registration(registrationFormEmail, registrationFormPassword, registrationFormFirstName, registrationFormLastName);
                 HttpSession session = request.getSession(true);
-                session.setAttribute("userId", user.getId());
-                session.setAttribute("userStatus", user.getStatus());
-                response.sendRedirect("/Controller?command=welcome");
+                session.setAttribute(USER_ID_SESSION_ATTRIBUTE, user.getId());
+                session.setAttribute(USER_STATUS_SESSION_ATTRIBUTE, user.getStatus());
+                response.sendRedirect(WELCOME_PAGE);
             } catch (ServiceWrongEmailException e) {
                 String languageId = LanguageUtil.getLanguageId(request);
-                request.setAttribute("selectedLanguage", languageId);
-                request.setAttribute("registrationFormEmail", registrationFormEmail);
-                request.setAttribute("registrationFormPassword", registrationFormPassword);
-                request.setAttribute("registrationFormFirstName", registrationFormFirstName);
-                request.setAttribute("registrationFormLastName", registrationFormLastName);
-                request.setAttribute("wrongEmail", true);
-                request.getRequestDispatcher("WEB-INF/jsp/registration.jsp").forward(request, response);
+                request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+                request.setAttribute(REGISTRATION_FORM_EMAIL_PARAM, registrationFormEmail);
+                request.setAttribute(REGISTRATION_FORM_PASSWORD_PARAM, registrationFormPassword);
+                request.setAttribute(REGISTRATION_FORM_FIRST_NAME_PARAM, registrationFormFirstName);
+                request.setAttribute(REGISTRATION_FORM_LAST_NAME_PARAM, registrationFormLastName);
+                request.setAttribute(WRONG_EMAIL_REQUEST_ATTR, true);
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
             } catch (ServiceException e) {
                 String languageId = LanguageUtil.getLanguageId(request);
-                request.setAttribute("selectedLanguage", languageId);
-                request.setAttribute("registrationFormEmail", registrationFormEmail);
-                request.setAttribute("registrationFormPassword", registrationFormPassword);
-                request.setAttribute("registrationFormFirstName", registrationFormFirstName);
-                request.setAttribute("registrationFormLastName", registrationFormLastName);
-                request.setAttribute("serviceError", true);
-                request.getRequestDispatcher("WEB-INF/jsp/registration.jsp").forward(request, response);
+                request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+                request.setAttribute(REGISTRATION_FORM_EMAIL_PARAM, registrationFormEmail);
+                request.setAttribute(REGISTRATION_FORM_PASSWORD_PARAM, registrationFormPassword);
+                request.setAttribute(REGISTRATION_FORM_FIRST_NAME_PARAM, registrationFormFirstName);
+                request.setAttribute(REGISTRATION_FORM_LAST_NAME_PARAM, registrationFormLastName);
+                request.setAttribute(SERVICE_ERROR_REQUEST_ATTR, true);
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
             }
         }
         else {
             QueryUtil.saveCurrentQueryToSession(request);
             String languageId = LanguageUtil.getLanguageId(request);
-            request.setAttribute("selectedLanguage", languageId);
+            request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
-            request.getRequestDispatcher("WEB-INF/jsp/registration.jsp").forward(request, response);
+            request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
         }
     }
 }

@@ -22,10 +22,28 @@ import java.util.ResourceBundle;
  * Created by Владислав on 15.07.2016.
  */
 public class LoginCommand implements Command {
+    private static final String JSP_PAGE_PATH = "WEB-INF/jsp/login.jsp";
+
+    private static final String WELCOME_PAGE = "/Controller?command=welcome";
+
+    private static final String USER_ID_SESSION_ATTRIBUTE = "userId";
+    private static final String USER_STATUS_SESSION_ATTRIBUTE = "userStatus";
+
+    private static final String LOGIN_FORM_EMAIL_PARAM = "loginFormEmail";
+    private static final String LOGIN_FORM_PASSWORD_PARAM = "loginFormPassword";
+    private static final String CAUSE_REQUEST_PARAM = "cause";
+    private static final String TIMEOUT_CAUSE_REQUEST_PARAM = "timeout";
+
+    private static final String SERVICE_ERROR_REQUEST_ATTR = "serviceError";
+    private static final String WRONG_EMAIL_REQUEST_ATTR = "wrongEmail";
+    private static final String WRONG_PASSWORD_REQUEST_ATTR = "wrongPassword";
+    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
+    private static final String TIMEOUT_REQUEST_ATTR = "timeout";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String loginFormEmail = request.getParameter("loginFormEmail");
-        String loginFormPassword = request.getParameter("loginFormPassword");
+        String loginFormEmail = request.getParameter(LOGIN_FORM_EMAIL_PARAM);
+        String loginFormPassword = request.getParameter(LOGIN_FORM_PASSWORD_PARAM);
 
         if(loginFormEmail != null && loginFormPassword != null){
             try {
@@ -33,45 +51,45 @@ public class LoginCommand implements Command {
                 SiteService siteService = serviceFactory.getSiteService();
                 User user = siteService.login(loginFormEmail, loginFormPassword);
                 HttpSession session = request.getSession(true);
-                session.setAttribute("userId", user.getId());
-                session.setAttribute("userStatus", user.getStatus());
-                response.sendRedirect("/Controller?command=welcome");
+                session.setAttribute(USER_ID_SESSION_ATTRIBUTE, user.getId());
+                session.setAttribute(USER_STATUS_SESSION_ATTRIBUTE, user.getStatus());
+                response.sendRedirect(WELCOME_PAGE);
             } catch (ServiceWrongEmailException e) {
                 String languageId = LanguageUtil.getLanguageId(request);
-                request.setAttribute("selectedLanguage", languageId);
-                request.setAttribute("wrongEmail", true);
-                request.setAttribute("loginFormEmail", loginFormEmail);
-                request.setAttribute("loginFormPassword", loginFormPassword);
-                request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
+                request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+                request.setAttribute(WRONG_EMAIL_REQUEST_ATTR, true);
+                request.setAttribute(LOGIN_FORM_EMAIL_PARAM, loginFormEmail);
+                request.setAttribute(LOGIN_FORM_PASSWORD_PARAM, loginFormPassword);
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
             } catch (ServiceWrongPasswordException e) {
                 String languageId = LanguageUtil.getLanguageId(request);
-                request.setAttribute("selectedLanguage", languageId);
-                request.setAttribute("wrongPassword", true);
-                request.setAttribute("loginFormEmail", loginFormEmail);
-                request.setAttribute("loginFormPassword", loginFormPassword);
-                request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
+                request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+                request.setAttribute(WRONG_PASSWORD_REQUEST_ATTR, true);
+                request.setAttribute(LOGIN_FORM_EMAIL_PARAM, loginFormEmail);
+                request.setAttribute(LOGIN_FORM_PASSWORD_PARAM, loginFormPassword);
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
             } catch (ServiceException e) {
                 String languageId = LanguageUtil.getLanguageId(request);
-                request.setAttribute("selectedLanguage", languageId);
-                request.setAttribute("serviceError", true);
-                request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
+                request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+                request.setAttribute(SERVICE_ERROR_REQUEST_ATTR, true);
+                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
             }
         }
         else {
-            String cause = request.getParameter("cause");
+            String cause = request.getParameter(CAUSE_REQUEST_PARAM);
             if(cause != null){
                 switch (cause){
-                    case "timeout":
-                        request.setAttribute("timeout", true);
+                    case TIMEOUT_CAUSE_REQUEST_PARAM:
+                        request.setAttribute(TIMEOUT_REQUEST_ATTR, true);
                         break;
                 }
             }
 
             QueryUtil.saveCurrentQueryToSession(request);
             String languageId = LanguageUtil.getLanguageId(request);
-            request.setAttribute("selectedLanguage", languageId);
+            request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
-            request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
+            request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
         }
     }
 }
