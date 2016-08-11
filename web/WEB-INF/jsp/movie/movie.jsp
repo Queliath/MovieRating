@@ -176,11 +176,11 @@
                 <input type="hidden" name="commentFormMovieId" value="${requestScope.movie.id}">
                 <div class="form-group">
                     <label for="title">${localeTitle}</label>
-                    <input name="commentFormTitle" type="text" class="form-control" id="title" placeholder="${localeEnterTitle}">
+                    <input name="commentFormTitle" type="text" minlength="1" maxlength="45" class="form-control" id="title" placeholder="${localeEnterTitle}">
                 </div>
                 <div class="form-group">
                     <label for="content">${localeContent}</label>
-                    <textarea name="commentFormContent" id="content" class="form-control" rows="5" placeholder="${localeEnterContent}"></textarea>
+                    <textarea name="commentFormContent" minlength="1" id="content" class="form-control" rows="5" placeholder="${localeEnterContent}"></textarea>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-default">${localeCommentButton}</button>

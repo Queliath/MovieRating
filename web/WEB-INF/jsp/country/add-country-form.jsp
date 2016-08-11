@@ -103,11 +103,11 @@
         <form action="Controller?command=add-country" method="post" role="form">
             <div class="form-group">
                 <label for="name">${localeName}</label>
-                <input name="countryFormName" value="${requestScope.countryFormName}" type="text" class="form-control" id="name" placeholder="${localeEnterName}">
+                <input name="countryFormName" value="${requestScope.countryFormName}" type="text" minlength="1" maxlength="45" class="form-control" id="name" placeholder="${localeEnterName}">
             </div>
             <div class="form-group">
                 <label for="position">${localePosition}</label>
-                <input name="countryFormPosition" value="${requestScope.countryFormPosition}" type="number" class="form-control" id="position" placeholder="${localeEnterPosition}">
+                <input name="countryFormPosition" value="${requestScope.countryFormPosition}" type="number" min="1" class="form-control" id="position" placeholder="${localeEnterPosition}">
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-success">${localeSave}</button>

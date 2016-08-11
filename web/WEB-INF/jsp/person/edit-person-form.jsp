@@ -113,7 +113,7 @@
             <form method="post" role="form">
                 <div class="form-group">
                     <label for="name">${localePersonName}</label>
-                    <input name="personFormName" value="${requestScope.person.name}" type="text" class="form-control" id="name">
+                    <input name="personFormName" value="${requestScope.person.name}" type="text" minlength="1" maxlength="70" class="form-control" id="name">
                 </div>
                 <c:if test='${requestScope.editingLanguage eq "EN"}'>
                     <div class="form-group">
@@ -126,12 +126,12 @@
                 </c:if>
                 <div class="form-group">
                     <label for="place-of-birth">${localePlaceOfBirth}</label>
-                    <input name="personFormPlaceOfBirth" value="${requestScope.person.placeOfBirth}" type="text" class="form-control" id="place-of-birth">
+                    <input name="personFormPlaceOfBirth" value="${requestScope.person.placeOfBirth}" type="text" minlength="1" maxlength="45" class="form-control" id="place-of-birth">
                 </div>
                 <c:if test='${requestScope.editingLanguage eq "EN"}'>
                     <div class="form-group">
                         <label for="photo">${localePhoto}</label>
-                        <input name="personFormPhoto" value="${requestScope.person.photo}" type="text" class="form-control" id="photo">
+                        <input name="personFormPhoto" value="${requestScope.person.photo}" type="text" minlength="1" maxlength="150" class="form-control" id="photo">
                     </div>
                 </c:if>
                 <c:if test='${requestScope.editingLanguage ne "EN"}'>

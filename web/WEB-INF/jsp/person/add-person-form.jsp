@@ -106,7 +106,7 @@
         <form action="Controller?command=add-person" method="post" role="form">
             <div class="form-group">
                 <label for="name">${localePersonName}</label>
-                <input name="personFormName" value="${requestScope.personFormName}" type="text" class="form-control" id="name" placeholder="${localeEnterPersonName}">
+                <input name="personFormName" value="${requestScope.personFormName}" type="text" minlength="1" maxlength="70" class="form-control" id="name" placeholder="${localeEnterPersonName}">
             </div>
             <div class="form-group">
                 <label for="date-of-birth">${localeDateOfBirth}</label>
@@ -114,11 +114,11 @@
             </div>
             <div class="form-group">
                 <label for="place-of-birth">${localePlaceOfBirth}</label>
-                <input name="personFormPlaceOfBirth" value="${requestScope.personFormPlaceOfBirth}" type="text" class="form-control" id="place-of-birth" placeholder="${localeEnterPlaceOfBirth}">
+                <input name="personFormPlaceOfBirth" value="${requestScope.personFormPlaceOfBirth}" type="text" minlength="1" maxlength="45" class="form-control" id="place-of-birth" placeholder="${localeEnterPlaceOfBirth}">
             </div>
             <div class="form-group">
                 <label for="photo">${localePhoto}</label>
-                <input name="personFormPhoto" value="${requestScope.personFormPhoto}" type="text" class="form-control" id="photo" placeholder="${localeEnterPhoto}">
+                <input name="personFormPhoto" value="${requestScope.personFormPhoto}" type="text" minlength="1" maxlength="150" class="form-control" id="photo" placeholder="${localeEnterPhoto}">
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-success">${localeSave}</button>

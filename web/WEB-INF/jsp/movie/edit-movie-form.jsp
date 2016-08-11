@@ -125,12 +125,12 @@
             <form method="post" role="form">
                 <div class="form-group">
                     <label for="name">${localeName}</label>
-                    <input name="movieFormName" value="${requestScope.movie.name}" type="text" class="form-control" id="name">
+                    <input name="movieFormName" value="${requestScope.movie.name}" type="text" minlength="1" maxlength="45" class="form-control" id="name">
                 </div>
                 <c:if test='${requestScope.editingLanguage eq "EN"}'>
                     <div class="form-group">
                         <label for="year">${localeYear}</label>
-                        <input name="movieFormYear" value="${requestScope.movie.year}" type="number" class="form-control" id="year">
+                        <input name="movieFormYear" value="${requestScope.movie.year}" type="number" min="1" class="form-control" id="year">
                     </div>
                 </c:if>
                 <c:if test='${requestScope.editingLanguage ne "EN"}'>
@@ -138,12 +138,12 @@
                 </c:if>
                 <div class="form-group">
                     <label for="tagline">${localeTagline}</label>
-                    <textarea name="movieFormTagline" class="form-control" id="tagline">${requestScope.movie.tagline}</textarea>
+                    <textarea name="movieFormTagline" minlength="1" class="form-control" id="tagline">${requestScope.movie.tagline}</textarea>
                 </div>
                 <c:if test='${requestScope.editingLanguage eq "EN"}'>
                     <div class="form-group">
                         <label for="budget">${localeBudget}</label>
-                        <input name="movieFormBudget" value="${requestScope.movie.budget}" type="number" class="form-control" id="budget">
+                        <input name="movieFormBudget" value="${requestScope.movie.budget}" type="number" min="1" class="form-control" id="budget">
                     </div>
                 </c:if>
                 <c:if test='${requestScope.editingLanguage ne "EN"}'>
@@ -161,7 +161,7 @@
                 <c:if test='${requestScope.editingLanguage eq "EN"}'>
                     <div class="form-group">
                         <label for="lasting">${localeLasting} (${localeMinute})</label>
-                        <input name="movieFormLasting" value="${requestScope.movie.lasting}" type="number" class="form-control" id="lasting">
+                        <input name="movieFormLasting" value="${requestScope.movie.lasting}" type="number" min="1" class="form-control" id="lasting">
                     </div>
                 </c:if>
                 <c:if test='${requestScope.editingLanguage ne "EN"}'>
@@ -169,11 +169,11 @@
                 </c:if>
                 <div class="form-group">
                     <label for="annotation">${localeAnnotation}</label>
-                    <textarea name="movieFormAnnotation" class="form-control" id="annotation" rows="10">${requestScope.movie.annotation}</textarea>
+                    <textarea name="movieFormAnnotation" minlength="1" class="form-control" id="annotation" rows="10">${requestScope.movie.annotation}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="image">${localeImage}</label>
-                    <input name="movieFormImage" value="${requestScope.movie.image}" type="text" class="form-control" id="image">
+                    <input name="movieFormImage" value="${requestScope.movie.image}" type="text" minlength="1" maxlength="150" class="form-control" id="image">
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">${localeSave}</button>

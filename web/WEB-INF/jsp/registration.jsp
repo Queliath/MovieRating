@@ -75,19 +75,19 @@
         <form action="Controller?command=registration" method="post" role="form">
             <div class="form-group">
                 <label for="email">${localeEmail}</label>
-                <input name="registrationFormEmail" value="${requestScope.registrationFormEmail}" type="email" class="form-control" id="email" placeholder="${localeEnterEmail}">
+                <input name="registrationFormEmail" value="${requestScope.registrationFormEmail}" type="email" minlength="3" maxlength="45" class="form-control" id="email" placeholder="${localeEnterEmail}">
             </div>
             <div class="form-group">
                 <label for="password">${localePassword}</label>
-                <input name="registrationFormPassword" value="${requestScope.registrationFormPassword}" type="password" class="form-control" id="password" placeholder="${localeEnterPassword}">
+                <input name="registrationFormPassword" value="${requestScope.registrationFormPassword}" type="password" minlength="1" maxlength="45" class="form-control" id="password" placeholder="${localeEnterPassword}">
             </div>
             <div class="form-group">
                 <label for="first-name">${localeFirstName}</label>
-                <input name="registrationFormFirstName" value="${requestScope.registrationFormFirstName}" type="text" class="form-control" id="first-name" placeholder="${localeEnterFirstName}">
+                <input name="registrationFormFirstName" value="${requestScope.registrationFormFirstName}" type="text" minlength="1" maxlength="25" class="form-control" id="first-name" placeholder="${localeEnterFirstName}">
             </div>
             <div class="form-group">
                 <label for="second-name">${localeLastName}</label>
-                <input name="registrationFormLastName" value="${requestScope.registrationFormLastName}" type="text" class="form-control" id="second-name" placeholder="${localeEnterLastName}">
+                <input name="registrationFormLastName" value="${requestScope.registrationFormLastName}" type="text" minlength="1" maxlength="25" class="form-control" id="second-name" placeholder="${localeEnterLastName}">
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-default">${localeRegistrationButton}</button>

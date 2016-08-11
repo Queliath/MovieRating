@@ -111,12 +111,12 @@
             <form method="post" role="form">
                 <div class="form-group">
                     <label for="name">${localeName}</label>
-                    <input name="genreFormName" value="${requestScope.genre.name}" type="text" class="form-control" id="name">
+                    <input name="genreFormName" value="${requestScope.genre.name}" type="text" minlength="1" maxlength="45" class="form-control" id="name">
                 </div>
                 <c:if test='${requestScope.editingLanguage eq "EN"}'>
                     <div class="form-group">
                         <label for="position">${localePosition}</label>
-                        <input name="genreFormPosition" value="${requestScope.genre.position}" type="number" class="form-control" id="position">
+                        <input name="genreFormPosition" value="${requestScope.genre.position}" type="number" min="1" class="form-control" id="position">
                     </div>
                 </c:if>
                 <c:if test='${requestScope.editingLanguage ne "EN"}'>

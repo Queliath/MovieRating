@@ -103,11 +103,11 @@
         <form action="Controller?command=add-genre" method="post" role="form">
             <div class="form-group">
                 <label for="name">${localeName}</label>
-                <input name="genreFormName" value="${requestScope.genreFormName}" type="text" class="form-control" id="name" placeholder="${localeEnterName}">
+                <input name="genreFormName" value="${requestScope.genreFormName}" type="text" minlength="1" maxlength="45" class="form-control" id="name" placeholder="${localeEnterName}">
             </div>
             <div class="form-group">
                 <label for="description">${localePosition}</label>
-                <input name="genreFormPosition" value="${requestScope.genreFormPosition}" type="number" class="form-control" id="description" placeholder="${localeEnterPosition}"/>
+                <input name="genreFormPosition" value="${requestScope.genreFormPosition}" type="number" min="1" class="form-control" id="description" placeholder="${localeEnterPosition}"/>
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-success">${localeSave}</button>

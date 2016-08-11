@@ -77,11 +77,11 @@
         <form action="Controller?command=login" method="post" role="form">
             <div class="form-group">
                 <label for="email">${localeEmail}</label>
-                <input name="loginFormEmail" value="${requestScope.loginFormEmail}" type="email" class="form-control" id="email" placeholder="${localeEnterEmail}">
+                <input name="loginFormEmail" value="${requestScope.loginFormEmail}" type="email" minlength="3" maxlength="45" class="form-control" id="email" placeholder="${localeEnterEmail}">
             </div>
             <div class="form-group">
                 <label for="password">${localePassword}</label>
-                <input name="loginFormPassword" value="${requestScope.loginFormPassword}" type="password" class="form-control" id="password" placeholder="${localeEnterPassword}">
+                <input name="loginFormPassword" value="${requestScope.loginFormPassword}" type="password" minlength="1" maxlength="45" class="form-control" id="password" placeholder="${localeEnterPassword}">
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-default">${localeLoginButton}</button>

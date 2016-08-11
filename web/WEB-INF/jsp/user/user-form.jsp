@@ -122,23 +122,23 @@
                 <c:if test="${sessionScope.userId == requestScope.user.id}">
                     <div class="form-group">
                         <label for="email">${localeEmail}</label>
-                        <input name="userFormEmail" value="${requestScope.user.email}" type="email" class="form-control" id="email" placeholder="${localeEnterEmail}">
+                        <input name="userFormEmail" value="${requestScope.user.email}" type="email" minlength="3" maxlength="45" class="form-control" id="email" placeholder="${localeEnterEmail}">
                     </div>
                     <div class="form-group">
                         <label for="password">${localePassword}</label>
-                        <input name="userFormPassword" value="${requestScope.user.password}" type="password" class="form-control" id="password" placeholder="${localeEnterPassword}">
+                        <input name="userFormPassword" value="${requestScope.user.password}" type="password" minlength="1" maxlength="45" class="form-control" id="password" placeholder="${localeEnterPassword}">
                     </div>
                     <div class="form-group">
                         <label for="first-name">${localeFirstName}</label>
-                        <input name="userFormFirstName" value="${requestScope.user.firstName}" type="text" class="form-control" id="first-name" placeholder="${localeEnterFirstName}">
+                        <input name="userFormFirstName" value="${requestScope.user.firstName}" type="text" minlength="1" maxlength="25" class="form-control" id="first-name" placeholder="${localeEnterFirstName}">
                     </div>
                     <div class="form-group">
                         <label for="second-name">${localeLastName}</label>
-                        <input name="userFormLastName" value="${requestScope.user.lastName}" type="text" class="form-control" id="second-name" placeholder="${localeEnterLastName}">
+                        <input name="userFormLastName" value="${requestScope.user.lastName}" type="text" minlength="1" maxlength="25" class="form-control" id="second-name" placeholder="${localeEnterLastName}">
                     </div>
                     <div class="form-group">
                         <label for="photo">${localePhoto}</label>
-                        <input name="userFormPhoto" value="${requestScope.user.photo}" type="text" class="form-control" id="photo" placeholder="${localeEnterPhoto}">
+                        <input name="userFormPhoto" value="${requestScope.user.photo}" type="text" maxlength="150" class="form-control" id="photo" placeholder="${localeEnterPhoto}">
                     </div>
                 </c:if>
                 <c:if test='${sessionScope.userStatus eq "admin"}'>

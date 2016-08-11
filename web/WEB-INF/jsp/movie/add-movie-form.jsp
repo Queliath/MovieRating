@@ -115,19 +115,19 @@
         <form action="Controller?command=add-movie" method="post" role="form">
             <div class="form-group">
                 <label for="name">${localeName}</label>
-                <input name="movieFormName" value="${requestScope.movieFormName}" type="text" class="form-control" id="name" placeholder="${localeEnterName}">
+                <input name="movieFormName" value="${requestScope.movieFormName}" type="text" minlength="1" maxlength="45" class="form-control" id="name" placeholder="${localeEnterName}">
             </div>
             <div class="form-group">
                 <label for="year">${localeYear}</label>
-                <input name="movieFormYear" value="${requestScope.movieFormYear}" type="number" class="form-control" id="year" placeholder="${localeEnterYear}">
+                <input name="movieFormYear" value="${requestScope.movieFormYear}" type="number" min="1" class="form-control" id="year" placeholder="${localeEnterYear}">
             </div>
             <div class="form-group">
                 <label for="tagline">${localeTagline}</label>
-                <textarea name="movieFormTagline" class="form-control" id="tagline" placeholder="${localeEnterTagline}">${requestScope.movieFormTagline}</textarea>
+                <textarea name="movieFormTagline" minlength="1" class="form-control" id="tagline" placeholder="${localeEnterTagline}">${requestScope.movieFormTagline}</textarea>
             </div>
             <div class="form-group">
                 <label for="budget">${localeBudget}</label>
-                <input name="movieFormBudget" value="${requestScope.movieFormBudget}" type="number" class="form-control" id="budget" placeholder="${localeEnterBudget}">
+                <input name="movieFormBudget" value="${requestScope.movieFormBudget}" type="number" min="1" class="form-control" id="budget" placeholder="${localeEnterBudget}">
             </div>
             <div class="form-group">
                 <label for="premiere">${localePremiere}</label>
@@ -135,15 +135,15 @@
             </div>
             <div class="form-group">
                 <label for="lasting">${localeLasting} (${localeMinute})</label>
-                <input name="movieFormLasting" value="${requestScope.movieFormLasting}" type="number" class="form-control" id="lasting" placeholder="${localeEnterLasting}">
+                <input name="movieFormLasting" value="${requestScope.movieFormLasting}" type="number" min="1" class="form-control" id="lasting" placeholder="${localeEnterLasting}">
             </div>
             <div class="form-group">
                 <label for="annotation">${localeAnnotation}</label>
-                <textarea name="movieFormAnnotation" class="form-control" id="annotation" placeholder="${localeEnterAnnotation}" rows="10">${requestScope.movieFormAnnotation}</textarea>
+                <textarea name="movieFormAnnotation" minlength="1" class="form-control" id="annotation" placeholder="${localeEnterAnnotation}" rows="10">${requestScope.movieFormAnnotation}</textarea>
             </div>
             <div class="form-group">
                 <label for="image">${localeImage}</label>
-                <input name="movieFormImage" value="${requestScope.movieFormImage}" type="text" class="form-control" id="image" placeholder="${localeEnterImage}">
+                <input name="movieFormImage" value="${requestScope.movieFormImage}" type="text" minlength="1" maxlength="150" class="form-control" id="image" placeholder="${localeEnterImage}">
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-success">${localeSave}</button>
