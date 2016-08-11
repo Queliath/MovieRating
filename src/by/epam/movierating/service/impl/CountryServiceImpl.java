@@ -7,6 +7,7 @@ import by.epam.movierating.domain.Country;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.interfaces.CountryService;
 
+import javax.print.attribute.standard.MediaSize;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +15,14 @@ import java.util.List;
  * Created by Владислав on 15.07.2016.
  */
 public class CountryServiceImpl implements CountryService {
+    private static final int NAME_MAX_LENGTH = 45;
+
     @Override
     public List<Country> getTopPositionCountries(int amount, String languageId) throws ServiceException {
+        if(amount <= 0){
+            throw new ServiceException("Wrong amount value");
+        }
+
         try {
             CountryDAO countryDAO = DAOFactory.getInstance().getCountryDAO();
             List<Country> countries = countryDAO.getTopPositionCountries(amount, languageId);
@@ -27,6 +34,10 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public List<Country> getCountries(int from, int amount, String languageId) throws ServiceException {
+        if(from <= 0 || amount <= 0){
+            throw new ServiceException("Wrong parameters for getting countries");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             CountryDAO countryDAO = daoFactory.getCountryDAO();
@@ -51,6 +62,10 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country getCountryById(int id, String languageId) throws ServiceException {
+        if(id <= 0){
+            throw new ServiceException("Wrong id for getting country");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             CountryDAO countryDAO = daoFactory.getCountryDAO();
@@ -63,6 +78,10 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public void addCountry(String name, int position) throws ServiceException {
+        if(name.isEmpty() || name.length() > NAME_MAX_LENGTH || position <= 0){
+            throw new ServiceException("Wrong parameters for adding country");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             CountryDAO countryDAO = daoFactory.getCountryDAO();
@@ -79,6 +98,10 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public void editCountry(int id, String name, int position, String languageId) throws ServiceException {
+        if(id <= 0 || name.isEmpty() || name.length() > NAME_MAX_LENGTH || position <= 0){
+            throw new ServiceException("Wrong parameters for editing country");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             CountryDAO countryDAO = daoFactory.getCountryDAO();
@@ -96,6 +119,10 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public void deleteCountry(int id) throws ServiceException {
+        if(id <= 0){
+            throw new ServiceException("Wrong id for deleting country");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             CountryDAO countryDAO = daoFactory.getCountryDAO();

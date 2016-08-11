@@ -14,8 +14,14 @@ import java.util.List;
  * Created by Владислав on 15.07.2016.
  */
 public class GenreServiceImpl implements GenreService {
+    private static final int NAME_MAX_LENGTH = 45;
+
     @Override
     public List<Genre> getTopPositionGenres(int amount, String languageId) throws ServiceException {
+        if(amount <= 0){
+            throw new ServiceException("Wrong amount value");
+        }
+
         try {
             GenreDAO genreDAO = DAOFactory.getInstance().getGenreDAO();
             List<Genre> genres = genreDAO.getTopPositionGenres(amount, languageId);
@@ -27,6 +33,10 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public List<Genre> getGenres(int from, int amount, String languageId) throws ServiceException {
+        if(from <= 0 || amount <= 0){
+            throw new ServiceException("Wrong parameters for getting genres");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             GenreDAO genreDAO = daoFactory.getGenreDAO();
@@ -51,6 +61,10 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre getGenreById(int id, String languageId) throws ServiceException {
+        if(id <= 0){
+            throw new ServiceException("Wrong id for getting genre");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             GenreDAO genreDAO = daoFactory.getGenreDAO();
@@ -63,6 +77,10 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public void addGenre(String name, int position) throws ServiceException {
+        if(name.isEmpty() || name.length() > NAME_MAX_LENGTH || position <= 0){
+            throw new ServiceException("Wrong parameters for adding genre");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             GenreDAO genreDAO = daoFactory.getGenreDAO();
@@ -79,6 +97,10 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public void editGenre(int id, String name, int position, String languageId) throws ServiceException {
+        if(id <= 0 || name.isEmpty() || name.length() > NAME_MAX_LENGTH || position <= 0){
+            throw new ServiceException("Wrong parameters for editing genre");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             GenreDAO genreDAO = daoFactory.getGenreDAO();
@@ -96,6 +118,10 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public void deleteGenre(int id) throws ServiceException {
+        if(id <= 0){
+            throw new ServiceException("Wrong id for deleting genre");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             GenreDAO genreDAO = daoFactory.getGenreDAO();

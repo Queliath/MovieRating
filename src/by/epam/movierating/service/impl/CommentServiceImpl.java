@@ -18,8 +18,14 @@ import java.util.List;
  * Created by Владислав on 15.07.2016.
  */
 public class CommentServiceImpl implements CommentService {
+    private static final int TITLE_MAX_LENGTH = 45;
+
     @Override
     public List<Comment> getRecentAddedComments(int amount, String languageId) throws ServiceException {
+        if(amount <= 0){
+            throw new ServiceException("Wrong amount value");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             CommentDAO commentDAO = daoFactory.getCommentDAO();
@@ -42,6 +48,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void addComment(String title, String content, int movieId, int userId, String languageId) throws ServiceException {
+        if(title.isEmpty() || title.length() > TITLE_MAX_LENGTH || content.isEmpty() || movieId <= 0 || userId <= 0){
+            throw new ServiceException("Wrong parameters for adding comment");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             CommentDAO commentDAO = daoFactory.getCommentDAO();
@@ -61,6 +71,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void editComment(int id, String title, String content) throws ServiceException {
+        if(id <= 0 || title.isEmpty() || title.length() > TITLE_MAX_LENGTH || content.isEmpty()){
+            throw new ServiceException("Wrong parameters for editing comment");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             CommentDAO commentDAO = daoFactory.getCommentDAO();
@@ -77,6 +91,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment getCommentById(int id) throws ServiceException {
+        if(id <= 0){
+            throw new ServiceException("Wrong id for getting comment");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             CommentDAO commentDAO = daoFactory.getCommentDAO();
@@ -89,6 +107,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteComment(int id) throws ServiceException {
+        if(id <= 0){
+            throw new ServiceException("Wrong id for deleting comment");
+        }
+
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             CommentDAO commentDAO = daoFactory.getCommentDAO();
