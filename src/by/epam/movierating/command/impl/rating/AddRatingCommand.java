@@ -17,18 +17,27 @@ import java.io.IOException;
 public class AddRatingCommand implements Command {
     private static final int SERVER_ERROR = 500;
 
+    private static final String SESSION_TIMEOUT_PAGE = "/Controller?command=login&cause=timeout";
+    private static final String WELCOME_PAGE = "/Controller?command=welcome";
+
+    private static final String USER_ID_SESSION_ATTRIBUTE = "userId";
+    private static final String USER_STATUS_SESSION_ATTRIBUTE = "userStatus";
+
+    private static final String RATING_VALUE_REQUEST_PARAM = "ratingValue";
+    private static final String MOVIE_ID_REQUEST_PARAM = "movieId";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        Integer userId = (session == null) ? null : (Integer) session.getAttribute("userId");
-        String userStatus = (session == null) ? null : (String) session.getAttribute("userStatus");
+        Integer userId = (session == null) ? null : (Integer) session.getAttribute(USER_ID_SESSION_ATTRIBUTE);
+        String userStatus = (session == null) ? null : (String) session.getAttribute(USER_STATUS_SESSION_ATTRIBUTE);
         if(userId == null || userStatus == null){
-            response.sendRedirect("/Controller?command=login&cause=timeout");
+            response.sendRedirect(SESSION_TIMEOUT_PAGE);
             return;
         }
 
-        String ratingValue = request.getParameter("ratingValue");
-        String movieId = request.getParameter("movieId");
+        String ratingValue = request.getParameter(RATING_VALUE_REQUEST_PARAM);
+        String movieId = request.getParameter(MOVIE_ID_REQUEST_PARAM);
         if(ratingValue != null && movieId != null){
             try {
                 ServiceFactory serviceFactory = ServiceFactory.getInstance();
@@ -39,7 +48,7 @@ public class AddRatingCommand implements Command {
             }
         }
         else {
-            response.sendRedirect("/Controller?command=welcome");
+            response.sendRedirect(WELCOME_PAGE);
         }
     }
 }
