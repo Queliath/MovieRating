@@ -13,6 +13,10 @@ import java.sql.SQLException;
  * Created by Владислав on 19.06.2016.
  */
 public class MySQLMovieGenreDAO implements MovieGenreDAO {
+    private static final String ADD_MOVIE_TO_GENRE_QUERY = "INSERT INTO movie_genre " +
+            "(movie_id, genre_id) VALUES (?, ?)";
+    private static final String DELETE_MOVIE_FROM_GENRE_QUERY = "DELETE FROM movie_genre WHERE movie_id = ? AND genre_id = ?";
+
     @Override
     public void addMovieToGenre(int movieId, int genreId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -24,8 +28,7 @@ public class MySQLMovieGenreDAO implements MovieGenreDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO movie_genre " +
-                    "(movie_id, genre_id) VALUES (?, ?)");
+            PreparedStatement statement = connection.prepareStatement(ADD_MOVIE_TO_GENRE_QUERY);
             statement.setInt(1, movieId);
             statement.setInt(2, genreId);
 
@@ -52,7 +55,7 @@ public class MySQLMovieGenreDAO implements MovieGenreDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM movie_genre WHERE movie_id = ? AND genre_id = ?");
+            PreparedStatement statement = connection.prepareStatement(DELETE_MOVIE_FROM_GENRE_QUERY);
             statement.setInt(1, movieId);
             statement.setInt(2, genreId);
 

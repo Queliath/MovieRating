@@ -14,6 +14,13 @@ import java.sql.SQLException;
  * Created by Владислав on 19.06.2016.
  */
 public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
+    private static final String ADD_MOVIE_TO_PERSON_QUERY = "INSERT INTO movie_person_relation " +
+            "(movie_id, person_id, relation_type) VALUES (?, ?, ?)";
+    private static final String DELETE_MOVIE_FORM_PERSON_QUERY = "DELETE FROM movie_person_relation " +
+            "WHERE movie_id = ? AND person_id = ? AND relation_type = ?";
+    private static final String GET_MOVIES_TOTAL_BY_PERSON_QUERY = "SELECT COUNT(*) FROM " +
+            "(SELECT DISTINCT movie_id FROM movie_person_relation WHERE person_id = ?) AS c";
+
     @Override
     public void addMovieToPersonWithRelation(int movieId, int personId, int relationType) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -25,8 +32,7 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO movie_person_relation " +
-                    "(movie_id, person_id, relation_type) VALUES (?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement(ADD_MOVIE_TO_PERSON_QUERY);
             statement.setInt(1, movieId);
             statement.setInt(2, personId);
             statement.setInt(3, relationType);
@@ -54,8 +60,7 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM movie_person_relation " +
-                    "WHERE movie_id = ? AND person_id = ? AND relation_type = ?");
+            PreparedStatement statement = connection.prepareStatement(DELETE_MOVIE_FORM_PERSON_QUERY);
             statement.setInt(1, movieId);
             statement.setInt(2, personId);
             statement.setInt(3, relationType);
@@ -83,8 +88,7 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM " +
-                    "(SELECT DISTINCT movie_id FROM movie_person_relation WHERE person_id = ?) AS c");
+            PreparedStatement statement = connection.prepareStatement(GET_MOVIES_TOTAL_BY_PERSON_QUERY);
             statement.setInt(1, personId);
             ResultSet resultSet = statement.executeQuery();
 
