@@ -33,7 +33,7 @@ public class EditCommentCommand implements Command {
     private static final String COMMENT_FORM_CONTENT_PARAM = "commentFormContent";
 
     private static final String SERVICE_ERROR_REQUEST_ATTR = "serviceError";
-    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "languageId";
+    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
     private static final String SAVE_SUCCESS_REQUEST_ATTR = "saveSuccess";
     private static final String COMMENT_REQUEST_ATTR = "comment";
 

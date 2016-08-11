@@ -17,20 +17,29 @@ import java.io.IOException;
 public class DeleteCountryCommand implements Command {
     private static final int SERVER_ERROR = 500;
 
+    private static final String SESSION_TIMEOUT_PAGE = "/Controller?command=login&cause=timeout";
+    private static final String WELCOME_PAGE = "/Controller?command=welcome";
+    private static final String SUCCESS_REDIRECT_PAGE = "/Controller?command=countries";
+
+    private static final String USER_STATUS_SESSION_ATTRIBUTE = "userStatus";
+    private static final String ADMIN_USER_STATUS = "admin";
+
+    private static final String REQUEST_ID_PARAM = "id";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String idStr = request.getParameter("id");
+        String idStr = request.getParameter(REQUEST_ID_PARAM);
         int id = (idStr == null) ? -1 : Integer.parseInt(idStr);
 
         if(id == -1){
-            response.sendRedirect("/Controller?command=welcome");
+            response.sendRedirect(WELCOME_PAGE);
             return;
         }
 
         HttpSession session = request.getSession(false);
-        String userStatus = (session == null) ? null : (String) session.getAttribute("userStatus");
-        if(userStatus == null || !userStatus.equals("admin")){
-            response.sendRedirect("/Controller?command=login&cause=timeout");
+        String userStatus = (session == null) ? null : (String) session.getAttribute(USER_STATUS_SESSION_ATTRIBUTE);
+        if(userStatus == null || !userStatus.equals(ADMIN_USER_STATUS)){
+            response.sendRedirect(SESSION_TIMEOUT_PAGE);
             return;
         }
 
@@ -38,7 +47,7 @@ public class DeleteCountryCommand implements Command {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             CountryService countryService = serviceFactory.getCountryService();
             countryService.deleteCountry(id);
-            response.sendRedirect("/Controller?command=countries");
+            response.sendRedirect(SUCCESS_REDIRECT_PAGE);
         } catch (ServiceException e) {
             response.sendError(SERVER_ERROR);
         }
