@@ -17,6 +17,16 @@ import java.util.List;
  * Created by Владислав on 11.06.2016.
  */
 public class MySQLRatingDAO implements RatingDAO {
+    private static final String ADD_RATING_QUERY = "INSERT INTO rating " +
+            "(movie_id, user_id, value) VALUES (?, ?, ?)";
+    private static final String UPDATE_RATING_QUERY = "UPDATE rating " +
+            "SET value = ? WHERE movie_id = ? AND user_id = ?";
+    private static final String DELETE_RATING_QUERY = "DELETE FROM rating WHERE movie_id = ? AND user_id = ?";
+    private static final String GET_RATING_BY_MOVIE_AND_USER_QUERY = "SELECT * FROM rating WHERE movie_id = ? AND user_id = ?";
+    private static final String GET_AVERAGE_RATING_BY_MOVIE_QUERY = "SELECT AVG(value) " +
+            "FROM rating WHERE movie_id = ? GROUP BY movie_id";
+    private static final String GET_RATINGS_BY_USER_QUERY = "SELECT * FROM rating WHERE user_id = ?";
+
     @Override
     public void addRating(Rating rating) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -28,8 +38,7 @@ public class MySQLRatingDAO implements RatingDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO rating " +
-                    "(movie_id, user_id, value) VALUES (?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement(ADD_RATING_QUERY);
             statement.setInt(1, rating.getMovieId());
             statement.setInt(2, rating.getUserId());
             statement.setInt(3, rating.getValue());
@@ -57,8 +66,7 @@ public class MySQLRatingDAO implements RatingDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE rating " +
-                    "SET value = ? WHERE movie_id = ? AND user_id = ?");
+            PreparedStatement statement = connection.prepareStatement(UPDATE_RATING_QUERY);
             statement.setInt(1, rating.getValue());
             statement.setInt(2, rating.getMovieId());
             statement.setInt(3, rating.getUserId());
@@ -86,7 +94,7 @@ public class MySQLRatingDAO implements RatingDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM rating WHERE movie_id = ? AND user_id = ?");
+            PreparedStatement statement = connection.prepareStatement(DELETE_RATING_QUERY);
             statement.setInt(1, movieId);
             statement.setInt(2, userId);
 
@@ -113,7 +121,7 @@ public class MySQLRatingDAO implements RatingDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM rating WHERE movie_id = ? AND user_id = ?");
+            PreparedStatement statement = connection.prepareStatement(GET_RATING_BY_MOVIE_AND_USER_QUERY);
             statement.setInt(1, movieId);
             statement.setInt(2, userId);
             ResultSet resultSet = statement.executeQuery();
@@ -148,8 +156,7 @@ public class MySQLRatingDAO implements RatingDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT AVG(value) " +
-                    "FROM rating WHERE movie_id = ? GROUP BY movie_id");
+            PreparedStatement statement = connection.prepareStatement(GET_AVERAGE_RATING_BY_MOVIE_QUERY);
             statement.setInt(1, movieId);
             ResultSet resultSet = statement.executeQuery();
 
@@ -180,7 +187,7 @@ public class MySQLRatingDAO implements RatingDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM rating WHERE user_id = ?");
+            PreparedStatement statement = connection.prepareStatement(GET_RATINGS_BY_USER_QUERY);
             statement.setInt(1, userId);
             ResultSet resultSet = statement.executeQuery();
 

@@ -15,6 +15,18 @@ import java.util.List;
  * Created by Владислав on 11.06.2016.
  */
 public class MySQLUserDAO implements UserDAO {
+    private static final String ADD_USER_QUERY = "INSERT INTO user " +
+            "(email, password, first_name, last_name, date_of_registry, photo, rating, status) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_USER_QUERY = "UPDATE user " +
+            "SET email = ?, password = ?, first_name = ?, last_name = ?, date_of_registry = ?, " +
+            "photo = ?, rating = ?, status = ? WHERE id = ?";
+    private static final String DELETE_USER_QUERY = "DELETE FROM user WHERE id = ?";
+    private static final String GET_ALL_USERS_QUERY = "SELECT * FROM user";
+    private static final String GET_USER_BY_ID_QUERY = "SELECT * FROM user WHERE id = ?";
+    private static final String GET_USER_BY_EMAIL_QUERY = "SELECT * FROM user WHERE email = ?";
+    private static final String GET_USERS_BY_STATUS_QUERY = "SELECT * FROM user WHERE status = ?";
+
     @Override
     public void addUser(User user) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -26,9 +38,7 @@ public class MySQLUserDAO implements UserDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO user " +
-                    "(email, password, first_name, last_name, date_of_registry, photo, rating, status) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement(ADD_USER_QUERY);
             statement.setString(1, user.getEmail());
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getFirstName());
@@ -61,9 +71,7 @@ public class MySQLUserDAO implements UserDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE user " +
-                    "SET email = ?, password = ?, first_name = ?, last_name = ?, date_of_registry = ?, " +
-                    "photo = ?, rating = ?, status = ? WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement(UPDATE_USER_QUERY);
             statement.setString(1, user.getEmail());
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getFirstName());
@@ -97,7 +105,7 @@ public class MySQLUserDAO implements UserDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM user WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement(DELETE_USER_QUERY);
             statement.setInt(1, id);
 
             statement.executeUpdate();
@@ -124,7 +132,7 @@ public class MySQLUserDAO implements UserDAO {
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM user");
+            ResultSet resultSet = statement.executeQuery(GET_ALL_USERS_QUERY);
 
             List<User> allUsers = new ArrayList<>();
             while (resultSet.next()){
@@ -164,7 +172,7 @@ public class MySQLUserDAO implements UserDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM user WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID_QUERY);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
 
@@ -204,7 +212,7 @@ public class MySQLUserDAO implements UserDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM user WHERE email = ?");
+            PreparedStatement statement = connection.prepareStatement(GET_USER_BY_EMAIL_QUERY);
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
 
@@ -244,7 +252,7 @@ public class MySQLUserDAO implements UserDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM user WHERE status = ?");
+            PreparedStatement statement = connection.prepareStatement(GET_USERS_BY_STATUS_QUERY);
             statement.setString(1, status);
             ResultSet resultSet = statement.executeQuery();
 
