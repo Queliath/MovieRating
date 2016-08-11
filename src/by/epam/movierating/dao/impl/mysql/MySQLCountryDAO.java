@@ -14,6 +14,42 @@ import java.util.List;
  * Created by Владислав on 18.06.2016.
  */
 public class MySQLCountryDAO implements CountryDAO {
+    private static final String ADD_COUNTRY_QUERY = "INSERT INTO country " +
+            "(name, position) VALUES (?, ?)";
+    private static final String UPDATE_COUNTRY_QUERY = "UPDATE country " +
+            "SET name = ?, position = ? WHERE id = ?";
+    private static final String TCOUNTRY_CHECK_QUERY = "SELECT id FROM tcountry " +
+            "WHERE language_id = ? AND id = ?";
+    private static final String ADD_TCOUNTRY_QUERY = "INSERT INTO tcountry " +
+            "(language_id, id, name) VALUES (?, ?, ?)";
+    private static final String UPDATE_TCOUNTRY_QUERY = "UPDATE tcountry " +
+            "SET name = ? WHERE language_id = ? AND id = ?";
+    private static final String DELETE_COUNTRY_QUERY = "DELETE FROM country WHERE id = ?";
+    private static final String GET_ALL_COUNTRIES_QUERY = "SELECT * FROM country";
+    private static final String GET_ALL_COUNTRIES_NOT_DEFAULT_LANG_QUERY = "SELECT c.id, " +
+            "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
+            "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id)";
+    private static final String GET_COUNTRY_BY_ID_QUERY = "SELECT * FROM country WHERE id = ?";
+    private static final String GET_COUNTRY_BY_ID_NOT_DEFAULT_LANG_QUERY = "SELECT c.id, " +
+            "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
+            "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) WHERE c.id = ?";
+    private static final String GET_COUNTRIES_BY_MOVIE_QUERY = "SELECT country.* FROM country " +
+            "INNER JOIN movie_country ON country.id = movie_country.country_id " +
+            "WHERE movie_country.movie_id = ?";
+    private static final String GET_COUNTRIES_BY_MOVIE_NOT_DEFAULT_LANG_QUERY = "SELECT c.id, coalesce(t.name, c.name), " +
+            " c.position FROM country AS c INNER JOIN movie_country AS mc ON c.id = mc.country_id " +
+            "LEFT JOIN (SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) WHERE mc.movie_id = ?";
+    private static final String GET_TOP_POSITION_COUNTRIES_QUERY = "SELECT * FROM country ORDER BY position LIMIT ";
+    private static final String GET_TOP_POSITION_COUNTRIES_NOT_DEFAULT_LANG_QUERY = "SELECT c.id, " +
+            "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
+            "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) " +
+            "ORDER BY c.position LIMIT ";
+    private static final String GET_COUNTRIES_QUERY = "SELECT * FROM country LIMIT ";
+    private static final String GET_COUNTRIES_NOT_DEFAULT_LANG_QUERY = "SELECT c.id, " +
+            "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
+            "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) LIMIT ";
+    private static final String GET_COUNTRIES_COUNT_QUERY = "SELECT COUNT(*) FROM country";
+
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
     @Override
@@ -27,8 +63,7 @@ public class MySQLCountryDAO implements CountryDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO country " +
-                    "(name, position) VALUES (?, ?)");
+            PreparedStatement statement = connection.prepareStatement(ADD_COUNTRY_QUERY);
             statement.setString(1, country.getName());
             statement.setInt(2, country.getPosition());
 
@@ -57,28 +92,24 @@ public class MySQLCountryDAO implements CountryDAO {
         try {
             PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("UPDATE country " +
-                        "SET name = ?, position = ? WHERE id = ?");
+                statement = connection.prepareStatement(UPDATE_COUNTRY_QUERY);
                 statement.setString(1, country.getName());
                 statement.setInt(2, country.getPosition());
                 statement.setInt(3, country.getId());
             }
             else {
-                PreparedStatement checkStatement = connection.prepareStatement("SELECT id FROM tcountry " +
-                        "WHERE language_id = ? AND id = ?");
+                PreparedStatement checkStatement = connection.prepareStatement(TCOUNTRY_CHECK_QUERY);
                 checkStatement.setString(1, languageId);
                 checkStatement.setInt(2, country.getId());
                 ResultSet resultSet = checkStatement.executeQuery();
                 if(resultSet.next()){
-                    statement = connection.prepareStatement("UPDATE tcountry " +
-                            "SET name = ? WHERE language_id = ? AND id = ?");
+                    statement = connection.prepareStatement(UPDATE_TCOUNTRY_QUERY);
                     statement.setString(1, country.getName());
                     statement.setString(2, languageId);
                     statement.setInt(3, country.getId());
                 }
                 else {
-                    statement = connection.prepareStatement("INSERT INTO tcountry " +
-                            "(language_id, id, name) VALUES (?, ?, ?)");
+                    statement = connection.prepareStatement(ADD_TCOUNTRY_QUERY);
                     statement.setString(1, languageId);
                     statement.setInt(2, country.getId());
                     statement.setString(3, country.getName());
@@ -108,7 +139,7 @@ public class MySQLCountryDAO implements CountryDAO {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM country WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement(DELETE_COUNTRY_QUERY);
             statement.setInt(1, id);
 
             statement.executeUpdate();
@@ -137,12 +168,10 @@ public class MySQLCountryDAO implements CountryDAO {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 Statement statement = connection.createStatement();
-                resultSet = statement.executeQuery("SELECT * FROM country");
+                resultSet = statement.executeQuery(GET_ALL_COUNTRIES_QUERY);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id, " +
-                        "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
-                        "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id)");
+                PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_COUNTRIES_NOT_DEFAULT_LANG_QUERY);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -182,13 +211,11 @@ public class MySQLCountryDAO implements CountryDAO {
         try {
             PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("SELECT * FROM country WHERE id = ?");
+                statement = connection.prepareStatement(GET_COUNTRY_BY_ID_QUERY);
                 statement.setInt(1, id);
             }
             else {
-                statement = connection.prepareStatement("SELECT c.id, " +
-                        "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
-                        "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) WHERE c.id = ?");
+                statement = connection.prepareStatement(GET_COUNTRY_BY_ID_NOT_DEFAULT_LANG_QUERY);
                 statement.setString(1, languageId);
                 statement.setInt(2, id);
             }
@@ -227,15 +254,11 @@ public class MySQLCountryDAO implements CountryDAO {
         try {
             PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement("SELECT country.* FROM country " +
-                        "INNER JOIN movie_country ON country.id = movie_country.country_id " +
-                        "WHERE movie_country.movie_id = ?");
+                statement = connection.prepareStatement(GET_COUNTRIES_BY_MOVIE_QUERY);
                 statement.setInt(1, movieId);
             }
             else {
-                statement = connection.prepareStatement("SELECT c.id, coalesce(t.name, c.name), " +
-                        " c.position FROM country AS c INNER JOIN movie_country AS mc ON c.id = mc.country_id " +
-                        "LEFT JOIN (SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) WHERE mc.movie_id = ?");
+                statement = connection.prepareStatement(GET_COUNTRIES_BY_MOVIE_NOT_DEFAULT_LANG_QUERY);
                 statement.setString(1, languageId);
                 statement.setInt(2, movieId);
             }
@@ -278,13 +301,10 @@ public class MySQLCountryDAO implements CountryDAO {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 Statement statement = connection.createStatement();
-                resultSet = statement.executeQuery("SELECT * FROM country ORDER BY position LIMIT " + amount);
+                resultSet = statement.executeQuery(GET_TOP_POSITION_COUNTRIES_QUERY + amount);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id, " +
-                        "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
-                        "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) " +
-                        "ORDER BY c.position LIMIT " + amount);
+                PreparedStatement preparedStatement = connection.prepareStatement(GET_TOP_POSITION_COUNTRIES_NOT_DEFAULT_LANG_QUERY + amount);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -325,12 +345,10 @@ public class MySQLCountryDAO implements CountryDAO {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 Statement statement = connection.createStatement();
-                resultSet = statement.executeQuery("SELECT * FROM country LIMIT " + from + ", " + amount);
+                resultSet = statement.executeQuery(GET_COUNTRIES_QUERY + from + ", " + amount);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id, " +
-                        "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
-                        "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) LIMIT " + from + ", " + amount);
+                PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNTRIES_NOT_DEFAULT_LANG_QUERY + from + ", " + amount);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -369,7 +387,7 @@ public class MySQLCountryDAO implements CountryDAO {
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM country");
+            ResultSet resultSet = statement.executeQuery(GET_COUNTRIES_COUNT_QUERY);
 
             int countriesCount = 0;
             if(resultSet.next()){
