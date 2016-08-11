@@ -34,10 +34,6 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public List<Country> getCountries(int from, int amount, String languageId) throws ServiceException {
-        if(from <= 0 || amount <= 0){
-            throw new ServiceException("Wrong parameters for getting countries");
-        }
-
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             CountryDAO countryDAO = daoFactory.getCountryDAO();

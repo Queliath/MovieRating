@@ -33,10 +33,6 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public List<Genre> getGenres(int from, int amount, String languageId) throws ServiceException {
-        if(from <= 0 || amount <= 0){
-            throw new ServiceException("Wrong parameters for getting genres");
-        }
-
         try {
             DAOFactory daoFactory = DAOFactory.getInstance();
             GenreDAO genreDAO = daoFactory.getGenreDAO();
