@@ -17,13 +17,21 @@ import java.io.IOException;
 public class DeleteUserCommand implements Command {
     private static final int SERVER_ERROR = 500;
 
+    private static final String WELCOME_PAGE = "/Controller?command=welcome";
+    private static final String SUCCESS_REDIRECT_PAGE = "/Controller?command=welcome";
+
+    private static final String USER_ID_SESSION_ATTRIBUTE = "userId";
+    private static final String USER_STATUS_SESSION_ATTRIBUTE = "userStatus";
+
+    private static final String REQUEST_ID_PARAM = "id";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String idStr = request.getParameter("id");
+        String idStr = request.getParameter(REQUEST_ID_PARAM);
         int id = (idStr == null) ? -1 : Integer.parseInt(idStr);
 
         if(id == -1){
-            response.sendRedirect("/Controller?command=welcome");
+            response.sendRedirect(WELCOME_PAGE);
             return;
         }
 
@@ -34,11 +42,11 @@ public class DeleteUserCommand implements Command {
 
             HttpSession session = request.getSession(false);
             if(session != null){
-                session.setAttribute("userId", null);
-                session.setAttribute("userStatus", null);
+                session.setAttribute(USER_ID_SESSION_ATTRIBUTE, null);
+                session.setAttribute(USER_STATUS_SESSION_ATTRIBUTE, null);
             }
 
-            response.sendRedirect("/Controller?command=welcome");
+            response.sendRedirect(SUCCESS_REDIRECT_PAGE);
         } catch (ServiceException e) {
             response.sendError(SERVER_ERROR);
         }
