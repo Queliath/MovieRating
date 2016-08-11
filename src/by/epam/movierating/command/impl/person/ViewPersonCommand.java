@@ -19,31 +19,41 @@ import java.util.ResourceBundle;
  * Created by Владислав on 25.07.2016.
  */
 public class ViewPersonCommand implements Command {
+    private static final String JSP_PAGE_PATH = "WEB-INF/jsp/person/person.jsp";
+
+    private static final String WELCOME_PAGE = "/Controller?command=welcome";
+
+    private static final String REQUEST_ID_PARAM = "id";
+
+    private static final String SERVICE_ERROR_REQUEST_ATTR = "serviceError";
+    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
+    private static final String PERSON_REQUEST_ATTR = "person";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String idStr = request.getParameter("id");
+        String idStr = request.getParameter(REQUEST_ID_PARAM);
         int id = (idStr == null) ? -1 : Integer.parseInt(idStr);
 
         if(id == -1){
-            response.sendRedirect("/Controller?command=welcome");
+            response.sendRedirect(WELCOME_PAGE);
             return;
         }
 
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        request.setAttribute("selectedLanguage", languageId);
+        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
         try{
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             PersonService personService = serviceFactory.getPersonService();
             Person person = personService.getPersonById(id, languageId);
             if(person != null){
-                request.setAttribute("person", person);
+                request.setAttribute(PERSON_REQUEST_ATTR, person);
             }
         } catch (ServiceException e) {
-            request.setAttribute("serviceError", true);
+            request.setAttribute(SERVICE_ERROR_REQUEST_ATTR, true);
         }
 
-        request.getRequestDispatcher("WEB-INF/jsp/person/person.jsp").forward(request, response);
+        request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
     }
 }
