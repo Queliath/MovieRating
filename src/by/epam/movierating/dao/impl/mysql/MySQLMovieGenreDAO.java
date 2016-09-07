@@ -21,23 +21,27 @@ public class MySQLMovieGenreDAO implements MovieGenreDAO {
     public void addMovieToGenre(int movieId, int genreId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(ADD_MOVIE_TO_GENRE_QUERY);
+            statement = connection.prepareStatement(ADD_MOVIE_TO_GENRE_QUERY);
             statement.setInt(1, movieId);
             statement.setInt(2, genreId);
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when adding movie to genre", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -48,23 +52,27 @@ public class MySQLMovieGenreDAO implements MovieGenreDAO {
     public void deleteMovieFromGenre(int movieId, int genreId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(DELETE_MOVIE_FROM_GENRE_QUERY);
+            statement = connection.prepareStatement(DELETE_MOVIE_FROM_GENRE_QUERY);
             statement.setInt(1, movieId);
             statement.setInt(2, genreId);
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when deleting movie from genre", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
