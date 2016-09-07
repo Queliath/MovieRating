@@ -76,14 +76,11 @@ public class MySQLMovieDAO implements MovieDAO {
     public void addMovie(Movie movie) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(ADD_MOVIE_QUERY);
+            statement = connection.prepareStatement(ADD_MOVIE_QUERY);
             statement.setString(1, movie.getName());
             statement.setInt(2, movie.getYear());
             statement.setString(3, movie.getTagline());
@@ -94,11 +91,18 @@ public class MySQLMovieDAO implements MovieDAO {
             statement.setString(8, movie.getImage());
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when adding movie", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -109,14 +113,10 @@ public class MySQLMovieDAO implements MovieDAO {
     public void updateMovie(Movie movie, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(UPDATE_MOVIE_QUERY);
                 statement.setString(1, movie.getName());
@@ -155,11 +155,18 @@ public class MySQLMovieDAO implements MovieDAO {
             }
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when updating movie", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -170,22 +177,26 @@ public class MySQLMovieDAO implements MovieDAO {
     public void deleteMovie(int id) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(DELETE_MOVIE_QUERY);
+            statement = connection.prepareStatement(DELETE_MOVIE_QUERY);
             statement.setInt(1, id);
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when deleting movie", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -196,20 +207,18 @@ public class MySQLMovieDAO implements MovieDAO {
     public List<Movie> getAllMovies(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                Statement statement = connection.createStatement();
+                statement = connection.createStatement();
                 resultSet = statement.executeQuery(GET_ALL_MOVIES_QUERY);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_MOVIES_NOT_DEFAULT_LANG_QUERY);
+                preparedStatement = connection.prepareStatement(GET_ALL_MOVIES_NOT_DEFAULT_LANG_QUERY);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -231,11 +240,21 @@ public class MySQLMovieDAO implements MovieDAO {
             }
 
             return allMovies;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting all movies", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if (preparedStatement != null){
+                        preparedStatement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -246,14 +265,10 @@ public class MySQLMovieDAO implements MovieDAO {
     public Movie getMovieById(int id, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(GET_MOVIE_BY_ID_QUERY);
                 statement.setInt(1, id);
@@ -279,11 +294,18 @@ public class MySQLMovieDAO implements MovieDAO {
                 movie.setImage(resultSet.getString(9));
             }
             return movie;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting all movies", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -294,14 +316,10 @@ public class MySQLMovieDAO implements MovieDAO {
     public List<Movie> getMoviesByGenre(int genreId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(GET_MOVIES_BY_GENRE_QUERY);
                 statement.setInt(1, genreId);
@@ -330,11 +348,18 @@ public class MySQLMovieDAO implements MovieDAO {
             }
 
             return moviesByGenre;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting all movies", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -345,14 +370,10 @@ public class MySQLMovieDAO implements MovieDAO {
     public List<Movie> getMoviesByCountry(int countryId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(GET_MOVIES_BY_COUNTRY_QUERY);
                 statement.setInt(1, countryId);
@@ -381,11 +402,18 @@ public class MySQLMovieDAO implements MovieDAO {
             }
 
             return moviesByCountry;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting all movies", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -396,14 +424,10 @@ public class MySQLMovieDAO implements MovieDAO {
     public List<Movie> getMoviesByPersonAndRelationType(int personId, int relationType, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(GET_MOVIES_BY_PERSON_QUERY);
                 statement.setInt(1, personId);
@@ -434,11 +458,18 @@ public class MySQLMovieDAO implements MovieDAO {
             }
 
             return moviesByPersonAndRelationType;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting all movies", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -449,20 +480,18 @@ public class MySQLMovieDAO implements MovieDAO {
     public List<Movie> getRecentAddedMovies(int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                Statement statement = connection.createStatement();
+                statement = connection.createStatement();
                 resultSet = statement.executeQuery(GET_RECENT_ADDED_MOVIES_QUERY + amount);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement(GET_RECENT_ADDED_MOVIES_NOT_DEFAULT_LANG_QUERY + amount);
+                preparedStatement = connection.prepareStatement(GET_RECENT_ADDED_MOVIES_NOT_DEFAULT_LANG_QUERY + amount);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -484,11 +513,21 @@ public class MySQLMovieDAO implements MovieDAO {
             }
 
             return allMovies;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting all movies", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if (preparedStatement != null){
+                        preparedStatement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -499,13 +538,10 @@ public class MySQLMovieDAO implements MovieDAO {
     public List<Movie> getMoviesByCriteria(MovieCriteria criteria, int from, int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
             StringBuilder query = new StringBuilder();
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 query.append("SELECT DISTINCT m.* FROM movie AS m ");
@@ -605,7 +641,7 @@ public class MySQLMovieDAO implements MovieDAO {
                 query.append(amount);
                 query.append(" ");
             }
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query.toString());
 
             List<Movie> allMovies = new ArrayList<>();
@@ -625,11 +661,18 @@ public class MySQLMovieDAO implements MovieDAO {
             }
 
             return allMovies;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Cannot get movies by criteria", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -640,13 +683,10 @@ public class MySQLMovieDAO implements MovieDAO {
     public int getMoviesCountByCriteria(MovieCriteria criteria, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
             StringBuilder query = new StringBuilder();
             query.append("SELECT COUNT(*) FROM (SELECT DISTINCT m.* FROM movie AS m ");
 
@@ -733,7 +773,7 @@ public class MySQLMovieDAO implements MovieDAO {
                 }
             }
             query.append(") AS c");
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query.toString());
 
             int moviesCount = 0;
@@ -741,15 +781,21 @@ public class MySQLMovieDAO implements MovieDAO {
                 moviesCount = resultSet.getInt(1);
             }
             return moviesCount;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Cannot get movies by criteria", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
         }
     }
-
 }
