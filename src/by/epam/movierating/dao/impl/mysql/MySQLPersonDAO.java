@@ -50,25 +50,29 @@ public class MySQLPersonDAO implements PersonDAO {
     public void addPerson(Person person) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(ADD_PERSON_QUERY);
+            statement = connection.prepareStatement(ADD_PERSON_QUERY);
             statement.setString(1, person.getName());
             statement.setDate(2, new Date(person.getDateOfBirth().getTime()));
             statement.setString(3, person.getPlaceOfBirth());
             statement.setString(4, person.getPhoto());
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when adding person", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -79,14 +83,10 @@ public class MySQLPersonDAO implements PersonDAO {
     public void updatePerson(Person person, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try{
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(UPDATE_PERSON_QUERY);
                 statement.setString(1, person.getName());
@@ -117,11 +117,18 @@ public class MySQLPersonDAO implements PersonDAO {
             }
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when updating person", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -132,22 +139,26 @@ public class MySQLPersonDAO implements PersonDAO {
     public void deletePerson(int id) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try{
-            PreparedStatement statement = connection.prepareStatement(DELETE_PERSON_QUERY);
+            statement = connection.prepareStatement(DELETE_PERSON_QUERY);
             statement.setInt(1, id);
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when deleting person", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -158,20 +169,18 @@ public class MySQLPersonDAO implements PersonDAO {
     public List<Person> getAllPersons(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try{
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                Statement statement = connection.createStatement();
+                statement = connection.createStatement();
                 resultSet = statement.executeQuery(GET_ALL_PERSONS_QUERY);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_PERSONS_NOT_DEFAULT_LANG_QUERY);
+                preparedStatement = connection.prepareStatement(GET_ALL_PERSONS_NOT_DEFAULT_LANG_QUERY);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -189,11 +198,21 @@ public class MySQLPersonDAO implements PersonDAO {
             }
 
             return allPersons;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting all persons", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if (preparedStatement != null){
+                        preparedStatement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -204,14 +223,10 @@ public class MySQLPersonDAO implements PersonDAO {
     public Person getPersonById(int id, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try{
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(GET_PERSON_BY_ID_QUERY);
                 statement.setInt(1, id);
@@ -233,11 +248,18 @@ public class MySQLPersonDAO implements PersonDAO {
                 person.setPhoto(resultSet.getString(5));
             }
             return person;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting all persons", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -248,14 +270,10 @@ public class MySQLPersonDAO implements PersonDAO {
     public List<Person> getPersonsByMovieAndRelationType(int movieId, int relationType, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try{
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(GET_PERSONS_BY_MOVIE_QUERY);
                 statement.setInt(1, movieId);
@@ -282,11 +300,18 @@ public class MySQLPersonDAO implements PersonDAO {
             }
 
             return personsByMovieAndRelationType;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting all persons", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -297,13 +322,10 @@ public class MySQLPersonDAO implements PersonDAO {
     public List<Person> getPersonsByCriteria(String name, int from, int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
             StringBuilder query = new StringBuilder();
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 query.append("SELECT DISTINCT p.* FROM person AS p ");
@@ -342,7 +364,7 @@ public class MySQLPersonDAO implements PersonDAO {
                 query.append(" ");
             }
 
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query.toString());
 
             List<Person> persons = new ArrayList<>();
@@ -358,11 +380,18 @@ public class MySQLPersonDAO implements PersonDAO {
             }
 
             return persons;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Cannot get persons by criteria", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -373,13 +402,10 @@ public class MySQLPersonDAO implements PersonDAO {
     public int getPersonsCountByCriteria(String name, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
             StringBuilder query = new StringBuilder();
             query.append("SELECT COUNT(*) FROM (SELECT p.* FROM person AS p ");
             if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
@@ -406,7 +432,7 @@ public class MySQLPersonDAO implements PersonDAO {
             }
             query.append(") AS c");
 
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query.toString());
 
             int personsCount = 0;
@@ -414,11 +440,18 @@ public class MySQLPersonDAO implements PersonDAO {
                 personsCount = resultSet.getInt(1);
             }
             return personsCount;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Cannot get persons by criteria", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
