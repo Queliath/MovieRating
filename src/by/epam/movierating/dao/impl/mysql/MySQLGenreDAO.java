@@ -57,23 +57,27 @@ public class MySQLGenreDAO implements GenreDAO {
     public void addGenre(Genre genre) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(ADD_GENRE_QUERY);
+            statement = connection.prepareStatement(ADD_GENRE_QUERY);
             statement.setString(1, genre.getName());
             statement.setInt(2, genre.getPosition());
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when adding genre", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -84,14 +88,10 @@ public class MySQLGenreDAO implements GenreDAO {
     public void updateGenre(Genre genre, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(UPDATE_GENRE_QUERY);
                 statement.setString(1, genre.getName());
@@ -118,11 +118,18 @@ public class MySQLGenreDAO implements GenreDAO {
             }
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when updating genre", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -133,22 +140,26 @@ public class MySQLGenreDAO implements GenreDAO {
     public void deleteGenre(int id) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(DELETE_GENRE_QUERY);
+            statement = connection.prepareStatement(DELETE_GENRE_QUERY);
             statement.setInt(1, id);
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when deleting genre", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -159,20 +170,18 @@ public class MySQLGenreDAO implements GenreDAO {
     public List<Genre> getAllGenres(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                Statement statement = connection.createStatement();
+                statement = connection.createStatement();
                 resultSet = statement.executeQuery(GET_ALL_GENRES_QUERY);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_GENRES_NOT_DEFAULT_LANG_QUERY);
+                preparedStatement = connection.prepareStatement(GET_ALL_GENRES_NOT_DEFAULT_LANG_QUERY);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -187,11 +196,21 @@ public class MySQLGenreDAO implements GenreDAO {
                 allGenres.add(genre);
             }
             return allGenres;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting genre", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if(preparedStatement != null){
+                        preparedStatement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -202,14 +221,10 @@ public class MySQLGenreDAO implements GenreDAO {
     public Genre getGenreById(int id, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(GET_GENRE_BY_ID_QUERY);
                 statement.setInt(1, id);
@@ -229,11 +244,18 @@ public class MySQLGenreDAO implements GenreDAO {
                 genre.setPosition(resultSet.getInt(3));
             }
             return genre;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting genre", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -244,14 +266,10 @@ public class MySQLGenreDAO implements GenreDAO {
     public List<Genre> getGenresByMovie(int movieId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(GET_GENRES_BY_MOVIE_QUERY);
                 statement.setInt(1, movieId);
@@ -273,11 +291,18 @@ public class MySQLGenreDAO implements GenreDAO {
                 genresByMovie.add(genre);
             }
             return genresByMovie;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting genre", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -288,20 +313,18 @@ public class MySQLGenreDAO implements GenreDAO {
     public List<Genre> getTopPositionGenres(int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                Statement statement = connection.createStatement();
+                statement = connection.createStatement();
                 resultSet = statement.executeQuery(GET_TOP_POSITION_GENRES_QUERY + amount);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement(GET_TOP_POSITION_GENRES_NOT_DEFAULT_LANG_QUERY + amount);
+                preparedStatement = connection.prepareStatement(GET_TOP_POSITION_GENRES_NOT_DEFAULT_LANG_QUERY + amount);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -316,11 +339,21 @@ public class MySQLGenreDAO implements GenreDAO {
                 allGenres.add(genre);
             }
             return allGenres;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting genre", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if(preparedStatement != null){
+                        preparedStatement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -331,20 +364,18 @@ public class MySQLGenreDAO implements GenreDAO {
     public List<Genre> getGenres(int from, int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                Statement statement = connection.createStatement();
+                statement = connection.createStatement();
                 resultSet = statement.executeQuery(GET_GENRES_QUERY + from + ", " + amount);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement(GET_GENRES_NOT_DEFAULT_LANG_QUERY + from + ", " + amount);
+                preparedStatement = connection.prepareStatement(GET_GENRES_NOT_DEFAULT_LANG_QUERY + from + ", " + amount);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -359,11 +390,21 @@ public class MySQLGenreDAO implements GenreDAO {
                 allGenres.add(genre);
             }
             return allGenres;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting genre", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if(preparedStatement != null){
+                        preparedStatement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -374,14 +415,11 @@ public class MySQLGenreDAO implements GenreDAO {
     public int getGenresCount() throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(GET_GENRES_COUNT_QUERY);
 
             int genresCount = 0;
@@ -389,11 +427,18 @@ public class MySQLGenreDAO implements GenreDAO {
                 genresCount = resultSet.getInt(1);
             }
             return genresCount;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("DAO layer: cannot get countries count", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
