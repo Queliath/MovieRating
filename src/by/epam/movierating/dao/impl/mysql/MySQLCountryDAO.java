@@ -56,23 +56,27 @@ public class MySQLCountryDAO implements CountryDAO {
     public void addCountry(Country country) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(ADD_COUNTRY_QUERY);
+            statement = connection.prepareStatement(ADD_COUNTRY_QUERY);
             statement.setString(1, country.getName());
             statement.setInt(2, country.getPosition());
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when adding country", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -83,14 +87,10 @@ public class MySQLCountryDAO implements CountryDAO {
     public void updateCountry(Country country, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(UPDATE_COUNTRY_QUERY);
                 statement.setString(1, country.getName());
@@ -117,11 +117,18 @@ public class MySQLCountryDAO implements CountryDAO {
             }
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when updating country", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -132,22 +139,26 @@ public class MySQLCountryDAO implements CountryDAO {
     public void deleteCountry(int id) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(DELETE_COUNTRY_QUERY);
+            statement = connection.prepareStatement(DELETE_COUNTRY_QUERY);
             statement.setInt(1, id);
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when deleting country", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -158,20 +169,18 @@ public class MySQLCountryDAO implements CountryDAO {
     public List<Country> getAllCountries(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                Statement statement = connection.createStatement();
+                statement = connection.createStatement();
                 resultSet = statement.executeQuery(GET_ALL_COUNTRIES_QUERY);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_COUNTRIES_NOT_DEFAULT_LANG_QUERY);
+                preparedStatement = connection.prepareStatement(GET_ALL_COUNTRIES_NOT_DEFAULT_LANG_QUERY);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -187,11 +196,21 @@ public class MySQLCountryDAO implements CountryDAO {
             }
 
             return allCountries;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting country", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if(preparedStatement != null){
+                        preparedStatement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -202,14 +221,10 @@ public class MySQLCountryDAO implements CountryDAO {
     public Country getCountryById(int id, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(GET_COUNTRY_BY_ID_QUERY);
                 statement.setInt(1, id);
@@ -230,11 +245,18 @@ public class MySQLCountryDAO implements CountryDAO {
             }
 
             return country;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting country", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -245,14 +267,10 @@ public class MySQLCountryDAO implements CountryDAO {
     public List<Country> getCountriesByMovie(int movieId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
                 statement = connection.prepareStatement(GET_COUNTRIES_BY_MOVIE_QUERY);
                 statement.setInt(1, movieId);
@@ -275,12 +293,18 @@ public class MySQLCountryDAO implements CountryDAO {
             }
 
             return countriesByMovie;
-
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting country", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -291,20 +315,18 @@ public class MySQLCountryDAO implements CountryDAO {
     public List<Country> getTopPositionCountries(int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                Statement statement = connection.createStatement();
+                statement = connection.createStatement();
                 resultSet = statement.executeQuery(GET_TOP_POSITION_COUNTRIES_QUERY + amount);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement(GET_TOP_POSITION_COUNTRIES_NOT_DEFAULT_LANG_QUERY + amount);
+                preparedStatement = connection.prepareStatement(GET_TOP_POSITION_COUNTRIES_NOT_DEFAULT_LANG_QUERY + amount);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -320,11 +342,21 @@ public class MySQLCountryDAO implements CountryDAO {
             }
 
             return allCountries;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting country", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if(preparedStatement != null){
+                        preparedStatement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -335,20 +367,18 @@ public class MySQLCountryDAO implements CountryDAO {
     public List<Country> getCountries(int from, int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
             ResultSet resultSet = null;
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                Statement statement = connection.createStatement();
+                statement = connection.createStatement();
                 resultSet = statement.executeQuery(GET_COUNTRIES_QUERY + from + ", " + amount);
             }
             else {
-                PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNTRIES_NOT_DEFAULT_LANG_QUERY + from + ", " + amount);
+                preparedStatement = connection.prepareStatement(GET_COUNTRIES_NOT_DEFAULT_LANG_QUERY + from + ", " + amount);
                 preparedStatement.setString(1, languageId);
                 resultSet = preparedStatement.executeQuery();
             }
@@ -364,11 +394,21 @@ public class MySQLCountryDAO implements CountryDAO {
             }
 
             return allCountries;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Error in DAO layer when getting country", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if(preparedStatement != null){
+                        preparedStatement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -379,14 +419,11 @@ public class MySQLCountryDAO implements CountryDAO {
     public int getCountriesCount() throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        Statement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(GET_COUNTRIES_COUNT_QUERY);
 
             int countriesCount = 0;
@@ -394,11 +431,18 @@ public class MySQLCountryDAO implements CountryDAO {
                 countriesCount = resultSet.getInt(1);
             }
             return countriesCount;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("DAO layer: cannot get countries count", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
