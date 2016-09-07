@@ -33,14 +33,11 @@ public class MySQLCommentDAO implements CommentDAO {
     public void addComment(Comment comment, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(ADD_COMMENT_QUERY);
+            statement = connection.prepareStatement(ADD_COMMENT_QUERY);
             statement.setInt(1, comment.getMovieId());
             statement.setInt(2, comment.getUserId());
             statement.setString(3, comment.getTitle());
@@ -49,11 +46,18 @@ public class MySQLCommentDAO implements CommentDAO {
             statement.setString(6, languageId);
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when adding comment", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -64,14 +68,11 @@ public class MySQLCommentDAO implements CommentDAO {
     public void updateComment(Comment comment) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(UPDATE_COMMENT_QUERY);
+            statement = connection.prepareStatement(UPDATE_COMMENT_QUERY);
             statement.setInt(1, comment.getMovieId());
             statement.setInt(2, comment.getUserId());
             statement.setString(3, comment.getTitle());
@@ -80,11 +81,18 @@ public class MySQLCommentDAO implements CommentDAO {
             statement.setInt(6, comment.getId());
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when updating comment", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -95,22 +103,26 @@ public class MySQLCommentDAO implements CommentDAO {
     public void deleteComment(int id) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(DELETE_COMMENT_QUERY);
+            statement = connection.prepareStatement(DELETE_COMMENT_QUERY);
             statement.setInt(1, id);
 
             statement.executeUpdate();
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when deleting comment", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -121,14 +133,11 @@ public class MySQLCommentDAO implements CommentDAO {
     public List<Comment> getAllComments(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(GET_ALL_COMMENTS_QUERY);
+            statement = connection.prepareStatement(GET_ALL_COMMENTS_QUERY);
             statement.setString(1, languageId);
             ResultSet resultSet = statement.executeQuery();
 
@@ -145,11 +154,18 @@ public class MySQLCommentDAO implements CommentDAO {
                 allComments.add(comment);
             }
             return allComments;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when getting comment", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -160,14 +176,11 @@ public class MySQLCommentDAO implements CommentDAO {
     public Comment getCommentById(int id) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(GET_COMMENT_BY_ID_QUERY);
+            statement = connection.prepareStatement(GET_COMMENT_BY_ID_QUERY);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
 
@@ -182,11 +195,18 @@ public class MySQLCommentDAO implements CommentDAO {
                 comment.setDateOfPublication(resultSet.getDate(6));
             }
             return comment;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when getting comment", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -197,14 +217,11 @@ public class MySQLCommentDAO implements CommentDAO {
     public List<Comment> getCommentsByMovie(int movieId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(GET_COMMENTS_BY_MOVIE_QUERY);
+            statement = connection.prepareStatement(GET_COMMENTS_BY_MOVIE_QUERY);
             statement.setInt(1, movieId);
             statement.setString(2, languageId);
             ResultSet resultSet = statement.executeQuery();
@@ -222,11 +239,18 @@ public class MySQLCommentDAO implements CommentDAO {
                 commentsByMovie.add(comment);
             }
             return commentsByMovie;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when getting comment", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -237,14 +261,11 @@ public class MySQLCommentDAO implements CommentDAO {
     public List<Comment> getCommentsByUser(int userId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(GET_COMMENTS_BY_USER_QUERY);
+            statement = connection.prepareStatement(GET_COMMENTS_BY_USER_QUERY);
             statement.setInt(1, userId);
             statement.setString(2, languageId);
             ResultSet resultSet = statement.executeQuery();
@@ -262,11 +283,18 @@ public class MySQLCommentDAO implements CommentDAO {
                 commentsByUser.add(comment);
             }
             return commentsByUser;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when getting comment", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
@@ -277,14 +305,11 @@ public class MySQLCommentDAO implements CommentDAO {
     public List<Comment> getRecentAddedComments(int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(GET_RECENT_ADDED_COMMENTS_QUERY + amount);
+            statement = connection.prepareStatement(GET_RECENT_ADDED_COMMENTS_QUERY + amount);
             statement.setString(1, languageId);
             ResultSet resultSet = statement.executeQuery();
 
@@ -301,11 +326,18 @@ public class MySQLCommentDAO implements CommentDAO {
                 allComments.add(comment);
             }
             return allComments;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when getting comment", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
+                if (connection != null) {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    mySQLConnectionPool.freeConnection(connection);
+                }
             } catch (SQLException | MySQLConnectionPoolException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
             }
