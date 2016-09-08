@@ -7,7 +7,7 @@ import by.epam.movierating.domain.User;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.exception.ServiceWrongEmailException;
 import by.epam.movierating.service.factory.ServiceFactory;
-import by.epam.movierating.service.interfaces.UserService;
+import by.epam.movierating.service.inter.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

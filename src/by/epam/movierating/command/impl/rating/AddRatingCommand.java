@@ -3,7 +3,7 @@ package by.epam.movierating.command.impl.rating;
 import by.epam.movierating.command.Command;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.factory.ServiceFactory;
-import by.epam.movierating.service.interfaces.RatingService;
+import by.epam.movierating.service.inter.RatingService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

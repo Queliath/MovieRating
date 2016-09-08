@@ -2,12 +2,11 @@ package by.epam.movierating.service.impl;
 
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.factory.DAOFactory;
-import by.epam.movierating.dao.interfaces.GenreDAO;
+import by.epam.movierating.dao.inter.GenreDAO;
 import by.epam.movierating.domain.Genre;
 import by.epam.movierating.service.exception.ServiceException;
-import by.epam.movierating.service.interfaces.GenreService;
+import by.epam.movierating.service.inter.GenreService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

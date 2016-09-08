@@ -1,6 +1,6 @@
 package by.epam.movierating.dao.impl.mysql;
 
-import by.epam.movierating.dao.interfaces.MoviePersonRelationDAO;
+import by.epam.movierating.dao.inter.MoviePersonRelationDAO;
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.pool.mysql.MySQLConnectionPool;
 import by.epam.movierating.dao.pool.mysql.MySQLConnectionPoolException;

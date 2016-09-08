@@ -1,4 +1,4 @@
-package by.epam.movierating.dao.interfaces;
+package by.epam.movierating.dao.inter;
 
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.domain.Genre;

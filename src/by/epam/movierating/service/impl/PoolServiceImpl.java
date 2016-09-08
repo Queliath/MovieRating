@@ -2,11 +2,9 @@ package by.epam.movierating.service.impl;
 
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.factory.DAOFactory;
-import by.epam.movierating.dao.interfaces.PoolDAO;
-import by.epam.movierating.dao.pool.mysql.MySQLConnectionPool;
-import by.epam.movierating.dao.pool.mysql.MySQLConnectionPoolException;
+import by.epam.movierating.dao.inter.PoolDAO;
 import by.epam.movierating.service.exception.ServiceException;
-import by.epam.movierating.service.interfaces.PoolService;
+import by.epam.movierating.service.inter.PoolService;
 
 /**
  * Created by Владислав on 19.07.2016.

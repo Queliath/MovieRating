@@ -9,19 +9,16 @@ import by.epam.movierating.domain.Genre;
 import by.epam.movierating.domain.Movie;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.factory.ServiceFactory;
-import by.epam.movierating.service.interfaces.CommentService;
-import by.epam.movierating.service.interfaces.CountryService;
-import by.epam.movierating.service.interfaces.GenreService;
-import by.epam.movierating.service.interfaces.MovieService;
+import by.epam.movierating.service.inter.CommentService;
+import by.epam.movierating.service.inter.CountryService;
+import by.epam.movierating.service.inter.GenreService;
+import by.epam.movierating.service.inter.MovieService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * Created by Владислав on 15.07.2016.

@@ -2,10 +2,10 @@ package by.epam.movierating.service.impl;
 
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.factory.DAOFactory;
-import by.epam.movierating.dao.interfaces.RatingDAO;
+import by.epam.movierating.dao.inter.RatingDAO;
 import by.epam.movierating.domain.Rating;
 import by.epam.movierating.service.exception.ServiceException;
-import by.epam.movierating.service.interfaces.RatingService;
+import by.epam.movierating.service.inter.RatingService;
 
 /**
  * Created by Владислав on 21.07.2016.

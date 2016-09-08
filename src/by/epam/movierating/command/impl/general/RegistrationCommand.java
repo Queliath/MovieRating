@@ -7,15 +7,13 @@ import by.epam.movierating.domain.User;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.exception.ServiceWrongEmailException;
 import by.epam.movierating.service.factory.ServiceFactory;
-import by.epam.movierating.service.interfaces.SiteService;
+import by.epam.movierating.service.inter.SiteService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * Created by Владислав on 15.07.2016.

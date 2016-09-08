@@ -1,4 +1,4 @@
-package by.epam.movierating.service.interfaces;
+package by.epam.movierating.service.inter;
 
 import by.epam.movierating.domain.Person;
 import by.epam.movierating.service.exception.ServiceException;

@@ -1,7 +1,7 @@
 package by.epam.movierating.dao.factory;
 
 import by.epam.movierating.dao.exception.DAOException;
-import by.epam.movierating.dao.interfaces.*;
+import by.epam.movierating.dao.inter.*;
 
 import java.util.ResourceBundle;
 

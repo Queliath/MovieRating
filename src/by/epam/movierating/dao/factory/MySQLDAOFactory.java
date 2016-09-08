@@ -1,7 +1,7 @@
 package by.epam.movierating.dao.factory;
 
 import by.epam.movierating.dao.impl.mysql.*;
-import by.epam.movierating.dao.interfaces.*;
+import by.epam.movierating.dao.inter.*;
 
 /**
  * Created by Владислав on 14.07.2016.

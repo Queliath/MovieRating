@@ -4,18 +4,15 @@ import by.epam.movierating.command.Command;
 import by.epam.movierating.command.util.LanguageUtil;
 import by.epam.movierating.command.util.QueryUtil;
 import by.epam.movierating.domain.Comment;
-import by.epam.movierating.domain.User;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.factory.ServiceFactory;
-import by.epam.movierating.service.interfaces.CommentService;
-import by.epam.movierating.service.interfaces.UserService;
+import by.epam.movierating.service.inter.CommentService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by Владислав on 04.08.2016.

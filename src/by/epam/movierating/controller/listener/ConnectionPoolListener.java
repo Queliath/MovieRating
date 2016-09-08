@@ -3,14 +3,12 @@ package by.epam.movierating.controller.listener; /**
  */
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.factory.ServiceFactory;
-import by.epam.movierating.service.interfaces.PoolService;
+import by.epam.movierating.service.inter.PoolService;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 public class ConnectionPoolListener implements ServletContextListener {
-    private static final String INIT_EXCEPTION_ATTRIBUTE = "initPoolException";
-
     // Public constructor is required by servlet spec
     public ConnectionPoolListener() {
     }
@@ -24,7 +22,7 @@ public class ConnectionPoolListener implements ServletContextListener {
             PoolService poolService = serviceFactory.getPoolService();
             poolService.init();
         } catch (ServiceException e) {
-            sce.getServletContext().setAttribute(INIT_EXCEPTION_ATTRIBUTE, true);
+            throw new ConnectionPoolListenerException("Cannot init a pool", e);
         }
     }
 

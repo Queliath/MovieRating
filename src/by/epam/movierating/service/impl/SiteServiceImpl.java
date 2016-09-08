@@ -2,12 +2,12 @@ package by.epam.movierating.service.impl;
 
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.factory.DAOFactory;
-import by.epam.movierating.dao.interfaces.UserDAO;
+import by.epam.movierating.dao.inter.UserDAO;
 import by.epam.movierating.domain.User;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.exception.ServiceWrongEmailException;
 import by.epam.movierating.service.exception.ServiceWrongPasswordException;
-import by.epam.movierating.service.interfaces.SiteService;
+import by.epam.movierating.service.inter.SiteService;
 
 import java.util.Date;
 

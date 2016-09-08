@@ -2,14 +2,14 @@ package by.epam.movierating.service.impl;
 
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.factory.DAOFactory;
-import by.epam.movierating.dao.interfaces.CommentDAO;
-import by.epam.movierating.dao.interfaces.MovieDAO;
-import by.epam.movierating.dao.interfaces.UserDAO;
+import by.epam.movierating.dao.inter.CommentDAO;
+import by.epam.movierating.dao.inter.MovieDAO;
+import by.epam.movierating.dao.inter.UserDAO;
 import by.epam.movierating.domain.Comment;
 import by.epam.movierating.domain.Movie;
 import by.epam.movierating.domain.User;
 import by.epam.movierating.service.exception.ServiceException;
-import by.epam.movierating.service.interfaces.CommentService;
+import by.epam.movierating.service.inter.CommentService;
 
 import java.util.Date;
 import java.util.List;

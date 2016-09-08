@@ -1,7 +1,7 @@
 package by.epam.movierating.dao.impl.mysql;
 
 import by.epam.movierating.dao.exception.DAOException;
-import by.epam.movierating.dao.interfaces.PoolDAO;
+import by.epam.movierating.dao.inter.PoolDAO;
 import by.epam.movierating.dao.pool.mysql.MySQLConnectionPool;
 import by.epam.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 

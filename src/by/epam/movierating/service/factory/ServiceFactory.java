@@ -1,8 +1,7 @@
 package by.epam.movierating.service.factory;
 
 import by.epam.movierating.service.exception.ServiceException;
-import by.epam.movierating.service.impl.*;
-import by.epam.movierating.service.interfaces.*;
+import by.epam.movierating.service.inter.*;
 
 import java.util.ResourceBundle;
 

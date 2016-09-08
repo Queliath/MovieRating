@@ -2,11 +2,11 @@ package by.epam.movierating.service.impl;
 
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.factory.DAOFactory;
-import by.epam.movierating.dao.interfaces.*;
+import by.epam.movierating.dao.inter.*;
 import by.epam.movierating.domain.*;
 import by.epam.movierating.domain.criteria.MovieCriteria;
 import by.epam.movierating.service.exception.ServiceException;
-import by.epam.movierating.service.interfaces.MovieService;
+import by.epam.movierating.service.inter.MovieService;
 
 import java.text.DateFormat;
 import java.text.ParseException;

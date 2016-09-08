@@ -6,17 +6,14 @@ import by.epam.movierating.command.util.QueryUtil;
 import by.epam.movierating.domain.Movie;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.factory.ServiceFactory;
-import by.epam.movierating.service.interfaces.CommentService;
-import by.epam.movierating.service.interfaces.MovieService;
-import by.epam.movierating.service.interfaces.RatingService;
+import by.epam.movierating.service.inter.MovieService;
+import by.epam.movierating.service.inter.RatingService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class ViewMovieCommand implements Command {
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/movie/movie.jsp";

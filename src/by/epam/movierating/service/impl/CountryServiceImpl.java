@@ -2,13 +2,11 @@ package by.epam.movierating.service.impl;
 
 import by.epam.movierating.dao.exception.DAOException;
 import by.epam.movierating.dao.factory.DAOFactory;
-import by.epam.movierating.dao.interfaces.CountryDAO;
+import by.epam.movierating.dao.inter.CountryDAO;
 import by.epam.movierating.domain.Country;
 import by.epam.movierating.service.exception.ServiceException;
-import by.epam.movierating.service.interfaces.CountryService;
+import by.epam.movierating.service.inter.CountryService;
 
-import javax.print.attribute.standard.MediaSize;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

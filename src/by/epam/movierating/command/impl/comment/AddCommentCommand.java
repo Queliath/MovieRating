@@ -4,7 +4,7 @@ import by.epam.movierating.command.Command;
 import by.epam.movierating.command.util.LanguageUtil;
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.factory.ServiceFactory;
-import by.epam.movierating.service.interfaces.CommentService;
+import by.epam.movierating.service.inter.CommentService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
