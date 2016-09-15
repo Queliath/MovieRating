@@ -30,4 +30,8 @@
     <welcome-file-list>
         <welcome-file>Controller</welcome-file>
     </welcome-file-list>
+    
+    <error-page>
+        <location>/Controller?command=error</location>
+    </error-page>
 </web-app>

@@ -40,10 +40,12 @@ public final class CommandHelper {
             return commands.get(DEFAULT_COMMAND_NAME);
         }
 
-        try {
-            return commands.get(commandName);
-        } catch (IllegalArgumentException | NullPointerException e) {
-            throw new CommandNotFoundException("Wrong or empty command name", e);
+        Command command = commands.get(commandName);
+        if(command != null){
+            return command;
+        }
+        else {
+            throw new CommandNotFoundException("Wrong or empty command name");
         }
     }
 
