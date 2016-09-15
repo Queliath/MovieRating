@@ -161,7 +161,7 @@
                 </ul>
             </div>
             <p>${requestScope.movie.annotation}</p>
-            <c:if test="${sessionScope.userId != null}">
+            <c:if test='${sessionScope.userId != null && sessionScope.userStatus ne "banned"}'>
                 <div id="star-rating" data-movie-id="${requestScope.movie.id}" data-url="Controller?command=add-rating" <c:if test="${requestScope.ratingValue != null}">data-value="${requestScope.ratingValue}"</c:if>></div>
             </c:if>
             <p>${localeRating}: ${requestScope.movie.averageRating}</p>
@@ -170,7 +170,7 @@
                 <a class="btn btn-danger" data-toggle="modal" data-target="#movie-remove-modal" data-id="${requestScope.movie.id}">${localeDelete}</a>
             </c:if>
         </div>
-        <c:if test="${sessionScope.userId != null}">
+        <c:if test='${sessionScope.userId != null && sessionScope.userStatus ne "banned"}'>
             <h3>${localeWriteComment}</h3>
             <form action="Controller?command=add-comment" method="post" role="form">
                 <input type="hidden" name="commentFormMovieId" value="${requestScope.movie.id}">

@@ -22,6 +22,7 @@ public class AddRatingCommand implements Command {
 
     private static final String USER_ID_SESSION_ATTRIBUTE = "userId";
     private static final String USER_STATUS_SESSION_ATTRIBUTE = "userStatus";
+    private static final String BANNED_USER_STATUS = "banned";
 
     private static final String RATING_VALUE_REQUEST_PARAM = "ratingValue";
     private static final String MOVIE_ID_REQUEST_PARAM = "movieId";
@@ -33,6 +34,10 @@ public class AddRatingCommand implements Command {
         String userStatus = (session == null) ? null : (String) session.getAttribute(USER_STATUS_SESSION_ATTRIBUTE);
         if(userId == null || userStatus == null){
             response.sendRedirect(SESSION_TIMEOUT_PAGE);
+            return;
+        }
+        if(userStatus.equals(BANNED_USER_STATUS)){
+            response.sendRedirect(WELCOME_PAGE);
             return;
         }
 
