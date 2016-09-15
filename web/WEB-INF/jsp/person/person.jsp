@@ -130,7 +130,7 @@
                 <img src="${requestScope.person.photo}" class="img-rounded" alt="${requestScope.person.name}">
                 <ul>
                     <li>${localeMoviesTotal}: ${requestScope.person.moviesTotal}</li>
-                    <li>${localeDateOfBirth}: ${requestScope.person.dateOfBirth}</li>
+                    <li>${localeDateOfBirth}: <f:formatDate value="${requestScope.person.dateOfBirth}" type="date" dateStyle="long"/></li>
                     <li>${localePlaceOfBirth}: ${requestScope.person.placeOfBirth}</li>
                 </ul>
             </div>
@@ -154,10 +154,10 @@
                             <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
                             <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
                             <li>${localeYear}: ${movie.year}</li>
-                            <li>${localeBudget}: ${movie.budget} $</li>
-                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeBudget}: <f:formatNumber value="${movie.budget}"/> $</li>
+                            <li>${localePremiere}: <f:formatDate value="${movie.premiere}" type="date" dateStyle="long"/></li>
                             <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
-                            <li>${localeRating}: ${movie.averageRating}</li>
+                            <li>${localeRating}: <f:formatNumber value="${movie.averageRating}" maxFractionDigits="2"/></li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
@@ -182,10 +182,10 @@
                             <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
                             <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
                             <li>${localeYear}: ${movie.year}</li>
-                            <li>${localeBudget}: ${movie.budget} $</li>
-                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeBudget}: <f:formatNumber value="${movie.budget}"/> $</li>
+                            <li>${localePremiere}: <f:formatDate value="${movie.premiere}" type="date" dateStyle="long"/></li>
                             <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
-                            <li>${localeRating}: ${movie.averageRating}</li>
+                            <li>${localeRating}: <f:formatNumber value="${movie.averageRating}" maxFractionDigits="2"/></li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
@@ -210,10 +210,10 @@
                             <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
                             <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
                             <li>${localeYear}: ${movie.year}</li>
-                            <li>${localeBudget}: ${movie.budget} $</li>
-                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeBudget}: <f:formatNumber value="${movie.budget}"/> $</li>
+                            <li>${localePremiere}: <f:formatDate value="${movie.premiere}" type="date" dateStyle="long"/></li>
                             <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
-                            <li>${localeRating}: ${movie.averageRating}</li>
+                            <li>${localeRating}: <f:formatNumber value="${movie.averageRating}" maxFractionDigits="2"/></li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
@@ -238,10 +238,10 @@
                             <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
                             <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
                             <li>${localeYear}: ${movie.year}</li>
-                            <li>${localeBudget}: ${movie.budget} $</li>
-                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeBudget}: <f:formatNumber value="${movie.budget}"/> $</li>
+                            <li>${localePremiere}: <f:formatDate value="${movie.premiere}" type="date" dateStyle="long"/></li>
                             <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
-                            <li>${localeRating}: ${movie.averageRating}</li>
+                            <li>${localeRating}: <f:formatNumber value="${movie.averageRating}" maxFractionDigits="2"/></li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
@@ -266,10 +266,10 @@
                             <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
                             <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
                             <li>${localeYear}: ${movie.year}</li>
-                            <li>${localeBudget}: ${movie.budget} $</li>
-                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeBudget}: <f:formatNumber value="${movie.budget}"/> $</li>
+                            <li>${localePremiere}: <f:formatDate value="${movie.premiere}" type="date" dateStyle="long"/></li>
                             <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
-                            <li>${localeRating}: ${movie.averageRating}</li>
+                            <li>${localeRating}: <f:formatNumber value="${movie.averageRating}" maxFractionDigits="2"/></li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
@@ -294,10 +294,10 @@
                             <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
                             <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
                             <li>${localeYear}: ${movie.year}</li>
-                            <li>${localeBudget}: ${movie.budget} $</li>
-                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeBudget}: <f:formatNumber value="${movie.budget}"/> $</li>
+                            <li>${localePremiere}: <f:formatDate value="${movie.premiere}" type="date" dateStyle="long"/></li>
                             <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
-                            <li>${localeRating}: ${movie.averageRating}</li>
+                            <li>${localeRating}: <f:formatNumber value="${movie.averageRating}" maxFractionDigits="2"/></li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
@@ -322,10 +322,10 @@
                             <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
                             <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
                             <li>${localeYear}: ${movie.year}</li>
-                            <li>${localeBudget}: ${movie.budget} $</li>
-                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeBudget}: <f:formatNumber value="${movie.budget}"/> $</li>
+                            <li>${localePremiere}: <f:formatDate value="${movie.premiere}" type="date" dateStyle="long"/></li>
                             <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
-                            <li>${localeRating}: ${movie.averageRating}</li>
+                            <li>${localeRating}: <f:formatNumber value="${movie.averageRating}" maxFractionDigits="2"/></li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>
@@ -350,10 +350,10 @@
                             <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
                             <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
                             <li>${localeYear}: ${movie.year}</li>
-                            <li>${localeBudget}: ${movie.budget} $</li>
-                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeBudget}: <f:formatNumber value="${movie.budget}"/> $</li>
+                            <li>${localePremiere}: <f:formatDate value="${movie.premiere}" type="date" dateStyle="long"/></li>
                             <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
-                            <li>${localeRating}: ${movie.averageRating}</li>
+                            <li>${localeRating}: <f:formatNumber value="${movie.averageRating}" maxFractionDigits="2"/></li>
                         </ul>
                         <p>${movie.annotation}</p>
                         <c:if test='${sessionScope.userStatus eq "admin"}'>

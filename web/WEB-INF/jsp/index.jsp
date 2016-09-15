@@ -153,10 +153,10 @@
                             <li>${localeGenre}: <c:forEach items="${movie.genres}" var="genre"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a> </c:forEach></li>
                             <li>${localeDirector}: <c:forEach items="${movie.directors}" var="director"><a href="Controller?command=person&id=${director.id}">${director.name}</a> </c:forEach></li>
                             <li>${localeYear}: ${movie.year}</li>
-                            <li>${localeBudget}: ${movie.budget} $</li>
-                            <li>${localePremiere}: ${movie.premiere}</li>
+                            <li>${localeBudget}: <f:formatNumber value="${movie.budget}"/> $</li>
+                            <li>${localePremiere}: <f:formatDate value="${movie.premiere}" type="date" dateStyle="long"/></li>
                             <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
-                            <li>${localeRating}: ${movie.averageRating}</li>
+                            <li>${localeRating}: <f:formatNumber value="${movie.averageRating}" maxFractionDigits="2"/></li>
                         </ul>
                         <p>${movie.annotation}</p>
                     </div>

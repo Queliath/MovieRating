@@ -142,7 +142,7 @@
                     <a href="Controller?command=person&id=${person.id}"><h3>${person.name}</h3></a>
                     <ul>
                         <li>${localeMoviesTotal}: ${person.moviesTotal}</li>
-                        <li>${localeDateOfBirth}: ${person.dateOfBirth}</li>
+                        <li>${localeDateOfBirth}: <f:formatDate value="${person.dateOfBirth}" type="date" dateStyle="long"/></li>
                         <li>${localePlaceOfBirth}: ${person.placeOfBirth}</li>
                     </ul>
                     <c:if test='${sessionScope.userStatus eq "admin" && requestScope.movieId != null && requestScope.relationType != null}'>

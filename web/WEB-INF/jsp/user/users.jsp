@@ -185,7 +185,7 @@
                     <a href="Controller?command=user&id=${user.id}"><h3>${user.firstName} ${user.lastName}</h3></a>
                     <ul>
                         <li>${localeEmail}: ${user.email}</li>
-                        <li>${localeDateOfRegistration}: ${user.dateOfRegistry}</li>
+                        <li>${localeDateOfRegistration}: <f:formatDate value="${user.dateOfRegistry}" type="date" dateStyle="long"/></li>
                         <li>${localeRating}: ${user.rating}</li>
                         <li>${localeStatus}: <c:if test='${user.status eq "normal"}'>${localeStatusNormal}</c:if><c:if test='${user.status eq "banned"}'>${localeStatusBanned}</c:if><c:if test='${user.status eq "admin"}'>${localeStatusAdmin}</c:if></li>
                         <li>${localeLanguage}: ${user.languageId}</li>

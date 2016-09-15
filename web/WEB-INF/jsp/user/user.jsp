@@ -121,7 +121,7 @@
                     <c:if test='${sessionScope.userId == requestScope.user.id || sessionScope.userStatus eq "admin"}'>
                         <li>${localeEmail}: ${requestScope.user.email}</li>
                     </c:if>
-                    <li>${localeDateOfRegistration}: ${requestScope.user.dateOfRegistry}</li>
+                    <li>${localeDateOfRegistration}: <f:formatDate value="${requestScope.user.dateOfRegistry}" type="date" dateStyle="long"/></li>
                     <li>${localeRating}: ${requestScope.user.rating}</li>
                     <li>${localeStatus}: <c:if test='${requestScope.user.status eq "normal"}'>${localeStatusNormal}</c:if><c:if test='${requestScope.user.status eq "banned"}'>${localeStatusBanned}</c:if><c:if test='${requestScope.user.status eq "admin"}'>${localeStatusAdmin}</c:if></li>
                     <c:if test='${sessionScope.userId == requestScope.user.id || sessionScope.userStatus eq "admin"}'>
@@ -143,7 +143,7 @@
                             <img src="${requestScope.user.photo}" class="img-circle" alt="${requestScope.user.firstName} ${requestScope.user.lastName}">
                         </a>
                         <h3>${comment.title}</h3>
-                        <p>${comment.dateOfPublication} ${localeToMovie} <a href="Controller?command=movie&id=${comment.movie.id}">${comment.movie.name}</a></p>
+                        <p><f:formatDate value="${comment.dateOfPublication}" type="date" dateStyle="long"/> ${localeToMovie} <a href="Controller?command=movie&id=${comment.movie.id}">${comment.movie.name}</a></p>
                         <p>${comment.content}</p>
                         <c:if test='${sessionScope.userId == requestScope.user.id}'>
                             <a href="Controller?command=edit-comment&id=${comment.id}" class="btn btn-success btn-sm">${localeEdit}</a>

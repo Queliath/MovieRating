@@ -155,8 +155,8 @@
                     <li>${localeGenre}:<c:forEach items="${requestScope.movie.genres}" var="genre"> <span class="comma"><a href="Controller?command=movies&searchFormGenres[]=${genre.id}">${genre.name}</a><c:if test='${sessionScope.userStatus eq "admin"}'> <a href="#" data-toggle="modal" data-target="#mg-remove-modal" data-id="${genre.id}"><span class="glyphicon glyphicon-remove"></span></a></c:if></span></c:forEach><c:if test='${sessionScope.userStatus eq "admin"}'> <a href="Controller?command=genres&movie=${requestScope.movie.id}" class="btn btn-success btn-xs">${localeAddGenre}</a></c:if></li>
                     <li>${localeYear}: ${requestScope.movie.year}</li>
                     <li>${localeTagline}: ${requestScope.movie.tagline}</li>
-                    <li>${localeBudget}: ${requestScope.movie.budget} $</li>
-                    <li>${localePremiere}: ${requestScope.movie.premiere}</li>
+                    <li>${localeBudget}: <f:formatNumber value="${requestScope.movie.budget}"/> $</li>
+                    <li>${localePremiere}: <f:formatDate value="${requestScope.movie.premiere}" type="date" dateStyle="long"/></li>
                     <li>${localeLasting}: ${requestScope.movie.lasting} ${localeMinute}</li>
                 </ul>
             </div>
@@ -164,7 +164,7 @@
             <c:if test='${sessionScope.userId != null && sessionScope.userStatus ne "banned"}'>
                 <div id="star-rating" data-movie-id="${requestScope.movie.id}" data-url="Controller?command=add-rating" <c:if test="${requestScope.ratingValue != null}">data-value="${requestScope.ratingValue}"</c:if>></div>
             </c:if>
-            <p>${localeRating}: ${requestScope.movie.averageRating}</p>
+            <p>${localeRating}: <f:formatNumber value="${requestScope.movie.averageRating}" maxFractionDigits="2"/></p>
             <c:if test='${sessionScope.userStatus eq "admin"}'>
                 <a href="Controller?command=edit-movie&id=${requestScope.movie.id}" class="btn btn-success">${localeEdit}</a>
                 <a class="btn btn-danger" data-toggle="modal" data-target="#movie-remove-modal" data-id="${requestScope.movie.id}">${localeDelete}</a>
@@ -195,7 +195,7 @@
                         <img src="${comment.user.photo}" class="img-circle" alt="${comment.user.firstName} ${comment.user.lastName}">
                     </a>
                     <h3>${comment.title}</h3>
-                    <p><a href="Controller?command=user&id=${comment.user.id}">${comment.user.firstName} ${comment.user.lastName}</a> ${comment.dateOfPublication}</p>
+                    <p><a href="Controller?command=user&id=${comment.user.id}">${comment.user.firstName} ${comment.user.lastName}</a> <f:formatDate value="${comment.dateOfPublication}" type="date" dateStyle="long"/></p>
                     <p>${comment.content}</p>
                 </div>
             </c:forEach>
