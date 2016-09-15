@@ -9,6 +9,17 @@ import by.epam.movierating.dao.exception.DAOException;
  * @version 1.0
  */
 public interface PoolDAO {
+    /**
+     * Initialize the Connection Pool.
+     *
+     * @throws DAOException
+     */
     void init() throws DAOException;
+
+    /**
+     * Destroys the Connection Pool.
+     *
+     * @throws DAOException
+     */
     void destroy() throws DAOException;
 }
