@@ -7,7 +7,10 @@ import by.epam.movierating.domain.criteria.UserCriteria;
 import java.util.List;
 
 /**
- * Created by Владислав on 11.06.2016.
+ * Provides a DAO-logic for the User entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface UserDAO {
     void addUser(User user) throws DAOException;

@@ -6,7 +6,10 @@ import by.epam.movierating.domain.Comment;
 import java.util.List;
 
 /**
- * Created by Владислав on 11.06.2016.
+ * Provides a DAO-logic for the Comment entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface CommentDAO {
     void addComment(Comment comment, String languageId) throws DAOException;

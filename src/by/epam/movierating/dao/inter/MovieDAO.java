@@ -7,7 +7,10 @@ import by.epam.movierating.domain.criteria.MovieCriteria;
 import java.util.List;
 
 /**
- * Created by Владислав on 11.06.2016.
+ * Provides a DAO-logic for the Movie entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface MovieDAO {
     void addMovie(Movie movie) throws DAOException;

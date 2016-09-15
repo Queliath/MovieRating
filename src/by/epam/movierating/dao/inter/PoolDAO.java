@@ -3,7 +3,10 @@ package by.epam.movierating.dao.inter;
 import by.epam.movierating.dao.exception.DAOException;
 
 /**
- * Created by Владислав on 02.08.2016.
+ * Provides a logic for the Connection Pool in DAO layer.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface PoolDAO {
     void init() throws DAOException;

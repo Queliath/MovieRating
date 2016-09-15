@@ -6,7 +6,10 @@ import by.epam.movierating.domain.Genre;
 import java.util.List;
 
 /**
- * Created by Владислав on 11.06.2016.
+ * Provides a DAO-logic for the Genre entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface GenreDAO {
     void addGenre(Genre genre) throws DAOException;

@@ -6,7 +6,10 @@ import by.epam.movierating.domain.Rating;
 import java.util.List;
 
 /**
- * Created by Владислав on 11.06.2016.
+ * Provides a DAO-logic for the Rating entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface RatingDAO {
     void addRating(Rating rating) throws DAOException;

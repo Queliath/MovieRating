@@ -6,7 +6,10 @@ import by.epam.movierating.domain.Country;
 import java.util.List;
 
 /**
- * Created by Владислав on 18.06.2016.
+ * Provides a DAO-logic for the Country entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface CountryDAO {
     void addCountry(Country country) throws DAOException;
