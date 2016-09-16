@@ -3,7 +3,10 @@ package by.epam.movierating.service.inter;
 import by.epam.movierating.service.exception.ServiceException;
 
 /**
- * Created by Владислав on 21.07.2016.
+ * Provides a business-logic with the Rating entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface RatingService {
     int getRatingValueByMovieAndUser(int movieId, int userId) throws ServiceException;

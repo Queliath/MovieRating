@@ -6,7 +6,10 @@ import by.epam.movierating.service.exception.ServiceException;
 import java.util.List;
 
 /**
- * Created by Владислав on 25.07.2016.
+ * Provides a business-logic with the Person entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface PersonService {
     Person getPersonById(int id, String languageId) throws ServiceException;

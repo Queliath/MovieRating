@@ -7,7 +7,10 @@ import by.epam.movierating.service.exception.ServiceWrongEmailException;
 import java.util.List;
 
 /**
- * Created by Владислав on 03.08.2016.
+ * Provides a business-logic with the User entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface UserService {
     User getUserById(int id, String languageId) throws ServiceException;

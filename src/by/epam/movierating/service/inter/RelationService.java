@@ -3,7 +3,10 @@ package by.epam.movierating.service.inter;
 import by.epam.movierating.service.exception.ServiceException;
 
 /**
- * Created by Владислав on 10.08.2016.
+ * Provides a business-logic for the relations between entities.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface RelationService {
     void addPersonToMovie(int movieId, int personId, int relationType) throws ServiceException;

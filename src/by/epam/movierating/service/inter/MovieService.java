@@ -6,7 +6,10 @@ import by.epam.movierating.service.exception.ServiceException;
 import java.util.List;
 
 /**
- * Created by Владислав on 15.07.2016.
+ * Provides a business-logic with the Movie entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface MovieService {
     List<Movie> getRecentAddedMovies(int amount, String languageId) throws ServiceException;

@@ -6,7 +6,10 @@ import by.epam.movierating.service.exception.ServiceException;
 import java.util.List;
 
 /**
- * Created by Владислав on 15.07.2016.
+ * Provides a business-logic with the Genre entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface GenreService {
     List<Genre> getTopPositionGenres(int amount, String languageId) throws ServiceException;

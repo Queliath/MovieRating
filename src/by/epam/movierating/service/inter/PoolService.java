@@ -3,7 +3,10 @@ package by.epam.movierating.service.inter;
 import by.epam.movierating.service.exception.ServiceException;
 
 /**
- * Created by Владислав on 19.07.2016.
+ * Provides a logic for the Connection Pool in the DAO layer.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface PoolService {
     void init() throws ServiceException;

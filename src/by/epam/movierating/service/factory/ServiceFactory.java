@@ -6,7 +6,10 @@ import by.epam.movierating.service.inter.*;
 import java.util.ResourceBundle;
 
 /**
- * Created by Владислав on 15.07.2016.
+ * Provides a logic of instancing Service objects.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class ServiceFactory {
     private static final String RESOURCE_BUNDLE_NAME = "service-factory";
@@ -34,6 +37,11 @@ public class ServiceFactory {
     private UserService userService;
     private RelationService relationService;
 
+    /**
+     * Creates a certain implementations of the Service interfaces.
+     *
+     * @throws ServiceException if there is instance initialization error
+     */
     private ServiceFactory() throws ServiceException {
         ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
         String siteServiceImplClassName = resourceBundle.getString(SITE_SERVICE_IMPL_KEY);
@@ -70,42 +78,92 @@ public class ServiceFactory {
         return instance;
     }
 
+    /**
+     * Returns an implementation of a SiteService interface.
+     *
+     * @return an implementation of a SiteService interface
+     */
     public SiteService getSiteService() {
         return siteService;
     }
 
+    /**
+     * Returns an implementation of a CommentService interface.
+     *
+     * @return an implementation of a CommentService interface
+     */
     public CommentService getCommentService() {
         return commentService;
     }
 
+    /**
+     * Returns an implementation of a CountryService interface.
+     *
+     * @return an implementation of a CountryService interface
+     */
     public CountryService getCountryService() {
         return countryService;
     }
 
+    /**
+     * Returns an implementation of a GenreService interface.
+     *
+     * @return an implementation of a GenreService interface
+     */
     public GenreService getGenreService() {
         return genreService;
     }
 
+    /**
+     * Returns an implementation of a MovieService interface.
+     *
+     * @return an implementation of a MovieService interface
+     */
     public MovieService getMovieService() {
         return movieService;
     }
 
+    /**
+     * Returns an implementation of a PoolService interface.
+     *
+     * @return an implementation of a PoolService interface
+     */
     public PoolService getPoolService() {
         return poolService;
     }
 
+    /**
+     * Returns an implementation of a RatingService interface.
+     *
+     * @return an implementation of a RatingService interface
+     */
     public RatingService getRatingService() {
         return ratingService;
     }
 
+    /**
+     * Returns an implementation of a PersonService interface.
+     *
+     * @return an implementation of a PersonService interface
+     */
     public PersonService getPersonService() {
         return personService;
     }
 
+    /**
+     * Returns an implementation of a UserService interface.
+     *
+     * @return an implementation of a UserService interface
+     */
     public UserService getUserService() {
         return userService;
     }
 
+    /**
+     * Returns an implementation of a RelationService interface.
+     *
+     * @return an implementation of a RelationService interface
+     */
     public RelationService getRelationService() {
         return relationService;
     }
