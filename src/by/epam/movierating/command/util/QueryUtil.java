@@ -4,13 +4,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * Created by Владислав on 17.07.2016.
+ * Helps to make the work with the queries easier.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class QueryUtil {
     private static final String SESSION_PREV_QUERY = "prevQuery";
 
     private static final char QUERY_SEPARATOR = '?';
 
+    /**
+     * Saves the current query to the user's session.
+     *
+     * @param request a request object
+     */
     public static void saveCurrentQueryToSession(HttpServletRequest request){
         HttpSession session = request.getSession(true);
 

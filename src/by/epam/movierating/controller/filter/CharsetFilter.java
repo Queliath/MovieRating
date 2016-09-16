@@ -4,7 +4,10 @@ import javax.servlet.*;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 17.07.2016.
+ * Sets character encoding for every request.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class CharsetFilter implements Filter {
     private static final String CHARSET = "UTF-8";

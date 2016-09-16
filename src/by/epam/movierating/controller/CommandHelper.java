@@ -10,7 +10,10 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 /**
- * Created by Владислав on 14.07.2016.
+ * Provides a logic of instancing the Command objects.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public final class CommandHelper {
     private static final String RESOURCE_BUNDLE_NAME = "commands";
@@ -21,6 +24,11 @@ public final class CommandHelper {
 
     private Map<String, Command> commands = new HashMap<>();
 
+    /**
+     * Creates the concrete implementations of the Command interface.
+     *
+     * @throws CommandHelperInitException if there is instance initialization error
+     */
     private CommandHelper() throws CommandHelperInitException {
         try {
             ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
@@ -35,6 +43,13 @@ public final class CommandHelper {
         }
     }
 
+    /**
+     * Returns a Command object by the name.
+     *
+     * @param commandName a name of the needed command
+     * @return a Command object
+     * @throws CommandNotFoundException if there is no command with this name
+     */
     public Command getCommand(String commandName) throws CommandNotFoundException {
         if(commandName == null){
             return commands.get(DEFAULT_COMMAND_NAME);

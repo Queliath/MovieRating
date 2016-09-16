@@ -6,7 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 14.07.2016.
+ * Services a concrete request.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public interface Command {
     void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;

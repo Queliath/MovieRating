@@ -1,6 +1,5 @@
-package by.epam.movierating.controller.listener; /**
- * Created by Владислав on 19.07.2016.
- */
+package by.epam.movierating.controller.listener;
+
 import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.factory.ServiceFactory;
 import by.epam.movierating.service.inter.PoolService;
@@ -8,6 +7,12 @@ import by.epam.movierating.service.inter.PoolService;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+/**
+ * Initialize and destroys the Connection Pool at the same time as ServletContext.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
+ */
 public class ConnectionPoolListener implements ServletContextListener {
     // Public constructor is required by servlet spec
     public ConnectionPoolListener() {
