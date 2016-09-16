@@ -17,7 +17,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 15.07.2016.
+ * Services the request from the log in form.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class LoginCommand implements Command {
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/login.jsp";

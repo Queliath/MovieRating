@@ -12,7 +12,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 10.08.2016.
+ * Services the request to add a new relation between the movie and the genre.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class AddGenreToMovieCommand implements Command {
     private static final int SERVER_ERROR = 500;

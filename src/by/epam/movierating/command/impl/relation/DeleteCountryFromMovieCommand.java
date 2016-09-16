@@ -12,7 +12,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 10.08.2016.
+ * Services the request to delete the existing relation between the movie and the country.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class DeleteCountryFromMovieCommand implements Command {
     private static final int SERVER_ERROR = 500;

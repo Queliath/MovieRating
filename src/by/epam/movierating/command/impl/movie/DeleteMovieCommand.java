@@ -12,7 +12,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 08.08.2016.
+ * Services the request to delete the movie.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class DeleteMovieCommand implements Command {
     private static final int SERVER_ERROR = 500;

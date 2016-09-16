@@ -15,6 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Services the request to show a certain movie by id.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
+ */
 public class ViewMovieCommand implements Command {
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/movie/movie.jsp";
 

@@ -15,7 +15,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 08.08.2016.
+ * Services the request from the editing person form.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class EditPersonCommand implements Command {
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/person/edit-person-form.jsp";

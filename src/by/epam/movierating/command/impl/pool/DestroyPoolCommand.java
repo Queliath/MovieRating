@@ -11,7 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 19.07.2016.
+ * Services the request to initialize the Connection Pool.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class DestroyPoolCommand implements Command {
     private static final String WELCOME_PAGE = "/Controller?command=welcome";

@@ -12,7 +12,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 06.08.2016.
+ * Services the request to delete the user.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class DeleteUserCommand implements Command {
     private static final int SERVER_ERROR = 500;

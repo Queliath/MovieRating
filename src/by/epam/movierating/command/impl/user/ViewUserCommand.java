@@ -14,7 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 03.08.2016.
+ * Services the request to show a certain user by id.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class ViewUserCommand implements Command {
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/user/user.jsp";

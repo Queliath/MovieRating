@@ -10,7 +10,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by Владислав on 17.07.2016.
+ * Services the request to change the language of the application.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class ChangeLanguageCommand implements Command {
     private static final String CHANGE_LANGUAGE_PARAMETER = "changeLanguageId";

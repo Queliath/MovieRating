@@ -9,7 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 15.09.2016.
+ * Services the request to show an error page.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class ErrorCommand implements Command {
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/error.jsp";

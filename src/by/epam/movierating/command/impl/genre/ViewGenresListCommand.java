@@ -17,7 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Владислав on 07.08.2016.
+ * Services the request from the genres list page.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class ViewGenresListCommand implements Command {
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/genre/genres.jsp";

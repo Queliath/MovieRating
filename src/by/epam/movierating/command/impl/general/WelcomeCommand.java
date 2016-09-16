@@ -21,7 +21,10 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by Владислав on 15.07.2016.
+ * Services the request from the main (welcome) apge.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class WelcomeCommand implements Command {
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/index.jsp";

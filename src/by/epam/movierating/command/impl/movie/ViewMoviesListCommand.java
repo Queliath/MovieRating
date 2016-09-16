@@ -19,7 +19,10 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Created by Владислав on 19.07.2016.
+ * Services the request from the movies list page.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class ViewMoviesListCommand implements Command {
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/movie/movies.jsp";

@@ -12,7 +12,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 07.08.2016.
+ * Services the ajax-request to add a new rating.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class AddRatingCommand implements Command {
     private static final int SERVER_ERROR = 500;

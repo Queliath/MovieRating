@@ -14,7 +14,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 07.08.2016.
+ * Services the request from the adding movie form.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class AddMovieCommand implements Command {
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/movie/add-movie-form.jsp";

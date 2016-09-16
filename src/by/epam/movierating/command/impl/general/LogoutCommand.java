@@ -9,7 +9,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Владислав on 17.07.2016.
+ * Services the request to log out from the system.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class LogoutCommand implements Command {
     private static final String SESSION_USER_ID = "userId";
