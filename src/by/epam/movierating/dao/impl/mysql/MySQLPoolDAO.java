@@ -6,9 +6,17 @@ import by.epam.movierating.dao.pool.mysql.MySQLConnectionPool;
 import by.epam.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 
 /**
- * Created by Владислав on 02.08.2016.
+ * Provides a logic for the MySQL Connection Pool.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLPoolDAO implements PoolDAO {
+    /**
+     * Initialize the Connection Pool.
+     *
+     * @throws DAOException
+     */
     @Override
     public void init() throws DAOException {
         try {
@@ -19,6 +27,11 @@ public class MySQLPoolDAO implements PoolDAO {
         }
     }
 
+    /**
+     * Destroys the Connection Pool.
+     *
+     * @throws DAOException
+     */
     @Override
     public void destroy() throws DAOException {
         try {

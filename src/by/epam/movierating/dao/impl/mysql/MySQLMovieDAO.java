@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Владислав on 11.06.2016.
+ * Provides a DAO-logic for the Movie entity for the MySQL Database.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLMovieDAO implements MovieDAO {
     private static final String ADD_MOVIE_QUERY = "INSERT INTO movie (name, year, tagline, budget, premiere," +
@@ -72,6 +75,12 @@ public class MySQLMovieDAO implements MovieDAO {
 
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
+    /**
+     * Adds a movie to the data storage.
+     *
+     * @param movie a movie object
+     * @throws DAOException
+     */
     @Override
     public void addMovie(Movie movie) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -109,6 +118,13 @@ public class MySQLMovieDAO implements MovieDAO {
         }
     }
 
+    /**
+     * Updates a movie in the data storage.
+     *
+     * @param movie a movie object
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @throws DAOException
+     */
     @Override
     public void updateMovie(Movie movie, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -173,6 +189,12 @@ public class MySQLMovieDAO implements MovieDAO {
         }
     }
 
+    /**
+     * Deletes a movie from the data storage.
+     *
+     * @param id an id of the deleting movie
+     * @throws DAOException
+     */
     @Override
     public void deleteMovie(int id) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -203,6 +225,13 @@ public class MySQLMovieDAO implements MovieDAO {
         }
     }
 
+    /**
+     * Returns all the movies from the data storage.
+     *
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return all the movies
+     * @throws DAOException
+     */
     @Override
     public List<Movie> getAllMovies(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -261,6 +290,14 @@ public class MySQLMovieDAO implements MovieDAO {
         }
     }
 
+    /**
+     * Returns a movie by id from the data storage.
+     *
+     * @param id an id of the needed movie
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a movie by id
+     * @throws DAOException
+     */
     @Override
     public Movie getMovieById(int id, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -312,6 +349,14 @@ public class MySQLMovieDAO implements MovieDAO {
         }
     }
 
+    /**
+     * Returns a movies belonging to the genre from the data storage.
+     *
+     * @param genreId an id of the genre
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a movies belonging to the genre
+     * @throws DAOException
+     */
     @Override
     public List<Movie> getMoviesByGenre(int genreId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -366,6 +411,14 @@ public class MySQLMovieDAO implements MovieDAO {
         }
     }
 
+    /**
+     * Returns a movies belonging to the country from the data storage.
+     *
+     * @param countryId an id of the country
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a movies belonging to the country
+     * @throws DAOException
+     */
     @Override
     public List<Movie> getMoviesByCountry(int countryId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -420,6 +473,15 @@ public class MySQLMovieDAO implements MovieDAO {
         }
     }
 
+    /**
+     * Returns a movies in which the person took part in the certain role from the data storage.
+     *
+     * @param personId an id of the person
+     * @param relationType an id of the relation type (role)
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a movies in which the person took part in the certain role
+     * @throws DAOException
+     */
     @Override
     public List<Movie> getMoviesByPersonAndRelationType(int personId, int relationType, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -476,6 +538,14 @@ public class MySQLMovieDAO implements MovieDAO {
         }
     }
 
+    /**
+     * Returns a recent added movies from the data storage.
+     *
+     * @param amount a needed amount of movies
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a recent added movies
+     * @throws DAOException
+     */
     @Override
     public List<Movie> getRecentAddedMovies(int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -534,6 +604,16 @@ public class MySQLMovieDAO implements MovieDAO {
         }
     }
 
+    /**
+     * Returns a movies matching to the criteria from the data storage.
+     *
+     * @param criteria a MovieCriteria object
+     * @param from a starting position in the movies list (starting from 0)
+     * @param amount a needed amount of movies
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a movies matching to the criteria
+     * @throws DAOException
+     */
     @Override
     public List<Movie> getMoviesByCriteria(MovieCriteria criteria, int from, int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -679,6 +759,14 @@ public class MySQLMovieDAO implements MovieDAO {
         }
     }
 
+    /**
+     * Returns an amount of movies matching to the criteria in the data storage.
+     *
+     * @param criteria a MovieCriteria object
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return an amount of movies matching to the criteria
+     * @throws DAOException
+     */
     @Override
     public int getMoviesCountByCriteria(MovieCriteria criteria, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();

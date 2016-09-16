@@ -11,7 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by Владислав on 19.06.2016.
+ * Provides a DAO-logic for the relations between Movie and Person entities for the MySQL Database.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
     private static final String ADD_MOVIE_TO_PERSON_QUERY = "INSERT INTO movie_person_relation " +
@@ -21,6 +24,14 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
     private static final String GET_MOVIES_TOTAL_BY_PERSON_QUERY = "SELECT COUNT(*) FROM " +
             "(SELECT DISTINCT movie_id FROM movie_person_relation WHERE person_id = ?) AS c";
 
+    /**
+     * Adds a relation between the movie and the person.
+     *
+     * @param movieId an id of the movie
+     * @param personId an id of the person
+     * @param relationType an id of the relation type (role)
+     * @throws DAOException
+     */
     @Override
     public void addMovieToPersonWithRelation(int movieId, int personId, int relationType) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -53,6 +64,14 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
         }
     }
 
+    /**
+     * Deletes a relation between the movie and the person.
+     *
+     * @param movieId an id of the movie
+     * @param personId an id of the person
+     * @param relationType an id of the relation type (role)
+     * @throws DAOException
+     */
     @Override
     public void deleteMovieFromPersonWithRelation(int movieId, int personId, int relationType) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -85,6 +104,13 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
         }
     }
 
+    /**
+     * Returns an amount of movies in which this person took part.
+     *
+     * @param personId an id of the person
+     * @return an amount of movies in which this person took part
+     * @throws DAOException
+     */
     @Override
     public int getMoviesTotalByPerson(int personId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();

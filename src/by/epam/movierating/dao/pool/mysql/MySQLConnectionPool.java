@@ -11,7 +11,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Created by Владислав on 12.06.2016.
+ * Holds a limit number of connections to the MySQL Database.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLConnectionPool {
     private static final String RESOURCE_BUNDLE_NAME = "mysql-connection";
@@ -40,6 +43,11 @@ public class MySQLConnectionPool {
 
     private MySQLConnectionPool() {}
 
+    /**
+     * Creates a limit number of connections with the MySQL Database.
+     *
+     * @throws MySQLConnectionPoolException
+     */
     public void init() throws MySQLConnectionPoolException {
         if(!isInit) {
             ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
@@ -76,6 +84,11 @@ public class MySQLConnectionPool {
         }
     }
 
+    /**
+     * Closes all of the connections with the MySQL Database.
+     *
+     * @throws MySQLConnectionPoolException
+     */
     public void destroy() throws MySQLConnectionPoolException {
         if(isInit) {
             lock.lock();
@@ -105,6 +118,13 @@ public class MySQLConnectionPool {
         return instance;
     }
 
+    /**
+     * Returns a first free connection.
+     *
+     * @return connection object
+     * @throws InterruptedException
+     * @throws MySQLConnectionPoolException if Connection Pool is not available at this moment
+     */
     public Connection getConnection() throws InterruptedException, MySQLConnectionPoolException {
         if(isAvailable){
             lock.lock();
@@ -125,6 +145,14 @@ public class MySQLConnectionPool {
         }
     }
 
+    /**
+     * Holds the given connection (if it was created in this Connection Pool).
+     *
+     * @param connection a connection object
+     * @throws SQLException if there is some problem with the connection
+     * @throws MySQLConnectionPoolException if the connection was created outside the Connection Pool
+     * or Connection Pool isn't available at this moment
+     */
     public void freeConnection(Connection connection) throws SQLException, MySQLConnectionPoolException {
         if(isAvailable){
             lock.lock();

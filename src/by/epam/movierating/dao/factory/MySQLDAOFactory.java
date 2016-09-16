@@ -4,7 +4,7 @@ import by.epam.movierating.dao.impl.mysql.*;
 import by.epam.movierating.dao.inter.*;
 
 /**
- * Created by Владислав on 14.07.2016.
+ * Provides a logic of instancing DAO objects for the MySQL Database
  */
 public class MySQLDAOFactory extends DAOFactory {
     private final MovieDAO mySQLMovieDAO = new MySQLMovieDAO();

@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Владислав on 11.06.2016.
+ * Provides a DAO-logic for the Person entity for the MySQL Database.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLPersonDAO implements PersonDAO {
     private static final String ADD_PERSON_QUERY = "INSERT INTO person " +
@@ -46,6 +49,12 @@ public class MySQLPersonDAO implements PersonDAO {
 
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
+    /**
+     * Adds a person to the data storage.
+     *
+     * @param person a person object
+     * @throws DAOException
+     */
     @Override
     public void addPerson(Person person) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -79,6 +88,13 @@ public class MySQLPersonDAO implements PersonDAO {
         }
     }
 
+    /**
+     * Updates a person in the data storage.
+     *
+     * @param person a person object
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @throws DAOException
+     */
     @Override
     public void updatePerson(Person person, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -135,6 +151,12 @@ public class MySQLPersonDAO implements PersonDAO {
         }
     }
 
+    /**
+     * Deletes a person from the data storage.
+     *
+     * @param id an id of the deleting person
+     * @throws DAOException
+     */
     @Override
     public void deletePerson(int id) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -165,6 +187,13 @@ public class MySQLPersonDAO implements PersonDAO {
         }
     }
 
+    /**
+     * Returns all the persons from the data storage.
+     *
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return all the persons
+     * @throws DAOException
+     */
     @Override
     public List<Person> getAllPersons(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -219,6 +248,14 @@ public class MySQLPersonDAO implements PersonDAO {
         }
     }
 
+    /**
+     * Returns a person by id from the data storage.
+     *
+     * @param id an id of the needed person
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a person by id
+     * @throws DAOException
+     */
     @Override
     public Person getPersonById(int id, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -266,6 +303,15 @@ public class MySQLPersonDAO implements PersonDAO {
         }
     }
 
+    /**
+     * Returns a persons which took part in the movie in the certain role.
+     *
+     * @param movieId an id of the movie
+     * @param relationType an id of the relation type (role)
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a persons which took part in the movie in the certain role
+     * @throws DAOException
+     */
     @Override
     public List<Person> getPersonsByMovieAndRelationType(int movieId, int relationType, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -318,6 +364,16 @@ public class MySQLPersonDAO implements PersonDAO {
         }
     }
 
+    /**
+     * Returns a persons matching the criteria.
+     *
+     * @param name a person's name
+     * @param from a starting position in the persons list (starting from 0)
+     * @param amount a needed amount of persons
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a persons matching the criteria
+     * @throws DAOException
+     */
     @Override
     public List<Person> getPersonsByCriteria(String name, int from, int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -398,6 +454,14 @@ public class MySQLPersonDAO implements PersonDAO {
         }
     }
 
+    /**
+     * Returns an amount of persons matching the criteria.
+     *
+     * @param name a person's name
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return an amount of persons matching the criteria
+     * @throws DAOException
+     */
     @Override
     public int getPersonsCountByCriteria(String name, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();

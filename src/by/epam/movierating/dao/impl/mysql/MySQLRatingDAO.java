@@ -14,7 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Владислав on 11.06.2016.
+ * Provides a DAO-logic for the Rating entity for the MySQL Database.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLRatingDAO implements RatingDAO {
     private static final String ADD_RATING_QUERY = "INSERT INTO rating " +
@@ -27,6 +30,12 @@ public class MySQLRatingDAO implements RatingDAO {
             "FROM rating WHERE movie_id = ? GROUP BY movie_id";
     private static final String GET_RATINGS_BY_USER_QUERY = "SELECT * FROM rating WHERE user_id = ?";
 
+    /**
+     * Adds a rating to the data storage.
+     *
+     * @param rating a rating object
+     * @throws DAOException
+     */
     @Override
     public void addRating(Rating rating) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -59,6 +68,12 @@ public class MySQLRatingDAO implements RatingDAO {
         }
     }
 
+    /**
+     * Updates a rating in the data storage.
+     *
+     * @param rating a rating object
+     * @throws DAOException
+     */
     @Override
     public void updateRating(Rating rating) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -91,6 +106,13 @@ public class MySQLRatingDAO implements RatingDAO {
         }
     }
 
+    /**
+     * Deletes a rating from the data storage.
+     *
+     * @param movieId an id of the movie to which the rating belongs
+     * @param userId an id of the user to which the rating belongs
+     * @throws DAOException
+     */
     @Override
     public void deleteRating(int movieId, int userId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -122,6 +144,14 @@ public class MySQLRatingDAO implements RatingDAO {
         }
     }
 
+    /**
+     * Returns a rating belonging to the movie and the user.
+     *
+     * @param movieId an id of the movie
+     * @param userId an id of the user
+     * @return a rating belonging to the movie and the user
+     * @throws DAOException
+     */
     @Override
     public Rating getRatingByMovieAndUser(int movieId, int userId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -161,6 +191,13 @@ public class MySQLRatingDAO implements RatingDAO {
         }
     }
 
+    /**
+     * Returns an average rating of the movie.
+     *
+     * @param movieId an id of the movie
+     * @return an average rating of the movie
+     * @throws DAOException
+     */
     @Override
     public double getAverageRatingByMovie(int movieId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -196,6 +233,13 @@ public class MySQLRatingDAO implements RatingDAO {
         }
     }
 
+    /**
+     * Returns a ratings belonging to the user.
+     *
+     * @param userId an id of the user
+     * @return a ratings belonging to the user
+     * @throws DAOException
+     */
     @Override
     public List<Rating> getRatingsByUser(int userId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();

@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Владислав on 18.06.2016.
+ * Provides a DAO-logic for the Country entity for the MySQL Database.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLCountryDAO implements CountryDAO {
     private static final String ADD_COUNTRY_QUERY = "INSERT INTO country " +
@@ -52,6 +55,12 @@ public class MySQLCountryDAO implements CountryDAO {
 
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
+    /**
+     * Adds a country to the data storage.
+     *
+     * @param country a country object
+     * @throws DAOException
+     */
     @Override
     public void addCountry(Country country) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -83,6 +92,13 @@ public class MySQLCountryDAO implements CountryDAO {
         }
     }
 
+    /**
+     * Updates a country in the data storage.
+     *
+     * @param country a country object
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @throws DAOException
+     */
     @Override
     public void updateCountry(Country country, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -135,6 +151,12 @@ public class MySQLCountryDAO implements CountryDAO {
         }
     }
 
+    /**
+     * Deletes a country from the data storage.
+     *
+     * @param id an id of a deleting country
+     * @throws DAOException
+     */
     @Override
     public void deleteCountry(int id) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -165,6 +187,13 @@ public class MySQLCountryDAO implements CountryDAO {
         }
     }
 
+    /**
+     * Returns all the countries from data storage.
+     *
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return all the countries
+     * @throws DAOException
+     */
     @Override
     public List<Country> getAllCountries(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -217,6 +246,14 @@ public class MySQLCountryDAO implements CountryDAO {
         }
     }
 
+    /**
+     * Returns a country by id from data storage.
+     *
+     * @param id an id of a needed country
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a country by id
+     * @throws DAOException
+     */
     @Override
     public Country getCountryById(int id, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -263,6 +300,14 @@ public class MySQLCountryDAO implements CountryDAO {
         }
     }
 
+    /**
+     * Returns a countries belonging to the movie from the data storage.
+     *
+     * @param movieId an id of the movie
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a countries belonging to the movie
+     * @throws DAOException
+     */
     @Override
     public List<Country> getCountriesByMovie(int movieId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -311,6 +356,14 @@ public class MySQLCountryDAO implements CountryDAO {
         }
     }
 
+    /**
+     * Returns a countries ordered by a position number from the data storage.
+     *
+     * @param amount a needed amount of countries
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a countries ordered by a position number
+     * @throws DAOException
+     */
     @Override
     public List<Country> getTopPositionCountries(int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -363,6 +416,15 @@ public class MySQLCountryDAO implements CountryDAO {
         }
     }
 
+    /**
+     * Returns a countries from data storage.
+     *
+     * @param from a start position in the countries list (started from 0)
+     * @param amount a needed amount of countries
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a countries from data storage
+     * @throws DAOException
+     */
     @Override
     public List<Country> getCountries(int from, int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -415,6 +477,12 @@ public class MySQLCountryDAO implements CountryDAO {
         }
     }
 
+    /**
+     * Returns an amount of countries in the data storage.
+     *
+     * @return an amount of countries in the data storage
+     * @throws DAOException
+     */
     @Override
     public int getCountriesCount() throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();

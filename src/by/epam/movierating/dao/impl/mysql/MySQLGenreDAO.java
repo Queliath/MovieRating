@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Владислав on 11.06.2016.
+ * Provides a DAO-logic for the Genre entity for the MySQL Database.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLGenreDAO implements GenreDAO {
     private static final String ADD_GENRE_QUERY = "INSERT INTO genre " +
@@ -53,6 +56,12 @@ public class MySQLGenreDAO implements GenreDAO {
 
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
+    /**
+     * Adds a genre to the data storage.
+     *
+     * @param genre a genre object
+     * @throws DAOException
+     */
     @Override
     public void addGenre(Genre genre) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -84,6 +93,13 @@ public class MySQLGenreDAO implements GenreDAO {
         }
     }
 
+    /**
+     * Updates a genre in the data storage.
+     *
+     * @param genre a genre object
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @throws DAOException
+     */
     @Override
     public void updateGenre(Genre genre, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -136,6 +152,12 @@ public class MySQLGenreDAO implements GenreDAO {
         }
     }
 
+    /**
+     * Deletes a genre from the data storage.
+     *
+     * @param id an id of a deleting genre
+     * @throws DAOException
+     */
     @Override
     public void deleteGenre(int id) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -166,6 +188,13 @@ public class MySQLGenreDAO implements GenreDAO {
         }
     }
 
+    /**
+     * Returns all the genres from the data storage.
+     *
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return all the genres
+     * @throws DAOException
+     */
     @Override
     public List<Genre> getAllGenres(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -217,6 +246,14 @@ public class MySQLGenreDAO implements GenreDAO {
         }
     }
 
+    /**
+     * Returns a genre by id from the data storage.
+     *
+     * @param id an id of a needed genre
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a genre by id
+     * @throws DAOException
+     */
     @Override
     public Genre getGenreById(int id, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -262,6 +299,14 @@ public class MySQLGenreDAO implements GenreDAO {
         }
     }
 
+    /**
+     * Returns a genres belonging to the movie from the data storage.
+     *
+     * @param movieId an id of the movie
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a genres belonging to the movie
+     * @throws DAOException
+     */
     @Override
     public List<Genre> getGenresByMovie(int movieId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -309,6 +354,14 @@ public class MySQLGenreDAO implements GenreDAO {
         }
     }
 
+    /**
+     * Returns a genres ordered by a position number from the data storage.
+     *
+     * @param amount a needed amount of genres
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a genres ordered by a position number
+     * @throws DAOException
+     */
     @Override
     public List<Genre> getTopPositionGenres(int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -360,6 +413,15 @@ public class MySQLGenreDAO implements GenreDAO {
         }
     }
 
+    /**
+     * Returns a genres from the data storage.
+     *
+     * @param from a start position in the genres list (started from 0)
+     * @param amount a needed amount of genres
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a genres
+     * @throws DAOException
+     */
     @Override
     public List<Genre> getGenres(int from, int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -411,6 +473,12 @@ public class MySQLGenreDAO implements GenreDAO {
         }
     }
 
+    /**
+     * Returns an amount of genres in the data storage.
+     *
+     * @return an amount of genres in the data storage
+     * @throws DAOException
+     */
     @Override
     public int getGenresCount() throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();

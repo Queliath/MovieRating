@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Владислав on 11.06.2016.
+ * Provides a DAO-logic for the Comment entity for the MySQL Database.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLCommentDAO implements CommentDAO {
     private static final String ADD_COMMENT_QUERY = "INSERT INTO " +
@@ -29,6 +32,13 @@ public class MySQLCommentDAO implements CommentDAO {
     private static final String GET_RECENT_ADDED_COMMENTS_QUERY = "SELECT * FROM comment " +
             "WHERE language_id = ? ORDER BY id DESC LIMIT ";
 
+    /**
+     * Adds a comment to the data storage.
+     *
+     * @param comment a comment object
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @throws DAOException
+     */
     @Override
     public void addComment(Comment comment, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -64,6 +74,12 @@ public class MySQLCommentDAO implements CommentDAO {
         }
     }
 
+    /**
+     * Updates a comment in the data storage.
+     *
+     * @param comment a comment object
+     * @throws DAOException
+     */
     @Override
     public void updateComment(Comment comment) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -99,6 +115,12 @@ public class MySQLCommentDAO implements CommentDAO {
         }
     }
 
+    /**
+     * Deletes a comment from the data storage.
+     *
+     * @param id - an id of a deleting comment
+     * @throws DAOException
+     */
     @Override
     public void deleteComment(int id) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -129,6 +151,13 @@ public class MySQLCommentDAO implements CommentDAO {
         }
     }
 
+    /**
+     * Returns all the comments from the data storage.
+     *
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return all the comments from the data storage
+     * @throws DAOException
+     */
     @Override
     public List<Comment> getAllComments(String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -172,6 +201,13 @@ public class MySQLCommentDAO implements CommentDAO {
         }
     }
 
+    /**
+     * Returns a comment from the data storage by id.
+     *
+     * @param id an id of a needed comment
+     * @return a comment object
+     * @throws DAOException
+     */
     @Override
     public Comment getCommentById(int id) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -213,6 +249,14 @@ public class MySQLCommentDAO implements CommentDAO {
         }
     }
 
+    /**
+     * Returns a comments from the data storage belonging to the movie.
+     *
+     * @param movieId an id of the movie
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a comments belonging to the movie
+     * @throws DAOException
+     */
     @Override
     public List<Comment> getCommentsByMovie(int movieId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -257,6 +301,14 @@ public class MySQLCommentDAO implements CommentDAO {
         }
     }
 
+    /**
+     * Returns a comments from the data storage belonging to the user.
+     *
+     * @param userId an id of the user
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a comments belonging to the user
+     * @throws DAOException
+     */
     @Override
     public List<Comment> getCommentsByUser(int userId, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -301,6 +353,14 @@ public class MySQLCommentDAO implements CommentDAO {
         }
     }
 
+    /**
+     * Returns a recent added comments from the data storage.
+     *
+     * @param amount a needed amount of a comment
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a recent added comments
+     * @throws DAOException
+     */
     @Override
     public List<Comment> getRecentAddedComments(int amount, String languageId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();

@@ -20,6 +20,7 @@ public interface MovieGenreDAO {
 
     /**
      * Deletes a relation between the movie and the genre from the data storage.
+     *
      * @param movieId an id of the movie
      * @param genreId an id of the genre
      * @throws DAOException

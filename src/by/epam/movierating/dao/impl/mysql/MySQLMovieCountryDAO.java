@@ -10,13 +10,23 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Created by Владислав on 19.06.2016.
+ * Provides a DAO-logic for the relations between Movie and Country entities for the MySQL Database.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLMovieCountryDAO implements MovieCountryDAO {
     private static final String ADD_MOVIE_TO_COUNTRY_QUERY = "INSERT INTO movie_country " +
             "(movie_id, country_id) VALUES (?, ?)";
     private static final String DELETE_MOVIE_FORM_COUNTRY_QUERY = "DELETE FROM movie_country WHERE movie_id = ? AND country_id = ?";
 
+    /**
+     * Adds a relation between the movie and the country.
+     *
+     * @param movieId an id of the movie
+     * @param countryId an id of the country
+     * @throws DAOException
+     */
     @Override
     public void addMovieToCountry(int movieId, int countryId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -48,6 +58,13 @@ public class MySQLMovieCountryDAO implements MovieCountryDAO {
         }
     }
 
+    /**
+     * Deletes a relation between the movie and the country.
+     *
+     * @param movieId an id of the movie
+     * @param countryId an id of the country
+     * @throws DAOException
+     */
     @Override
     public void deleteMovieFromCountry(int movieId, int countryId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();

@@ -10,13 +10,23 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Created by Владислав on 19.06.2016.
+ * Provides a DAO-logic for the relations between Movie and Genre entities for the MySQL Database.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLMovieGenreDAO implements MovieGenreDAO {
     private static final String ADD_MOVIE_TO_GENRE_QUERY = "INSERT INTO movie_genre " +
             "(movie_id, genre_id) VALUES (?, ?)";
     private static final String DELETE_MOVIE_FROM_GENRE_QUERY = "DELETE FROM movie_genre WHERE movie_id = ? AND genre_id = ?";
 
+    /**
+     * Adds a relation between the movie and the genre to the data storage.
+     *
+     * @param movieId an id of the movie
+     * @param genreId an id of the genre
+     * @throws DAOException
+     */
     @Override
     public void addMovieToGenre(int movieId, int genreId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
@@ -48,6 +58,13 @@ public class MySQLMovieGenreDAO implements MovieGenreDAO {
         }
     }
 
+    /**
+     * Deletes a relation between the movie and the genre from the data storage.
+     *
+     * @param movieId an id of the movie
+     * @param genreId an id of the genre
+     * @throws DAOException
+     */
     @Override
     public void deleteMovieFromGenre(int movieId, int genreId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
