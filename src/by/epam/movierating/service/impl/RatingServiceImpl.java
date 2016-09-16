@@ -8,12 +8,23 @@ import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.inter.RatingService;
 
 /**
- * Created by Владислав on 21.07.2016.
+ * Provides a business-logic with the Rating entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class RatingServiceImpl implements RatingService {
     private static final int MIN_VALUE = 0;
     private static final int MAX_VALUE = 10;
 
+    /**
+     * Returns a value of the rating belonging to the movie and to the user (if exists).
+     *
+     * @param movieId an id of the movie
+     * @param userId an id of the user
+     * @return a value of the rating
+     * @throws ServiceException
+     */
     @Override
     public int getRatingValueByMovieAndUser(int movieId, int userId) throws ServiceException {
         try {
@@ -26,6 +37,14 @@ public class RatingServiceImpl implements RatingService {
         }
     }
 
+    /**
+     * Adds a new rating to the data storage.
+     *
+     * @param value a value of the rating
+     * @param movieId an id of the movie to which the rating belongs
+     * @param userId an id of the user to which the rating belongs
+     * @throws ServiceException
+     */
     @Override
     public void addRating(int value, int movieId, int userId) throws ServiceException {
         if(value < MIN_VALUE || value > MAX_VALUE || movieId <= 0 || userId <= 0){

@@ -15,11 +15,22 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Владислав on 15.07.2016.
+ * Provides a business-logic with the Comment entity.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class CommentServiceImpl implements CommentService {
     private static final int TITLE_MAX_LENGTH = 45;
 
+    /**
+     * Returns a recent added comments.
+     *
+     * @param amount a needed amount of comments
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @return a recent added comments
+     * @throws ServiceException
+     */
     @Override
     public List<Comment> getRecentAddedComments(int amount, String languageId) throws ServiceException {
         if(amount <= 0){
@@ -46,6 +57,16 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    /**
+     * Adds a comment to the data storage.
+     *
+     * @param title a title of the comment
+     * @param content a content of the comment
+     * @param movieId an id of the movie to which the comment belongs
+     * @param userId an id of the user to which the comment belongs
+     * @param languageId a language id like 'EN', "RU' etc.
+     * @throws ServiceException
+     */
     @Override
     public void addComment(String title, String content, int movieId, int userId, String languageId) throws ServiceException {
         if(title.isEmpty() || title.length() > TITLE_MAX_LENGTH || content.isEmpty() || movieId <= 0 || userId <= 0){
@@ -69,6 +90,14 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    /**
+     * Edits an already existing comment.
+     *
+     * @param id an id of the needed comment
+     * @param title a new title of the comment
+     * @param content a new content of the comment
+     * @throws ServiceException
+     */
     @Override
     public void editComment(int id, String title, String content) throws ServiceException {
         if(id <= 0 || title.isEmpty() || title.length() > TITLE_MAX_LENGTH || content.isEmpty()){
@@ -89,6 +118,13 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    /**
+     * Returns a concrete comment by id.
+     *
+     * @param id an id of a needed comment
+     * @return a concrete comment by id
+     * @throws ServiceException
+     */
     @Override
     public Comment getCommentById(int id) throws ServiceException {
         if(id <= 0){
@@ -105,6 +141,12 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    /**
+     * Deletes an existing comment from the data storage.
+     *
+     * @param id an id of the deleting comment
+     * @throws ServiceException
+     */
     @Override
     public void deleteComment(int id) throws ServiceException {
         if(id <= 0){

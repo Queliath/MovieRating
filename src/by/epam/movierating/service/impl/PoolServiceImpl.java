@@ -7,9 +7,17 @@ import by.epam.movierating.service.exception.ServiceException;
 import by.epam.movierating.service.inter.PoolService;
 
 /**
- * Created by Владислав on 19.07.2016.
+ * Provides a logic for the Connection Pool in the DAO layer.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class PoolServiceImpl implements PoolService {
+    /**
+     * Gives a command to initialize the Connection Pool in the DAO layer.
+     *
+     * @throws ServiceException
+     */
     @Override
     public void init() throws ServiceException {
         try {
@@ -21,6 +29,11 @@ public class PoolServiceImpl implements PoolService {
         }
     }
 
+    /**
+     * Gives a command to destroy the Connection Pool in the DAO layer.
+     *
+     * @throws ServiceException
+     */
     @Override
     public void destroy() throws ServiceException {
         try {
