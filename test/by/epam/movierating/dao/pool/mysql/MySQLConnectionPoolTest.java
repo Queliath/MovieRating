@@ -11,6 +11,29 @@ import java.sql.SQLException;
  */
 public class MySQLConnectionPoolTest {
     @Test(expected = MySQLConnectionPoolException.class)
+    public void initAlreadyInitedPoolTest() throws MySQLConnectionPoolException{
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        mySQLConnectionPool.init();
+        try {
+            mySQLConnectionPool.init();
+        } finally {
+            mySQLConnectionPool.destroy();
+        }
+    }
+
+    @Test(expected = MySQLConnectionPoolException.class)
+    public void destroyNotInitedPoolTest() throws MySQLConnectionPoolException{
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        mySQLConnectionPool.destroy();
+    }
+
+    @Test(expected = MySQLConnectionPoolException.class)
+    public void getConnectionFromUnavailablePoolTest() throws MySQLConnectionPoolException, InterruptedException {
+        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
+        mySQLConnectionPool.getConnection();
+    }
+
+    @Test(expected = MySQLConnectionPoolException.class)
     public void freeOutsideConnectionTest() throws MySQLConnectionPoolException, InterruptedException, ClassNotFoundException, SQLException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection poolConnection = mySQLConnectionPool.getConnection();
