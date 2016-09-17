@@ -54,8 +54,6 @@ public class RegistrationCommand implements Command {
                 SiteService siteService = serviceFactory.getSiteService();
                 User user = siteService.registration(registrationFormEmail, registrationFormPassword, registrationFormFirstName, registrationFormLastName, languageId);
                 HttpSession session = request.getSession(true);
-                session.setAttribute(USER_ID_SESSION_ATTRIBUTE, user.getId());
-                session.setAttribute(USER_STATUS_SESSION_ATTRIBUTE, user.getStatus());
                 session.setAttribute(LANGUAGE_ID_SESSION_ATTRIBUTE, user.getLanguageId());
                 response.sendRedirect(WELCOME_PAGE);
             } catch (ServiceWrongEmailException e) {
