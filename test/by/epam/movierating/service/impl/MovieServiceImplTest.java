@@ -6,7 +6,10 @@ import by.epam.movierating.service.inter.MovieService;
 import org.junit.Test;
 
 /**
- * Created by Владислав on 17.09.2016.
+ * Tests the methods of MovieServiceImpl class.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MovieServiceImplTest {
     @Test(expected = ServiceException.class)

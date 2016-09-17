@@ -7,7 +7,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * Created by Владислав on 15.09.2016.
+ * Tests the methods of MySQLConnectionPool class.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLConnectionPoolTest {
     @Test(expected = MySQLConnectionPoolException.class)

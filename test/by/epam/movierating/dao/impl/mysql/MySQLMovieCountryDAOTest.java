@@ -14,7 +14,10 @@ import org.junit.Test;
 import java.util.List;
 
 /**
- * Created by Владислав on 17.09.2016.
+ * Tests the methods of MySQLMovieCountryDAO class.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLMovieCountryDAOTest {
     @Test

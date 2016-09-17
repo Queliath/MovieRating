@@ -6,7 +6,10 @@ import by.epam.movierating.service.inter.GenreService;
 import org.junit.Test;
 
 /**
- * Created by Владислав on 17.09.2016.
+ * Tests the methods of GenreServiceImpl class.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class GenreServiceImplTest {
     @Test(expected = ServiceException.class)

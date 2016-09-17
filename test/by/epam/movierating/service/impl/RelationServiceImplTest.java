@@ -6,7 +6,10 @@ import by.epam.movierating.service.inter.RelationService;
 import org.junit.Test;
 
 /**
- * Created by Владислав on 17.09.2016.
+ * Tests the methods of RelationServiceImpl class.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class RelationServiceImplTest {
     @Test(expected = ServiceException.class)

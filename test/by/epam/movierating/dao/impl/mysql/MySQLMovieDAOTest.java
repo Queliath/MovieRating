@@ -12,7 +12,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
- * Created by Владислав on 15.09.2016.
+ * Tests the methods of MySQLMovieDAO class.
+ *
+ * @author Kostevich Vladislav
+ * @version 1.0
  */
 public class MySQLMovieDAOTest {
     @Test
