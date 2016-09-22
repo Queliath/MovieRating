@@ -57,7 +57,7 @@ public class MySQLGenreDAO implements GenreDAO {
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
     /**
-     * Adds a genre to the data storage.
+     * Adds a genre to the data storage (in the default language).
      *
      * @param genre a genre object
      * @throws DAOException
@@ -81,21 +81,30 @@ public class MySQLGenreDAO implements GenreDAO {
             throw new DAOException("Error in DAO layer when adding genre", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
 
     /**
-     * Updates a genre in the data storage.
+     * Updates a genre or adds/updates a localization of a genre in the data storage.
      *
+     * If the languageId argument is an id of the default language of the application, then it updates
+     * a genre. If the language argument is an id of the different language (not default) then it
+     * adds/updates a localization of a genre (it based on the fact of existence of a localization:
+     * if it doesn't exist then it will be added, otherwise a localization will be updated).
      * @param genre a genre object
      * @param languageId a language id like 'EN', "RU' etc.
      * @throws DAOException
@@ -140,20 +149,25 @@ public class MySQLGenreDAO implements GenreDAO {
             throw new DAOException("Error in DAO layer when updating genre", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
 
     /**
-     * Deletes a genre from the data storage.
+     * Deletes a genre from the data storage (with all of the localizations).
      *
      * @param id an id of a deleting genre
      * @throws DAOException
@@ -176,14 +190,19 @@ public class MySQLGenreDAO implements GenreDAO {
             throw new DAOException("Error in DAO layer when deleting genre", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -231,17 +250,22 @@ public class MySQLGenreDAO implements GenreDAO {
             throw new DAOException("Error in DAO layer when getting genre", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    if(preparedStatement != null){
-                        preparedStatement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+                if (preparedStatement != null){
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -287,14 +311,19 @@ public class MySQLGenreDAO implements GenreDAO {
             throw new DAOException("Error in DAO layer when getting genre", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -342,14 +371,19 @@ public class MySQLGenreDAO implements GenreDAO {
             throw new DAOException("Error in DAO layer when getting genre", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -398,17 +432,22 @@ public class MySQLGenreDAO implements GenreDAO {
             throw new DAOException("Error in DAO layer when getting genre", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    if(preparedStatement != null){
-                        preparedStatement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+                if (preparedStatement != null){
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -458,17 +497,22 @@ public class MySQLGenreDAO implements GenreDAO {
             throw new DAOException("Error in DAO layer when getting genre", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    if(preparedStatement != null){
-                        preparedStatement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+                if (preparedStatement != null){
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -501,14 +545,19 @@ public class MySQLGenreDAO implements GenreDAO {
             throw new DAOException("DAO layer: cannot get countries count", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }

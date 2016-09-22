@@ -52,14 +52,19 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
             throw new DAOException("Exception in DAO layer when adding movie to person with relation", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -92,14 +97,19 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
             throw new DAOException("Exception in DAO layer when deleting movie from person with relation", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -115,14 +125,11 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
     public int getMoviesTotalByPerson(int personId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
+        PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        }
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(GET_MOVIES_TOTAL_BY_PERSON_QUERY);
+            statement = connection.prepareStatement(GET_MOVIES_TOTAL_BY_PERSON_QUERY);
             statement.setInt(1, personId);
             ResultSet resultSet = statement.executeQuery();
 
@@ -131,13 +138,25 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
                 moviesTotal = resultSet.getInt(1);
             }
             return moviesTotal;
+        } catch (InterruptedException | MySQLConnectionPoolException e) {
+            throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
             throw new DAOException("Exception in DAO layer when getting movies total by person", e);
         } finally {
             try {
-                mySQLConnectionPool.freeConnection(connection);
-            } catch (SQLException | MySQLConnectionPoolException e) {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }

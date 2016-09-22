@@ -62,14 +62,19 @@ public class MySQLCommentDAO implements CommentDAO {
             throw new DAOException("Exception in DAO layer when adding comment", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -103,14 +108,19 @@ public class MySQLCommentDAO implements CommentDAO {
             throw new DAOException("Exception in DAO layer when updating comment", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -139,14 +149,19 @@ public class MySQLCommentDAO implements CommentDAO {
             throw new DAOException("Exception in DAO layer when deleting comment", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -189,14 +204,19 @@ public class MySQLCommentDAO implements CommentDAO {
             throw new DAOException("Exception in DAO layer when getting comment", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -237,14 +257,19 @@ public class MySQLCommentDAO implements CommentDAO {
             throw new DAOException("Exception in DAO layer when getting comment", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -289,14 +314,19 @@ public class MySQLCommentDAO implements CommentDAO {
             throw new DAOException("Exception in DAO layer when getting comment", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -341,14 +371,19 @@ public class MySQLCommentDAO implements CommentDAO {
             throw new DAOException("Exception in DAO layer when getting comment", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -392,14 +427,19 @@ public class MySQLCommentDAO implements CommentDAO {
             throw new DAOException("Exception in DAO layer when getting comment", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }

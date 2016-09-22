@@ -62,14 +62,19 @@ public class MySQLUserDAO implements UserDAO {
             throw new DAOException("Exception in DAO layer when adding user", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -107,14 +112,19 @@ public class MySQLUserDAO implements UserDAO {
             throw new DAOException("Exception in DAO layer when updating user", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -143,14 +153,19 @@ public class MySQLUserDAO implements UserDAO {
             throw new DAOException("Exception in DAO layer when deleting user", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -195,14 +210,19 @@ public class MySQLUserDAO implements UserDAO {
             throw new DAOException("Exception in DAO layer when getting user", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -247,14 +267,19 @@ public class MySQLUserDAO implements UserDAO {
             throw new DAOException("Exception in DAO layer when getting user", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -299,14 +324,19 @@ public class MySQLUserDAO implements UserDAO {
             throw new DAOException("Exception in DAO layer when getting user", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -353,14 +383,19 @@ public class MySQLUserDAO implements UserDAO {
             throw new DAOException("Exception in DAO layer when getting user", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -478,14 +513,19 @@ public class MySQLUserDAO implements UserDAO {
             throw new DAOException("DAO layer: cannot get users by criteria", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }
@@ -583,14 +623,19 @@ public class MySQLUserDAO implements UserDAO {
             throw new DAOException("DAO layer: cannot get users by criteria", e);
         } finally {
             try {
-                if (connection != null) {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    mySQLConnectionPool.freeConnection(connection);
+                if (statement != null) {
+                    statement.close();
                 }
-            } catch (SQLException | MySQLConnectionPoolException e) {
+            } catch (SQLException e) {
                 throw new DAOException("Cannot free a connection from Connection Pool", e);
+            } finally {
+                if (connection != null){
+                    try {
+                        mySQLConnectionPool.freeConnection(connection);
+                    } catch (SQLException | MySQLConnectionPoolException e) {
+                        throw new DAOException("Cannot free a connection from Connection Pool", e);
+                    }
+                }
             }
         }
     }

@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface PersonDAO {
     /**
-     * Adds a person to the data storage.
+     * Adds a person to the data storage (in the default language).
      *
      * @param person a person object
      * @throws DAOException
@@ -21,8 +21,12 @@ public interface PersonDAO {
     void addPerson(Person person) throws DAOException;
 
     /**
-     * Updates a person in the data storage.
+     * Updates a person or adds/updates a localization of a person in the data storage.
      *
+     * If the languageId argument is an id of the default language of the application, then it updates
+     * a person. If the language argument is an id of the different language (not default) then it
+     * adds/updates a localization of a person (it based on the fact of existence of a localization:
+     * if it doesn't exist then it will be added, otherwise a localization will be updated).
      * @param person a person object
      * @param languageId a language id like 'EN', "RU' etc.
      * @throws DAOException
@@ -30,7 +34,7 @@ public interface PersonDAO {
     void updatePerson(Person person, String languageId) throws DAOException;
 
     /**
-     * Deletes a person from the data storage.
+     * Deletes a person from the data storage (with all of the localizations).
      *
      * @param id an id of the deleting person
      * @throws DAOException

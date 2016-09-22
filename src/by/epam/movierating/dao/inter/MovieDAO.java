@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface MovieDAO {
     /**
-     * Adds a movie to the data storage.
+     * Adds a movie to the data storage (in the default language).
      *
      * @param movie a movie object
      * @throws DAOException
@@ -22,8 +22,12 @@ public interface MovieDAO {
     void addMovie(Movie movie) throws DAOException;
 
     /**
-     * Updates a movie in the data storage.
+     * Updates a movie or adds/updates a localization of a movie in the data storage.
      *
+     * If the languageId argument is an id of the default language of the application, then it updates
+     * a movie. If the language argument is an id of the different language (not default) then it
+     * adds/updates a localization of a movie (it based on the fact of existence of a localization:
+     * if it doesn't exist then it will be added, otherwise a localization will be updated).
      * @param movie a movie object
      * @param languageId a language id like 'EN', "RU' etc.
      * @throws DAOException
@@ -31,7 +35,7 @@ public interface MovieDAO {
     void updateMovie(Movie movie, String languageId) throws DAOException;
 
     /**
-     * Deletes a movie from the data storage.
+     * Deletes a movie from the data storage (with all of the localizations).
      *
      * @param id an id of the deleting movie
      * @throws DAOException

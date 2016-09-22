@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface GenreDAO {
     /**
-     * Adds a genre to the data storage.
+     * Adds a genre to the data storage (in the default language).
      *
      * @param genre a genre object
      * @throws DAOException
@@ -21,8 +21,12 @@ public interface GenreDAO {
     void addGenre(Genre genre) throws DAOException;
 
     /**
-     * Updates a genre in the data storage.
+     * Updates a genre or adds/updates a localization of a genre in the data storage.
      *
+     * If the languageId argument is an id of the default language of the application, then it updates
+     * a genre. If the language argument is an id of the different language (not default) then it
+     * adds/updates a localization of a genre (it based on the fact of existence of a localization:
+     * if it doesn't exist then it will be added, otherwise a localization will be updated).
      * @param genre a genre object
      * @param languageId a language id like 'EN', "RU' etc.
      * @throws DAOException
@@ -30,7 +34,7 @@ public interface GenreDAO {
     void updateGenre(Genre genre, String languageId) throws DAOException;
 
     /**
-     * Deletes a genre from the data storage.
+     * Deletes a genre from the data storage (with all of the localizations).
      *
      * @param id an id of a deleting genre
      * @throws DAOException

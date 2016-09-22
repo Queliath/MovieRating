@@ -11,7 +11,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Holds a limit number of connections to the MySQL Database.
+ * Stores a limit number of connections to the MySQL Database.
  *
  * @author Kostevich Vladislav
  * @version 1.0
@@ -146,7 +146,7 @@ public class MySQLConnectionPool {
     }
 
     /**
-     * Holds the given connection (if it was created in this Connection Pool).
+     * Stores the given connection (if it was created in this Connection Pool).
      *
      * @param connection a connection object
      * @throws SQLException if there is some problem with the connection
