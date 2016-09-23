@@ -46,6 +46,21 @@ public class MySQLPersonDAO implements PersonDAO {
             "movie_person_relation AS mpr ON p.id = mpr.person_id LEFT JOIN " +
             "(SELECT * FROM tperson WHERE language_id = ?) AS t USING(id) " +
             "WHERE mpr.movie_id = ? AND mpr.relation_type = ?";
+    private static final String GET_PERSONS_BY_CRITERIA_HEAD_QUERY = "SELECT DISTINCT p.* FROM person AS p ";
+    private static final String GET_PERSONS_BY_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY = "SELECT DISTINCT p.id, coalesce(t.name, p.name), p.date_of_birth, " +
+            "coalesce(t.place_of_birth, p.place_of_birth), p.photo FROM person AS p ";
+    private static final String GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_FIRST_PART = "LEFT JOIN (SELECT * FROM tperson WHERE language_id = '";
+    private static final String GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_SECOND_PART = "') AS t USING(id) ";
+    private static final String GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_FIRST_PART = "WHERE p.name LIKE '%";
+    private static final String GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_SECOND_PART = "%' ";
+    private static final String GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_FIRST_PART = "WHERE (p.name LIKE '%";
+    private static final String GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_SECOND_PART = "%' OR t.name LIKE '%";
+    private static final String GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_THIRD_PART = "%') ";
+    private static final String LIMIT_QUERY = "LIMIT ";
+    private static final String SPACE_SEPARATOR = " ";
+    private static final String COMA_SEPARATOR = ",";
+    private static final String GET_PERSONS_COUNT_BY_CRITERIA_HEAD_QUERY = "SELECT COUNT(*) FROM (SELECT p.* FROM person AS p ";
+    private static final String GET_PERSONS_COUNT_BY_CRITERIA_TAIL_QUERY = ") AS c";
 
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
@@ -418,40 +433,40 @@ public class MySQLPersonDAO implements PersonDAO {
 
             StringBuilder query = new StringBuilder();
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                query.append("SELECT DISTINCT p.* FROM person AS p ");
+                query.append(GET_PERSONS_BY_CRITERIA_HEAD_QUERY);
             }
             else {
-                query.append("SELECT DISTINCT p.id, coalesce(t.name, p.name), p.date_of_birth, " +
-                        "coalesce(t.place_of_birth, p.place_of_birth), p.photo FROM person AS p ");
+                query.append(GET_PERSONS_BY_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY);
             }
             if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
-                query.append("LEFT JOIN (SELECT * FROM tperson WHERE language_id = '");
+                query.append(GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_FIRST_PART);
                 query.append(languageId);
-                query.append("') AS t USING(id) ");
+                query.append(GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_SECOND_PART);
             }
 
             boolean atLeastOneWhereCriteria = false;
             if (name != null) {
                 if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                    query.append("WHERE p.name LIKE '%");
+                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_FIRST_PART);
                     query.append(name);
-                    query.append("%' ");
+                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_SECOND_PART);
                 }
                 else {
-                    query.append("WHERE (p.name LIKE '%");
+                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_FIRST_PART);
                     query.append(name);
-                    query.append("%' OR t.name LIKE '%");
+                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_SECOND_PART);
                     query.append(name);
-                    query.append("%') ");
+                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_THIRD_PART);
                 }
                 atLeastOneWhereCriteria = true;
             }
             if(amount != 0){
-                query.append("LIMIT ");
+                query.append(LIMIT_QUERY);
                 query.append(from);
-                query.append(", ");
+                query.append(COMA_SEPARATOR);
+                query.append(SPACE_SEPARATOR);
                 query.append(amount);
-                query.append(" ");
+                query.append(SPACE_SEPARATOR);
             }
 
             statement = connection.createStatement();
@@ -510,30 +525,30 @@ public class MySQLPersonDAO implements PersonDAO {
             connection = mySQLConnectionPool.getConnection();
 
             StringBuilder query = new StringBuilder();
-            query.append("SELECT COUNT(*) FROM (SELECT p.* FROM person AS p ");
+            query.append(GET_PERSONS_COUNT_BY_CRITERIA_HEAD_QUERY);
             if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
-                query.append("LEFT JOIN (SELECT * FROM tperson WHERE language_id = '");
+                query.append(GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_FIRST_PART);
                 query.append(languageId);
-                query.append("') AS t USING(id) ");
+                query.append(GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_SECOND_PART);
             }
 
             boolean atLeastOneWhereCriteria = false;
             if (name != null) {
                 if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                    query.append("WHERE p.name LIKE '%");
+                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_FIRST_PART);
                     query.append(name);
-                    query.append("%' ");
+                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_SECOND_PART);
                 }
                 else {
-                    query.append("WHERE (p.name LIKE '%");
+                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_FIRST_PART);
                     query.append(name);
-                    query.append("%' OR t.name LIKE '%");
+                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_SECOND_PART);
                     query.append(name);
-                    query.append("%') ");
+                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_THIRD_PART);
                 }
                 atLeastOneWhereCriteria = true;
             }
-            query.append(") AS c");
+            query.append(GET_PERSONS_COUNT_BY_CRITERIA_TAIL_QUERY);
 
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query.toString());
