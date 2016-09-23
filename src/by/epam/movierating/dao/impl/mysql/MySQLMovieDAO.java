@@ -72,6 +72,37 @@ public class MySQLMovieDAO implements MovieDAO {
             "m.budget, m.premiere, m.lasting, coalesce(t.annotation, m.annotation), " +
             "coalesce(t.image, m.image) FROM movie AS m LEFT JOIN (SELECT * FROM tmovie " +
             "WHERE language_id = ?) AS t USING(id) ORDER BY id DESC LIMIT ";
+    private static final String GET_MOVIES_BY_CRITERIA_HEAD_QUERY = "SELECT DISTINCT m.* FROM movie AS m ";
+    private static final String GET_MOVIES_BY_CRITERIA_NOT_DEFAULT_LANGUAGE_HEAD_QUERY = "SELECT DISTINCT m.id, coalesce(t.name, m.name), m.year, " +
+            "coalesce(t.tagline, m.tagline), m.budget, m.premiere, m.lasting, " +
+            "coalesce(t.annotation, m.annotation), coalesce(t.image, m.image) " +
+            "FROM movie AS m ";
+    private static final String GET_MOVIES_BY_CRITERIA_MG_JOIN_QUERY = "INNER JOIN movie_genre AS mg ON m.id = mg.movie_id ";
+    private static final String GET_MOVIES_BY_CRITERIA_MC_JOIN_QUERY = "INNER JOIN movie_country AS mc ON m.id = mc.movie_id ";
+    private static final String GET_MOVIES_BY_CRITERIA_RATING_JOIN_QUERY = "INNER JOIN rating AS r ON m.id = r.movie_id ";
+    private static final String GET_MOVIES_BY_CRITERIA_TRANSLATE_JOIN_QUERY_FIRST_PART = "LEFT JOIN (SELECT * FROM tmovie WHERE language_id = '";
+    private static final String GET_MOVIES_BY_CRITERIA_TRANSLATE_JOIN_QUERY_SECOND_PART = "') AS t USING(id) ";
+    private static final String GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_QUERY_FIRST_PART = "WHERE m.name LIKE '%";
+    private static final String GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_QUERY_SECOND_PART = "%' ";
+    private static final String GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_FIRST_PART = "WHERE (m.name LIKE '%";
+    private static final String GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_SECOND_PART = "%' OR t.name LIKE '%";
+    private static final String GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_THIRD_PART = "%') ";
+    private static final String WHERE_CRITERIA = "WHERE";
+    private static final String AND_CRITERIA = "AND";
+    private static final String HAVING_CRITERIA = "HAVING";
+    private static final String SPACE_SEPARATOR = " ";
+    private static final String COMA_SEPARATOR = ",";
+    private static final String CLOSING_BRACKET = ") ";
+    private static final String GET_MOVIES_BY_CRITERIA_MIN_YEAR_CRITERIA_QUERY = " m.year > ";
+    private static final String GET_MOVIES_BY_CRITERIA_MAX_YEAR_CRITERIA_QUERY = " m.year < ";
+    private static final String GET_MOVIES_BY_CRITERIA_GENRES_LIST_CRITERIA_QUERY = " mg.genre_id IN (";
+    private static final String GET_MOVIES_BY_CRITERIA_COUNTRIES_LIST_CRITERIA_QUERY = " mc.country_id IN (";
+    private static final String GET_MOVIES_BY_CRITERIA_GROUP_BY_ID_QUERY = "GROUP BY r.movie_id ";
+    private static final String GET_MOVIES_BY_CRITERIA_MIN_RATING_CRITERIA_QUERY = "HAVING AVG(r.value) > ";
+    private static final String GET_MOVIES_BY_CRITERIA_MAX_RATING_CRITERIA_QUERY = " AVG(r.value) < ";
+    private static final String LIMIT_QUERY = "LIMIT ";
+    private static final String GET_MOVIES_COUNT_BY_CRITERIA_HEAD_QUERY = "SELECT COUNT(*) FROM (SELECT DISTINCT m.* FROM movie AS m ";
+    private static final String GET_MOVIES_COUNT_BY_CRITERIA_TAIL_QUERY = ") AS c";
 
     private static final String DEFAULT_LANGUAGE_ID = "EN";
 
@@ -673,102 +704,100 @@ public class MySQLMovieDAO implements MovieDAO {
 
             StringBuilder query = new StringBuilder();
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                query.append("SELECT DISTINCT m.* FROM movie AS m ");
+                query.append(GET_MOVIES_BY_CRITERIA_HEAD_QUERY);
             }
             else {
-                query.append("SELECT DISTINCT m.id, coalesce(t.name, m.name), m.year, " +
-                        "coalesce(t.tagline, m.tagline), m.budget, m.premiere, m.lasting, " +
-                        "coalesce(t.annotation, m.annotation), coalesce(t.image, m.image) " +
-                        "FROM movie AS m ");
+                query.append(GET_MOVIES_BY_CRITERIA_NOT_DEFAULT_LANGUAGE_HEAD_QUERY);
             }
             if (criteria.getGenreIds() != null) {
-                query.append("INNER JOIN movie_genre AS mg ON m.id = mg.movie_id ");
+                query.append(GET_MOVIES_BY_CRITERIA_MG_JOIN_QUERY);
             }
             if (criteria.getCountryIds() != null) {
-                query.append("INNER JOIN movie_country AS mc ON m.id = mc.movie_id ");
+                query.append(GET_MOVIES_BY_CRITERIA_MC_JOIN_QUERY);
             }
             if(criteria.getMinRating() != 0 || criteria.getMaxRating() != 0){
-                query.append("INNER JOIN rating AS r ON m.id = r.movie_id ");
+                query.append(GET_MOVIES_BY_CRITERIA_RATING_JOIN_QUERY);
             }
             if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
-                query.append("LEFT JOIN (SELECT * FROM tmovie WHERE language_id = '");
+                query.append(GET_MOVIES_BY_CRITERIA_TRANSLATE_JOIN_QUERY_FIRST_PART);
                 query.append(languageId);
-                query.append("') AS t USING(id) ");
+                query.append(GET_MOVIES_BY_CRITERIA_TRANSLATE_JOIN_QUERY_SECOND_PART);
             }
 
             boolean atLeastOneWhereCriteria = false;
             if (criteria.getName() != null) {
                 if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                    query.append("WHERE m.name LIKE '%");
+                    query.append(GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_QUERY_FIRST_PART);
                     query.append(criteria.getName());
-                    query.append("%' ");
+                    query.append(GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_QUERY_SECOND_PART);
                 }
                 else {
-                    query.append("WHERE (m.name LIKE '%");
+                    query.append(GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_FIRST_PART);
                     query.append(criteria.getName());
-                    query.append("%' OR t.name LIKE '%");
+                    query.append(GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_SECOND_PART);
                     query.append(criteria.getName());
-                    query.append("%') ");
+                    query.append(GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_THIRD_PART);
                 }
                 atLeastOneWhereCriteria = true;
             }
             if (criteria.getMinYear() != 0) {
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" m.year > ");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_MOVIES_BY_CRITERIA_MIN_YEAR_CRITERIA_QUERY);
                 query.append(criteria.getMinYear());
-                query.append(" ");
+                query.append(SPACE_SEPARATOR);
                 atLeastOneWhereCriteria = true;
             }
             if (criteria.getMaxYear() != 0) {
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" m.year < ");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_MOVIES_BY_CRITERIA_MAX_YEAR_CRITERIA_QUERY);
                 query.append(criteria.getMaxYear());
-                query.append(" ");
+                query.append(SPACE_SEPARATOR);
                 atLeastOneWhereCriteria = true;
             }
             if (criteria.getGenreIds() != null) {
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" mg.genre_id IN (");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_MOVIES_BY_CRITERIA_GENRES_LIST_CRITERIA_QUERY);
                 for (Integer integer : criteria.getGenreIds()) {
                     query.append(integer);
-                    query.append(',');
+                    query.append(COMA_SEPARATOR);
                 }
                 query.deleteCharAt(query.length() - 1);
-                query.append(") ");
+                query.append(CLOSING_BRACKET);
                 atLeastOneWhereCriteria = true;
             }
             if (criteria.getCountryIds() != null) {
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" mc.country_id IN (");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_MOVIES_BY_CRITERIA_COUNTRIES_LIST_CRITERIA_QUERY);
                 for (Integer integer : criteria.getCountryIds()) {
                     query.append(integer);
-                    query.append(',');
+                    query.append(COMA_SEPARATOR);
                 }
                 query.deleteCharAt(query.length() - 1);
-                query.append(") ");
+                query.append(CLOSING_BRACKET);
             }
             if(criteria.getMinRating() != 0 || criteria.getMaxRating() != 0){
-                query.append("GROUP BY r.movie_id ");
+                query.append(GET_MOVIES_BY_CRITERIA_GROUP_BY_ID_QUERY);
                 boolean atLeastOneHavingCriteria = false;
                 if(criteria.getMinRating() != 0){
-                    query.append("HAVING AVG(r.value) > ");
+                    query.append(GET_MOVIES_BY_CRITERIA_MIN_RATING_CRITERIA_QUERY);
                     query.append(criteria.getMinRating());
-                    query.append(" ");
+                    query.append(SPACE_SEPARATOR);
                     atLeastOneHavingCriteria = true;
                 }
                 if(criteria.getMaxRating() != 0){
-                    query.append(atLeastOneHavingCriteria ? "AND" : "HAVING");
-                    query.append(" AVG(r.value) < ");
+                    query.append(atLeastOneHavingCriteria ? AND_CRITERIA : HAVING_CRITERIA);
+                    query.append(GET_MOVIES_BY_CRITERIA_MAX_RATING_CRITERIA_QUERY);
                     query.append(criteria.getMaxRating());
-                    query.append(" ");
+                    query.append(SPACE_SEPARATOR);
                 }
             }
             if(amount != 0){
-                query.append("LIMIT ");
+                query.append(LIMIT_QUERY);
                 query.append(from);
-                query.append(", ");
+                query.append(COMA_SEPARATOR);
+                query.append(SPACE_SEPARATOR);
                 query.append(amount);
-                query.append(" ");
+                query.append(SPACE_SEPARATOR);
             }
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query.toString());
@@ -830,91 +859,91 @@ public class MySQLMovieDAO implements MovieDAO {
             connection = mySQLConnectionPool.getConnection();
 
             StringBuilder query = new StringBuilder();
-            query.append("SELECT COUNT(*) FROM (SELECT DISTINCT m.* FROM movie AS m ");
+            query.append(GET_MOVIES_COUNT_BY_CRITERIA_HEAD_QUERY);
 
             if (criteria.getGenreIds() != null) {
-                query.append("INNER JOIN movie_genre AS mg ON m.id = mg.movie_id ");
+                query.append(GET_MOVIES_BY_CRITERIA_MG_JOIN_QUERY);
             }
             if (criteria.getCountryIds() != null) {
-                query.append("INNER JOIN movie_country AS mc ON m.id = mc.movie_id ");
+                query.append(GET_MOVIES_BY_CRITERIA_MC_JOIN_QUERY);
             }
             if(criteria.getMinRating() != 0 || criteria.getMaxRating() != 0){
-                query.append("INNER JOIN rating AS r ON m.id = r.movie_id ");
+                query.append(GET_MOVIES_BY_CRITERIA_RATING_JOIN_QUERY);
             }
             if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
-                query.append("LEFT JOIN (SELECT * FROM tmovie WHERE language_id = '");
+                query.append(GET_MOVIES_BY_CRITERIA_TRANSLATE_JOIN_QUERY_FIRST_PART);
                 query.append(languageId);
-                query.append("') AS t USING(id) ");
+                query.append(GET_MOVIES_BY_CRITERIA_TRANSLATE_JOIN_QUERY_SECOND_PART);
             }
 
             boolean atLeastOneWhereCriteria = false;
             if (criteria.getName() != null) {
                 if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                    query.append("WHERE m.name LIKE '%");
+                    query.append(GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_QUERY_FIRST_PART);
                     query.append(criteria.getName());
-                    query.append("%' ");
+                    query.append(GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_QUERY_SECOND_PART);
                 }
                 else {
-                    query.append("WHERE (m.name LIKE '%");
+                    query.append(GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_FIRST_PART);
                     query.append(criteria.getName());
-                    query.append("%' OR t.name LIKE '%");
+                    query.append(GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_SECOND_PART);
                     query.append(criteria.getName());
-                    query.append("%') ");
+                    query.append(GET_MOVIES_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_THIRD_PART);
                 }
                 atLeastOneWhereCriteria = true;
             }
             if (criteria.getMinYear() != 0) {
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" m.year > ");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_MOVIES_BY_CRITERIA_MIN_YEAR_CRITERIA_QUERY);
                 query.append(criteria.getMinYear());
-                query.append(" ");
+                query.append(SPACE_SEPARATOR);
                 atLeastOneWhereCriteria = true;
             }
             if (criteria.getMaxYear() != 0) {
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" m.year < ");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_MOVIES_BY_CRITERIA_MAX_YEAR_CRITERIA_QUERY);
                 query.append(criteria.getMaxYear());
-                query.append(" ");
+                query.append(SPACE_SEPARATOR);
                 atLeastOneWhereCriteria = true;
             }
             if (criteria.getGenreIds() != null) {
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" mg.genre_id IN (");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_MOVIES_BY_CRITERIA_GENRES_LIST_CRITERIA_QUERY);
                 for (Integer integer : criteria.getGenreIds()) {
                     query.append(integer);
-                    query.append(',');
+                    query.append(COMA_SEPARATOR);
                 }
                 query.deleteCharAt(query.length() - 1);
-                query.append(") ");
+                query.append(CLOSING_BRACKET);
                 atLeastOneWhereCriteria = true;
             }
             if (criteria.getCountryIds() != null) {
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" mc.country_id IN (");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_MOVIES_BY_CRITERIA_COUNTRIES_LIST_CRITERIA_QUERY);
                 for (Integer integer : criteria.getCountryIds()) {
                     query.append(integer);
-                    query.append(',');
+                    query.append(COMA_SEPARATOR);
                 }
                 query.deleteCharAt(query.length() - 1);
-                query.append(") ");
+                query.append(CLOSING_BRACKET);
             }
             if(criteria.getMinRating() != 0 || criteria.getMaxRating() != 0){
-                query.append("GROUP BY r.movie_id ");
+                query.append(GET_MOVIES_BY_CRITERIA_GROUP_BY_ID_QUERY);
                 boolean atLeastOneHavingCriteria = false;
                 if(criteria.getMinRating() != 0){
-                    query.append("HAVING AVG(r.value) > ");
+                    query.append(GET_MOVIES_BY_CRITERIA_MIN_RATING_CRITERIA_QUERY);
                     query.append(criteria.getMinRating());
-                    query.append(" ");
+                    query.append(SPACE_SEPARATOR);
                     atLeastOneHavingCriteria = true;
                 }
                 if(criteria.getMaxRating() != 0){
-                    query.append(atLeastOneHavingCriteria ? "AND" : "HAVING");
-                    query.append(" AVG(r.value) < ");
+                    query.append(atLeastOneHavingCriteria ? AND_CRITERIA : HAVING_CRITERIA);
+                    query.append(GET_MOVIES_BY_CRITERIA_MAX_RATING_CRITERIA_QUERY);
                     query.append(criteria.getMaxRating());
-                    query.append(" ");
+                    query.append(SPACE_SEPARATOR);
                 }
             }
-            query.append(") AS c");
+            query.append(GET_MOVIES_COUNT_BY_CRITERIA_TAIL_QUERY);
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query.toString());
 
