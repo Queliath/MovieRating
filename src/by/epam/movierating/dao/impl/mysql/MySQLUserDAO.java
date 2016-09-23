@@ -29,6 +29,29 @@ public class MySQLUserDAO implements UserDAO {
     private static final String GET_USER_BY_ID_QUERY = "SELECT * FROM user WHERE id = ?";
     private static final String GET_USER_BY_EMAIL_QUERY = "SELECT * FROM user WHERE email = ?";
     private static final String GET_USERS_BY_STATUS_QUERY = "SELECT * FROM user WHERE status = ?";
+    private static final String GET_USERS_BY_CRITERIA_HEAD_QUERY = "SELECT * FROM user ";
+    private static final String WHERE_CRITERIA = "WHERE";
+    private static final String AND_CRITERIA = "AND";
+    private static final String SPACE_SEPARATOR = " ";
+    private static final String COMA_SEPARATOR = ",";
+    private static final String CLOSING_BRACKET = ") ";
+    private static final String SINGLE_QUOTE = "'";
+    private static final String GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_FIRST_PART = "WHERE email LIKE '%";
+    private static final String GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_SECOND_PART = "%' ";
+    private static final String GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_FIRST_PART = " first_name LIKE '%";
+    private static final String GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_SECOND_PART = "%' ";
+    private static final String GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_FIRST_PART = " last_name LIKE '%";
+    private static final String GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_SECOND_PART = "%' ";
+    private static final String GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART = " date_of_registry > '";
+    private static final String GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART = "' ";
+    private static final String GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART = " date_of_registry < '";
+    private static final String GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART = "' ";
+    private static final String GET_USERS_BY_CRITERIA_MIN_RATING_CRITERIA_QUERY = " rating > ";
+    private static final String GET_USERS_BY_CRITERIA_MAX_RATING_CRITERIA_QUERY = " rating < ";
+    private static final String GET_USERS_BY_CRITERIA_STATUSES_LIST_CRITERIA_QUERY = " status IN (";
+    private static final String LIMIT_QUERY = "LIMIT ";
+    private static final String GET_USERS_COUNT_BY_CRITERIA_HEAD_QUERY = "SELECT COUNT(*) FROM (SELECT * FROM user ";
+    private static final String GET_USERS_COUNT_BY_CRITERIA_TAIL_QUERY = ") AS c";
 
     /**
      * Adds an user to the data storage.
@@ -417,74 +440,75 @@ public class MySQLUserDAO implements UserDAO {
         try {
             connection = mySQLConnectionPool.getConnection();
 
-            StringBuilder query = new StringBuilder("SELECT * FROM user ");
+            StringBuilder query = new StringBuilder(GET_USERS_BY_CRITERIA_HEAD_QUERY);
             boolean atLeastOneWhereCriteria = false;
             if(criteria.getEmail() != null){
-                query.append("WHERE email LIKE '%");
+                query.append(GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_FIRST_PART);
                 query.append(criteria.getEmail());
-                query.append("%' ");
+                query.append(GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_SECOND_PART);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getFirstName() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" first_name LIKE '%");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_FIRST_PART);
                 query.append(criteria.getFirstName());
-                query.append("%' ");
+                query.append(GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_SECOND_PART);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getLastName() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" last_name LIKE '%");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_FIRST_PART);
                 query.append(criteria.getLastName());
-                query.append("%' ");
+                query.append(GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_SECOND_PART);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getMinDateOfRegistry() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" date_of_registry > '");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART);
                 query.append(criteria.getMinDateOfRegistry());
-                query.append("' ");
+                query.append(GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getMaxDateOfRegistry() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" date_of_registry < '");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART);
                 query.append(criteria.getMaxDateOfRegistry());
-                query.append("' ");
+                query.append(GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getMinRating() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" rating > ");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_MIN_RATING_CRITERIA_QUERY);
                 query.append(criteria.getMinRating());
-                query.append(" ");
+                query.append(SPACE_SEPARATOR);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getMaxRating() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" rating < ");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_MAX_RATING_CRITERIA_QUERY);
                 query.append(criteria.getMaxRating());
-                query.append(" ");
+                query.append(SPACE_SEPARATOR);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getStatuses() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" status IN (");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_STATUSES_LIST_CRITERIA_QUERY);
                 for(String status : criteria.getStatuses()){
-                    query.append("'");
+                    query.append(SINGLE_QUOTE);
                     query.append(status);
-                    query.append("'");
-                    query.append(',');
+                    query.append(SINGLE_QUOTE);
+                    query.append(COMA_SEPARATOR);
                 }
                 query.deleteCharAt(query.length() - 1);
-                query.append(") ");
+                query.append(CLOSING_BRACKET);
             }
             if(amount != 0){
-                query.append("LIMIT ");
+                query.append(LIMIT_QUERY);
                 query.append(from);
-                query.append(", ");
+                query.append(COMA_SEPARATOR);
+                query.append(SPACE_SEPARATOR);
                 query.append(amount);
-                query.append(" ");
+                query.append(SPACE_SEPARATOR);
             }
 
             statement = connection.createStatement();
@@ -545,69 +569,69 @@ public class MySQLUserDAO implements UserDAO {
         try {
             connection = mySQLConnectionPool.getConnection();
 
-            StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM (SELECT * FROM user ");
+            StringBuilder query = new StringBuilder(GET_USERS_COUNT_BY_CRITERIA_HEAD_QUERY);
             boolean atLeastOneWhereCriteria = false;
             if(criteria.getEmail() != null){
-                query.append("WHERE email LIKE '%");
+                query.append(GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_FIRST_PART);
                 query.append(criteria.getEmail());
-                query.append("%' ");
+                query.append(GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_SECOND_PART);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getFirstName() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" first_name LIKE '%");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_FIRST_PART);
                 query.append(criteria.getFirstName());
-                query.append("%' ");
+                query.append(GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_SECOND_PART);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getLastName() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" last_name LIKE '%");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_FIRST_PART);
                 query.append(criteria.getLastName());
-                query.append("%' ");
+                query.append(GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_SECOND_PART);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getMinDateOfRegistry() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" date_of_registry > '");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART);
                 query.append(criteria.getMinDateOfRegistry());
-                query.append("' ");
+                query.append(GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getMaxDateOfRegistry() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" date_of_registry < '");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART);
                 query.append(criteria.getMaxDateOfRegistry());
-                query.append("' ");
+                query.append(GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getMinRating() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" rating > ");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_MIN_RATING_CRITERIA_QUERY);
                 query.append(criteria.getMinRating());
-                query.append(" ");
+                query.append(SPACE_SEPARATOR);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getMaxRating() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" rating < ");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_MAX_RATING_CRITERIA_QUERY);
                 query.append(criteria.getMaxRating());
-                query.append(" ");
+                query.append(SPACE_SEPARATOR);
                 atLeastOneWhereCriteria = true;
             }
             if(criteria.getStatuses() != null){
-                query.append(atLeastOneWhereCriteria ? "AND" : "WHERE");
-                query.append(" status IN (");
+                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+                query.append(GET_USERS_BY_CRITERIA_STATUSES_LIST_CRITERIA_QUERY);
                 for(String status : criteria.getStatuses()){
-                    query.append("'");
+                    query.append(SINGLE_QUOTE);
                     query.append(status);
-                    query.append("'");
-                    query.append(',');
+                    query.append(SINGLE_QUOTE);
+                    query.append(COMA_SEPARATOR);
                 }
                 query.deleteCharAt(query.length() - 1);
-                query.append(") ");
+                query.append(CLOSING_BRACKET);
             }
-            query.append(") AS c");
+            query.append(GET_USERS_COUNT_BY_CRITERIA_TAIL_QUERY);
 
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query.toString());
