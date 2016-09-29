@@ -24,10 +24,6 @@ import java.io.IOException;
 public class RegistrationCommand implements Command {
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/registration.jsp";
 
-    private static final String WELCOME_PAGE = "/Controller?command=welcome";
-
-    private static final String USER_ID_SESSION_ATTRIBUTE = "userId";
-    private static final String USER_STATUS_SESSION_ATTRIBUTE = "userStatus";
     private static final String LANGUAGE_ID_SESSION_ATTRIBUTE = "languageId";
 
     private static final String REGISTRATION_FORM_EMAIL_PARAM = "registrationFormEmail";
@@ -35,6 +31,7 @@ public class RegistrationCommand implements Command {
     private static final String REGISTRATION_FORM_FIRST_NAME_PARAM = "registrationFormFirstName";
     private static final String REGISTRATION_FORM_LAST_NAME_PARAM = "registrationFormLastName";
 
+    private static final String REGISTRATION_SUCCESS_REQUEST_ATTR = "registrationSuccess";
     private static final String SERVICE_ERROR_REQUEST_ATTR = "serviceError";
     private static final String WRONG_EMAIL_REQUEST_ATTR = "wrongEmail";
     private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
@@ -55,7 +52,8 @@ public class RegistrationCommand implements Command {
                 User user = siteService.registration(registrationFormEmail, registrationFormPassword, registrationFormFirstName, registrationFormLastName, languageId);
                 HttpSession session = request.getSession(true);
                 session.setAttribute(LANGUAGE_ID_SESSION_ATTRIBUTE, user.getLanguageId());
-                response.sendRedirect(WELCOME_PAGE);
+                request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+                request.setAttribute(REGISTRATION_SUCCESS_REQUEST_ATTR, true);
             } catch (ServiceWrongEmailException e) {
                 request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
                 request.setAttribute(REGISTRATION_FORM_EMAIL_PARAM, registrationFormEmail);
@@ -63,7 +61,6 @@ public class RegistrationCommand implements Command {
                 request.setAttribute(REGISTRATION_FORM_FIRST_NAME_PARAM, registrationFormFirstName);
                 request.setAttribute(REGISTRATION_FORM_LAST_NAME_PARAM, registrationFormLastName);
                 request.setAttribute(WRONG_EMAIL_REQUEST_ATTR, true);
-                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
             } catch (ServiceException e) {
                 request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
                 request.setAttribute(REGISTRATION_FORM_EMAIL_PARAM, registrationFormEmail);
@@ -71,14 +68,13 @@ public class RegistrationCommand implements Command {
                 request.setAttribute(REGISTRATION_FORM_FIRST_NAME_PARAM, registrationFormFirstName);
                 request.setAttribute(REGISTRATION_FORM_LAST_NAME_PARAM, registrationFormLastName);
                 request.setAttribute(SERVICE_ERROR_REQUEST_ATTR, true);
-                request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
             }
         }
         else {
             QueryUtil.saveCurrentQueryToSession(request);
             request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
-
-            request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
         }
+
+        request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
     }
 }

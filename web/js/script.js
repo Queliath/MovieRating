@@ -62,8 +62,35 @@ var starRating = {
                 }
             }
         }
+
+        this.wrapper.innerHTML = "";
         for(var i = 0; i < 10; i++){
             this.wrapper.appendChild(this.stars[i]);
+        }
+
+        if(this.ratingValue != null){
+            var deleteRatingLinkWrapper = document.createElement("p");
+            var deleteRatingLink = document.createElement("a");
+            deleteRatingLink.setAttribute("href", "#");
+            deleteRatingLink.innerHTML = "Удалить рейтинг";
+
+            var self = this;
+            deleteRatingLink.onclick = function () {
+                var request = new XMLHttpRequest();
+                request.open("GET", "Controller?command=delete-rating&movieId=" + self.movieId);
+                request.onreadystatechange = function () {
+                    if(request.readyState == 4){
+                        if(request.status == 200){
+                            self.ratingValue = null;
+                            self.init();
+                        }
+                    }
+                }
+                request.send();
+            }
+            
+            deleteRatingLinkWrapper.appendChild(deleteRatingLink);
+            this.wrapper.appendChild(deleteRatingLinkWrapper);
         }
     }
 };

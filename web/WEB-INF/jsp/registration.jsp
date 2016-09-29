@@ -27,7 +27,7 @@
 <f:message bundle="${locale}" key="locale.registrationButton" var="localeRegistrationButton"/>
 <f:message bundle="${locale}" key="locale.usedEmail" var="localeUsedEmail"/>
 <f:message bundle="${locale}" key="locale.serviceError" var="localeServiceError"/>
-
+<f:message bundle="${locale}" key="locale.registrationSuccess" var="localeRegistrationSuccess"/>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -93,6 +93,12 @@
                 <button type="submit" class="btn btn-default">${localeRegistrationButton}</button>
             </div>
         </form>
+        <c:if test="${requestScope.registrationSuccess}">
+            <div class="alert alert-success fade in">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                ${localeRegistrationSuccess}
+            </div>
+        </c:if>
         <c:if test="${requestScope.wrongEmail}">
             <div class="alert alert-danger fade in">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>

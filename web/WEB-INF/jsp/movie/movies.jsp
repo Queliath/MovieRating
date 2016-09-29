@@ -202,7 +202,7 @@
                         <li>${localeYear}: ${movie.year}</li>
                         <li>${localeBudget}: <f:formatNumber value="${movie.budget}"/> $</li>
                         <li>${localePremiere}: <f:formatDate value="${movie.premiere}" type="date" dateStyle="long"/></li>
-                        <li>${localeLasting}: ${movie.lasting} ${requestScope.localeMinute}</li>
+                        <li>${localeLasting}: ${movie.lasting} ${localeMinute}</li>
                         <li>${localeRating}: <f:formatNumber value="${movie.averageRating}" maxFractionDigits="2"/></li>
                     </ul>
                     <p>${movie.annotation}</p>
