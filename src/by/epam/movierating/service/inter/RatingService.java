@@ -28,4 +28,13 @@ public interface RatingService {
      * @throws ServiceException
      */
     void addRating(int value, int movieId, int userId) throws ServiceException;
+
+    /**
+     * Deletes an existing rating from the data storage.
+     *
+     * @param movieId an id of the movie to which the rating belongs
+     * @param userId an id of the user to which the rating belongs
+     * @throws ServiceException
+     */
+    void deleteRating(int movieId, int userId) throws ServiceException;
 }

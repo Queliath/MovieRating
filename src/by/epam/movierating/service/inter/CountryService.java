@@ -52,7 +52,7 @@ public interface CountryService {
     Country getCountryById(int id, String languageId) throws ServiceException;
 
     /**
-     * Adds a new country to the data storage.
+     * Adds a new country to the data storage (in the default language).
      *
      * @param name a name of the country
      * @param position a number of a position of the country
@@ -61,8 +61,12 @@ public interface CountryService {
     void addCountry(String name, int position) throws ServiceException;
 
     /**
-     * Edits an already existing country.
+     * Edits an already existing country or adds/edits a localization of a country.
      *
+     * If the languageId argument is an id of the default language of the application, then it edits
+     * a country. If the language argument is an id of the different language (not default) then it
+     * adds/edits a localization of a country (it based on the fact of existence of a localization:
+     * if it doesn't exist then it will be added, otherwise a localization will be updated).
      * @param id an id of the needed country
      * @param name a new name of the country
      * @param position a new position number of the country
@@ -72,7 +76,7 @@ public interface CountryService {
     void editCountry(int id, String name, int position, String languageId) throws ServiceException;
 
     /**
-     * Deletes an existing country from the data storage.
+     * Deletes an existing country from the data storage (with all of the localizations).
      *
      * @param id an id of the deleting country
      * @throws ServiceException

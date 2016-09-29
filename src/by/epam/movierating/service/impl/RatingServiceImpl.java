@@ -65,4 +65,19 @@ public class RatingServiceImpl implements RatingService {
             throw new ServiceException("Service layer: cannot add rating", e);
         }
     }
+
+    @Override
+    public void deleteRating(int movieId, int userId) throws ServiceException {
+        if(movieId <= 0 || userId <= 0){
+            throw new ServiceException("Wrong parameters for deleting movie");
+        }
+
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            RatingDAO ratingDAO = daoFactory.getRatingDAO();
+            ratingDAO.deleteRating(movieId, userId);
+        } catch (DAOException e) {
+            throw new ServiceException("Service layer: cannot delete a rating", e);
+        }
+    }
 }

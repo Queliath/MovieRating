@@ -70,7 +70,7 @@ public interface MovieService {
     Movie getMovieById(int id, String languageId) throws ServiceException;
 
     /**
-     * Adds a new movie to the data storage.
+     * Adds a new movie to the data storage (in the default language).
      *
      * @param name a name of the movie
      * @param year a year of the movie
@@ -86,8 +86,12 @@ public interface MovieService {
                   String annotation, String image) throws ServiceException;
 
     /**
-     * Edits an already existing movie.
+     * Edits an already existing movie or adds/edits a localization of a movie.
      *
+     * If the languageId argument is an id of the default language of the application, then it updates
+     * a movie. If the language argument is an id of the different language (not default) then it
+     * adds/updates a localization of a movie (it based on the fact of existence of a localization:
+     * if it doesn't exist then it will be added, otherwise a localization will be updated).
      * @param id an id of the needed movie
      * @param name a new name of the movie
      * @param year a new year of the movie
@@ -104,7 +108,7 @@ public interface MovieService {
                    String annotation, String image, String languageId) throws ServiceException;
 
     /**
-     * Deletes an existing movie from the data storage.
+     * Deletes an existing movie from the data storage (with all of the localizations).
      *
      * @param id an id of the deleting movie
      * @throws ServiceException

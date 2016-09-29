@@ -45,7 +45,7 @@ public interface PersonService {
     int getPersonsCountByCriteria(String name, String languageId) throws ServiceException;
 
     /**
-     * Adds a new person to the data storage.
+     * Adds a new person to the data storage (in the default language).
      *
      * @param name a name of the person
      * @param dateOfBirth a date of birth of the person
@@ -56,8 +56,12 @@ public interface PersonService {
     void addPerson(String name, String dateOfBirth, String placeOfBirth, String photo) throws ServiceException;
 
     /**
-     * Edits an already existing person.
+     * Edits an already existing person or adds/edits a localization of a person.
      *
+     * If the languageId argument is an id of the default language of the application, then it updates
+     * a person. If the language argument is an id of the different language (not default) then it
+     * adds/updates a localization of a person (it based on the fact of existence of a localization:
+     * if it doesn't exist then it will be added, otherwise a localization will be updated).
      * @param id an id of a needed person
      * @param name a new name of the person
      * @param dateOfBirth a new date of a birth of the person
@@ -70,7 +74,7 @@ public interface PersonService {
                     String languageId) throws ServiceException;
 
     /**
-     * Deletes an existing person from the data storage.
+     * Deletes an existing person from the data storage (with all of the localizations).
      *
      * @param id an id of the deleting person
      * @throws ServiceException
