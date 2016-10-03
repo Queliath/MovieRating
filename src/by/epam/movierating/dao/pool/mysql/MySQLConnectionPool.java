@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.locks.Condition;
@@ -35,8 +36,8 @@ public class MySQLConnectionPool {
 
     private static MySQLConnectionPool instance = new MySQLConnectionPool();
 
-    private List<Connection> availableConnections = new ArrayList<>();
-    private List<Connection> usedConnections = new ArrayList<>();
+    private List<Connection> availableConnections = new LinkedList<>();
+    private List<Connection> usedConnections = new LinkedList<>();
 
     private final Lock lock = new ReentrantLock();
     private final Condition atLeastOneFreeConnection = lock.newCondition();
