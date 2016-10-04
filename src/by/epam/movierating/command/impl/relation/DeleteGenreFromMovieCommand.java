@@ -28,7 +28,7 @@ public class DeleteGenreFromMovieCommand implements Command {
     private static final String ADMIN_USER_STATUS = "admin";
 
     private static final String MOVIE_ID_REQUEST_PARAM = "movieId";
-    private static final String GENRE_ID_REQUEST_PARAM = "Id";
+    private static final String GENRE_ID_REQUEST_PARAM = "id";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
