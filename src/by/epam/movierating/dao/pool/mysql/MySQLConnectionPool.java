@@ -65,7 +65,7 @@ public class MySQLConnectionPool {
             this.userPassword = userPassword;
 
             try {
-                Class.forName(driverClassName).newInstance();
+                Class.forName(driverClassName);
                 for (int i = 0; i < Integer.parseInt(numberOfConnectionsStr); i++) {
                     Connection newConnection = DriverManager.getConnection(hostConnectionString +
                             databaseName, userLogin, userPassword);
@@ -76,7 +76,7 @@ public class MySQLConnectionPool {
                     lock.unlock();
                 }
                 isInit = true;
-            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+            } catch (ClassNotFoundException | SQLException e) {
                 throw new MySQLConnectionPoolException("Cannot init a pool", e);
             }
         }
