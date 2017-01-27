@@ -1,7 +1,7 @@
 package by.bsuir.movierating.command.impl.comment;
 
 import by.bsuir.movierating.service.factory.ServiceFactory;
-import by.bsuir.movierating.service.inter.CommentService;
+import by.bsuir.movierating.service.CommentService;
 import by.bsuir.movierating.command.Command;
 import by.bsuir.movierating.service.exception.ServiceException;
 

@@ -1,7 +1,6 @@
-package by.bsuir.movierating.service.inter;
+package by.bsuir.movierating.service;
 
 import by.bsuir.movierating.domain.Country;
-import by.bsuir.movierating.service.exception.ServiceException;
 
 import java.util.List;
 
@@ -18,9 +17,8 @@ public interface CountryService {
      * @param amount a needed amount of countries
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a countries ordered by a position number
-     * @throws ServiceException
      */
-    List<Country> getTopPositionCountries(int amount, String languageId) throws ServiceException;
+    List<Country> getTopPositionCountries(int amount, String languageId);
 
     /**
      * Returns a concrete amount of the countries from a concrete position.
@@ -29,17 +27,15 @@ public interface CountryService {
      * @param amount a needed amount of countries
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a concrete amount of the countries from a concrete position
-     * @throws ServiceException
      */
-    List<Country> getCountries(int from, int amount, String languageId) throws ServiceException;
+    List<Country> getCountries(int from, int amount, String languageId);
 
     /**
      * Returns a total amount of countries in the data storage.
      *
      * @return a total amount of countries in the data storage
-     * @throws ServiceException
      */
-    int getCountriesCount() throws ServiceException;
+    int getCountriesCount();
 
     /**
      * Returns a certain country by id.
@@ -47,18 +43,16 @@ public interface CountryService {
      * @param id an id of a needed country
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a certain country
-     * @throws ServiceException
      */
-    Country getCountryById(int id, String languageId) throws ServiceException;
+    Country getCountryById(int id, String languageId);
 
     /**
      * Adds a new country to the data storage (in the default language).
      *
      * @param name a name of the country
      * @param position a number of a position of the country
-     * @throws ServiceException
      */
-    void addCountry(String name, int position) throws ServiceException;
+    void addCountry(String name, int position);
 
     /**
      * Edits an already existing country or adds/edits a localization of a country.
@@ -71,15 +65,13 @@ public interface CountryService {
      * @param name a new name of the country
      * @param position a new position number of the country
      * @param languageId a language id like 'EN', "RU' etc.
-     * @throws ServiceException
      */
-    void editCountry(int id, String name, int position, String languageId) throws ServiceException;
+    void editCountry(int id, String name, int position, String languageId);
 
     /**
      * Deletes an existing country from the data storage (with all of the localizations).
      *
      * @param id an id of the deleting country
-     * @throws ServiceException
      */
-    void deleteCountry(int id) throws ServiceException;
+    void deleteCountry(int id);
 }

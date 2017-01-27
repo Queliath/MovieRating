@@ -1,7 +1,6 @@
-package by.bsuir.movierating.service.inter;
+package by.bsuir.movierating.service;
 
 import by.bsuir.movierating.domain.Genre;
-import by.bsuir.movierating.service.exception.ServiceException;
 
 import java.util.List;
 
@@ -18,9 +17,8 @@ public interface GenreService {
      * @param amount a needed amount of a genres
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a genres ordered by a position number
-     * @throws ServiceException
      */
-    List<Genre> getTopPositionGenres(int amount, String languageId) throws ServiceException;
+    List<Genre> getTopPositionGenres(int amount, String languageId);
 
     /**
      * Returns a concrete amount of a genres from a concrete position.
@@ -29,17 +27,15 @@ public interface GenreService {
      * @param amount a needed amount of a genres
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a concrete amount of a genres from a concrete position
-     * @throws ServiceException
      */
-    List<Genre> getGenres(int from, int amount, String languageId) throws ServiceException;
+    List<Genre> getGenres(int from, int amount, String languageId);
 
     /**
      * Returns a total amount of a genres in the data storage.
      *
      * @return a total amount of a genres
-     * @throws ServiceException
      */
-    int getGenresCount() throws ServiceException;
+    int getGenresCount();
 
     /**
      * Returns a certain genre by id.
@@ -47,18 +43,16 @@ public interface GenreService {
      * @param id an id of a needed genre
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a certain genre
-     * @throws ServiceException
      */
-    Genre getGenreById(int id, String languageId) throws ServiceException;
+    Genre getGenreById(int id, String languageId);
 
     /**
      * Adds a new genre to the data storage (in the default language).
      *
      * @param name a name of the genre
      * @param position a number of a position of the genre
-     * @throws ServiceException
      */
-    void addGenre(String name, int position) throws ServiceException;
+    void addGenre(String name, int position);
 
     /**
      * Edits an already existing genre or adds/edits a localizations of a genre.
@@ -71,15 +65,13 @@ public interface GenreService {
      * @param name a new name of the genre
      * @param position a new position number of the genre
      * @param languageId a language id like 'EN', "RU' etc.
-     * @throws ServiceException
      */
-    void editGenre(int id, String name, int position, String languageId) throws ServiceException;
+    void editGenre(int id, String name, int position, String languageId);
 
     /**
      * Deletes an existing genre from the data storage (with all of the localizations).
      *
      * @param id an id of the deleting genre
-     * @throws ServiceException
      */
-    void deleteGenre(int id) throws ServiceException;
+    void deleteGenre(int id);
 }

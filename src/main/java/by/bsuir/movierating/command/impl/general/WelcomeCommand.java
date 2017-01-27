@@ -7,10 +7,10 @@ import by.bsuir.movierating.domain.Country;
 import by.bsuir.movierating.domain.Genre;
 import by.bsuir.movierating.domain.Movie;
 import by.bsuir.movierating.service.factory.ServiceFactory;
-import by.bsuir.movierating.service.inter.CommentService;
-import by.bsuir.movierating.service.inter.CountryService;
-import by.bsuir.movierating.service.inter.GenreService;
-import by.bsuir.movierating.service.inter.MovieService;
+import by.bsuir.movierating.service.CommentService;
+import by.bsuir.movierating.service.CountryService;
+import by.bsuir.movierating.service.GenreService;
+import by.bsuir.movierating.service.MovieService;
 import by.bsuir.movierating.command.Command;
 import by.bsuir.movierating.service.exception.ServiceException;
 

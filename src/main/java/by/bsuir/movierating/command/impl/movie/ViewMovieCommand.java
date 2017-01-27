@@ -2,12 +2,12 @@ package by.bsuir.movierating.command.impl.movie;
 
 import by.bsuir.movierating.command.util.QueryUtil;
 import by.bsuir.movierating.domain.Movie;
-import by.bsuir.movierating.service.inter.RatingService;
+import by.bsuir.movierating.service.RatingService;
 import by.bsuir.movierating.command.Command;
 import by.bsuir.movierating.command.util.LanguageUtil;
 import by.bsuir.movierating.service.exception.ServiceException;
 import by.bsuir.movierating.service.factory.ServiceFactory;
-import by.bsuir.movierating.service.inter.MovieService;
+import by.bsuir.movierating.service.MovieService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

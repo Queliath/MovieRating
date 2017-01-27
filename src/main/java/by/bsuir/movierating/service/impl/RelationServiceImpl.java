@@ -6,7 +6,7 @@ import by.bsuir.movierating.dao.MovieGenreDAO;
 import by.bsuir.movierating.dao.exception.DAOException;
 import by.bsuir.movierating.dao.MoviePersonRelationDAO;
 import by.bsuir.movierating.service.exception.ServiceException;
-import by.bsuir.movierating.service.inter.RelationService;
+import by.bsuir.movierating.service.RelationService;
 
 /**
  * Provides a business-logic for the relations between entities.

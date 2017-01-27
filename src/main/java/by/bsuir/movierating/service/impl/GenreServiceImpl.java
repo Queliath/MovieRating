@@ -5,7 +5,7 @@ import by.bsuir.movierating.dao.factory.DAOFactory;
 import by.bsuir.movierating.dao.GenreDAO;
 import by.bsuir.movierating.domain.Genre;
 import by.bsuir.movierating.service.exception.ServiceException;
-import by.bsuir.movierating.service.inter.GenreService;
+import by.bsuir.movierating.service.GenreService;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import by.bsuir.movierating.dao.factory.DAOFactory;
 import by.bsuir.movierating.dao.UserDAO;
 import by.bsuir.movierating.domain.User;
 import by.bsuir.movierating.service.exception.ServiceWrongPasswordException;
-import by.bsuir.movierating.service.inter.SiteService;
+import by.bsuir.movierating.service.SiteService;
 import by.bsuir.movierating.dao.exception.DAOException;
 import by.bsuir.movierating.service.exception.ServiceException;
 import by.bsuir.movierating.service.exception.ServiceWrongEmailException;

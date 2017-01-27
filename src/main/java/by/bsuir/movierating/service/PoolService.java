@@ -1,6 +1,4 @@
-package by.bsuir.movierating.service.inter;
-
-import by.bsuir.movierating.service.exception.ServiceException;
+package by.bsuir.movierating.service;
 
 /**
  * Provides a logic for the Connection Pool in the DAO layer.
@@ -11,15 +9,11 @@ import by.bsuir.movierating.service.exception.ServiceException;
 public interface PoolService {
     /**
      * Gives a command to initialize the Connection Pool in the DAO layer.
-     *
-     * @throws ServiceException
      */
-    void init() throws ServiceException;
+    void init();
 
     /**
      * Gives a command to destroy the Connection Pool in the DAO layer.
-     *
-     * @throws ServiceException
      */
-    void destroy() throws ServiceException;
+    void destroy();
 }

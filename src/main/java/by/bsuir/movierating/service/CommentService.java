@@ -1,7 +1,6 @@
-package by.bsuir.movierating.service.inter;
+package by.bsuir.movierating.service;
 
 import by.bsuir.movierating.domain.Comment;
-import by.bsuir.movierating.service.exception.ServiceException;
 
 import java.util.List;
 
@@ -18,9 +17,8 @@ public interface CommentService {
      * @param amount a needed amount of comments
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a recent added comments
-     * @throws ServiceException
      */
-    List<Comment> getRecentAddedComments(int amount, String languageId) throws ServiceException;
+    List<Comment> getRecentAddedComments(int amount, String languageId);
 
     /**
      * Adds a comment to the data storage.
@@ -30,9 +28,8 @@ public interface CommentService {
      * @param movieId an id of the movie to which the comment belongs
      * @param userId an id of the user to which the comment belongs
      * @param languageId a language id like 'EN', "RU' etc.
-     * @throws ServiceException
      */
-    void addComment(String title, String content, int movieId, int userId, String languageId) throws ServiceException;
+    void addComment(String title, String content, int movieId, int userId, String languageId);
 
     /**
      * Edits an already existing comment.
@@ -40,24 +37,21 @@ public interface CommentService {
      * @param id an id of the needed comment
      * @param title a new title of the comment
      * @param content a new content of the comment
-     * @throws ServiceException
      */
-    void editComment(int id, String title, String content) throws ServiceException;
+    void editComment(int id, String title, String content);
 
     /**
      * Returns a concrete comment by id.
      *
      * @param id an id of a needed comment
      * @return a concrete comment by id
-     * @throws ServiceException
      */
-    Comment getCommentById(int id) throws ServiceException;
+    Comment getCommentById(int id);
 
     /**
      * Deletes an existing comment from the data storage.
      *
      * @param id an id of the deleting comment
-     * @throws ServiceException
      */
-    void deleteComment(int id) throws ServiceException;
+    void deleteComment(int id);
 }

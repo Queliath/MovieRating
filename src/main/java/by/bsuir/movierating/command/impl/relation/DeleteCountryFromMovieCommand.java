@@ -1,7 +1,7 @@
 package by.bsuir.movierating.command.impl.relation;
 
 import by.bsuir.movierating.service.factory.ServiceFactory;
-import by.bsuir.movierating.service.inter.RelationService;
+import by.bsuir.movierating.service.RelationService;
 import by.bsuir.movierating.command.Command;
 import by.bsuir.movierating.service.exception.ServiceException;
 

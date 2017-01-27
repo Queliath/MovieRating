@@ -1,6 +1,4 @@
-package by.bsuir.movierating.service.inter;
-
-import by.bsuir.movierating.service.exception.ServiceException;
+package by.bsuir.movierating.service;
 
 /**
  * Provides a business-logic with the Rating entity.
@@ -15,9 +13,8 @@ public interface RatingService {
      * @param movieId an id of the movie
      * @param userId an id of the user
      * @return a value of the rating
-     * @throws ServiceException
      */
-    int getRatingValueByMovieAndUser(int movieId, int userId) throws ServiceException;
+    int getRatingValueByMovieAndUser(int movieId, int userId);
 
     /**
      * Adds a new rating to the data storage.
@@ -25,16 +22,14 @@ public interface RatingService {
      * @param value a value of the rating
      * @param movieId an id of the movie to which the rating belongs
      * @param userId an id of the user to which the rating belongs
-     * @throws ServiceException
      */
-    void addRating(int value, int movieId, int userId) throws ServiceException;
+    void addRating(int value, int movieId, int userId);
 
     /**
      * Deletes an existing rating from the data storage.
      *
      * @param movieId an id of the movie to which the rating belongs
      * @param userId an id of the user to which the rating belongs
-     * @throws ServiceException
      */
-    void deleteRating(int movieId, int userId) throws ServiceException;
+    void deleteRating(int movieId, int userId);
 }

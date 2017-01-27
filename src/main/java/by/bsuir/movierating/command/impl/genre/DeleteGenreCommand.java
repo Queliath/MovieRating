@@ -1,6 +1,6 @@
 package by.bsuir.movierating.command.impl.genre;
 
-import by.bsuir.movierating.service.inter.GenreService;
+import by.bsuir.movierating.service.GenreService;
 import by.bsuir.movierating.command.Command;
 import by.bsuir.movierating.service.exception.ServiceException;
 import by.bsuir.movierating.service.factory.ServiceFactory;

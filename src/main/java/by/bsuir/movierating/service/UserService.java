@@ -1,8 +1,6 @@
-package by.bsuir.movierating.service.inter;
+package by.bsuir.movierating.service;
 
 import by.bsuir.movierating.domain.User;
-import by.bsuir.movierating.service.exception.ServiceException;
-import by.bsuir.movierating.service.exception.ServiceWrongEmailException;
 
 import java.util.List;
 
@@ -19,9 +17,8 @@ public interface UserService {
      * @param id an id of a needed user
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a certain user
-     * @throws ServiceException
      */
-    User getUserById(int id, String languageId) throws ServiceException;
+    User getUserById(int id, String languageId);
 
     /**
      * Edits a main information about the already existing user.
@@ -33,10 +30,8 @@ public interface UserService {
      * @param lastName a new last name of the user
      * @param photo a URL to the new photo of the user
      * @param languageId an id of the new language of the user
-     * @throws ServiceWrongEmailException if there is already existing user with email like the new email of the editing user
-     * @throws ServiceException
      */
-    void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo, String languageId) throws ServiceWrongEmailException, ServiceException;
+    void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo, String languageId);
 
     /**
      * Edits a secondary information about the already existing user.
@@ -44,17 +39,15 @@ public interface UserService {
      * @param id an id of a needed user
      * @param rating a new rating of the user
      * @param status a new status of the user
-     * @throws ServiceException
      */
-    void editUserSecondInf(int id, int rating, String status) throws ServiceException;
+    void editUserSecondInf(int id, int rating, String status);
 
     /**
      * Deletes existing user from the data storage.
      *
      * @param id an id of the deleting user
-     * @throws ServiceException
      */
-    void deleteUser(int id) throws ServiceException;
+    void deleteUser(int id);
 
     /**
      * Returns an amount of the users matching the criteria.
@@ -68,11 +61,10 @@ public interface UserService {
      * @param maxRating a max rating of the user criteria
      * @param statuses a list of possible statuses of the user criteria
      * @return an amount of the users matching the criteria
-     * @throws ServiceException
      */
     int getUsersCountByCriteria(String email, String firstName, String lastName,
                                 String minDateOfRegistry, String maxDateOfRegistry, Integer minRating, Integer maxRating,
-                                List<String> statuses) throws ServiceException;
+                                List<String> statuses);
 
     /**
      * Returns a users matching the criteria.
@@ -88,9 +80,8 @@ public interface UserService {
      * @param from a starting position in the users list (starting from 0)
      * @param amount a needed amount of the users
      * @return a users matching the criteria
-     * @throws ServiceException
      */
     List<User> getUsersByCriteria(String email, String firstName, String lastName,
                                   String minDateOfRegistry, String maxDateOfRegistry, Integer minRating, Integer maxRating,
-                                  List<String> statuses, int from, int amount) throws ServiceException;
+                                  List<String> statuses, int from, int amount);
 }

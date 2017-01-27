@@ -7,7 +7,7 @@ import by.bsuir.movierating.dao.UserDAO;
 import by.bsuir.movierating.domain.Comment;
 import by.bsuir.movierating.domain.Movie;
 import by.bsuir.movierating.domain.User;
-import by.bsuir.movierating.service.inter.CommentService;
+import by.bsuir.movierating.service.CommentService;
 import by.bsuir.movierating.dao.CommentDAO;
 import by.bsuir.movierating.service.exception.ServiceException;
 

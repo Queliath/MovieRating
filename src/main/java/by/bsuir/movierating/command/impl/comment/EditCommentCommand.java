@@ -2,7 +2,7 @@ package by.bsuir.movierating.command.impl.comment;
 
 import by.bsuir.movierating.command.util.QueryUtil;
 import by.bsuir.movierating.domain.Comment;
-import by.bsuir.movierating.service.inter.CommentService;
+import by.bsuir.movierating.service.CommentService;
 import by.bsuir.movierating.command.Command;
 import by.bsuir.movierating.command.util.LanguageUtil;
 import by.bsuir.movierating.service.exception.ServiceException;

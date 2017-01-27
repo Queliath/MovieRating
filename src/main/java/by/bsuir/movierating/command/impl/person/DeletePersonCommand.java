@@ -2,7 +2,7 @@ package by.bsuir.movierating.command.impl.person;
 
 import by.bsuir.movierating.command.Command;
 import by.bsuir.movierating.service.factory.ServiceFactory;
-import by.bsuir.movierating.service.inter.PersonService;
+import by.bsuir.movierating.service.PersonService;
 import by.bsuir.movierating.service.exception.ServiceException;
 
 import javax.servlet.ServletException;

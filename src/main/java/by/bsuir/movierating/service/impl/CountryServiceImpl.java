@@ -5,7 +5,7 @@ import by.bsuir.movierating.dao.factory.DAOFactory;
 import by.bsuir.movierating.dao.CountryDAO;
 import by.bsuir.movierating.domain.Country;
 import by.bsuir.movierating.service.exception.ServiceException;
-import by.bsuir.movierating.service.inter.CountryService;
+import by.bsuir.movierating.service.CountryService;
 
 import java.util.List;
 

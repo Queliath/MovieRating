@@ -3,7 +3,7 @@ package by.bsuir.movierating.command.impl.country;
 import by.bsuir.movierating.command.Command;
 import by.bsuir.movierating.service.exception.ServiceException;
 import by.bsuir.movierating.service.factory.ServiceFactory;
-import by.bsuir.movierating.service.inter.CountryService;
+import by.bsuir.movierating.service.CountryService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

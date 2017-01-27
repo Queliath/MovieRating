@@ -1,7 +1,7 @@
 package by.bsuir.movierating.command.impl.country;
 
 import by.bsuir.movierating.command.util.QueryUtil;
-import by.bsuir.movierating.service.inter.CountryService;
+import by.bsuir.movierating.service.CountryService;
 import by.bsuir.movierating.command.Command;
 import by.bsuir.movierating.command.util.LanguageUtil;
 import by.bsuir.movierating.domain.Country;

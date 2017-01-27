@@ -1,6 +1,4 @@
-package by.bsuir.movierating.service.inter;
-
-import by.bsuir.movierating.service.exception.ServiceException;
+package by.bsuir.movierating.service;
 
 /**
  * Provides a business-logic for the relations between entities.
@@ -15,27 +13,24 @@ public interface RelationService {
      * @param movieId an id of the movie
      * @param personId an id of the person
      * @param relationType an id of the relation type (role)
-     * @throws ServiceException
      */
-    void addPersonToMovie(int movieId, int personId, int relationType) throws ServiceException;
+    void addPersonToMovie(int movieId, int personId, int relationType);
 
     /**
      * Adds a relation between the movie and the country.
      *
      * @param movieId an id of the movie
      * @param countryId an id of the country
-     * @throws ServiceException
      */
-    void addCountryToMovie(int movieId, int countryId) throws ServiceException;
+    void addCountryToMovie(int movieId, int countryId);
 
     /**
      * Adds a relation between the movie and the genre.
      *
      * @param movieId an id of the movie
      * @param genreId an id of the genre
-     * @throws ServiceException
      */
-    void addGenreToMovie(int movieId, int genreId) throws ServiceException;
+    void addGenreToMovie(int movieId, int genreId);
 
     /**
      * Deletes a relation between the movie and the person.
@@ -43,25 +38,22 @@ public interface RelationService {
      * @param movieId an id of the movie
      * @param personId an id of the person
      * @param relationType an id of the relation type (role)
-     * @throws ServiceException
      */
-    void deletePersonFromMovie(int movieId, int personId, int relationType) throws ServiceException;
+    void deletePersonFromMovie(int movieId, int personId, int relationType);
 
     /**
      * Deletes a relation between the movie and the country.
      *
      * @param movieId an id of the movie
      * @param countryId an id of the country
-     * @throws ServiceException
      */
-    void deleteCountryFromMovie(int movieId, int countryId) throws ServiceException;
+    void deleteCountryFromMovie(int movieId, int countryId);
 
     /**
      * Deletes a relation between the movie and the genre.
      *
      * @param movieId an id of the movie
      * @param genreId an id of the genre
-     * @throws ServiceException
      */
-    void deleteGenreFromMovie(int movieId, int genreId) throws ServiceException;
+    void deleteGenreFromMovie(int movieId, int genreId);
 }

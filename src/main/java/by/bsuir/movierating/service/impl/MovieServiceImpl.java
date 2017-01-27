@@ -5,7 +5,7 @@ import by.bsuir.movierating.dao.exception.DAOException;
 import by.bsuir.movierating.dao.factory.DAOFactory;
 import by.bsuir.movierating.domain.*;
 import by.bsuir.movierating.domain.criteria.MovieCriteria;
-import by.bsuir.movierating.service.inter.MovieService;
+import by.bsuir.movierating.service.MovieService;
 import by.bsuir.movierating.service.exception.ServiceException;
 
 import java.text.DateFormat;

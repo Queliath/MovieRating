@@ -5,7 +5,7 @@ import by.bsuir.movierating.dao.factory.DAOFactory;
 import by.bsuir.movierating.dao.RatingDAO;
 import by.bsuir.movierating.domain.Rating;
 import by.bsuir.movierating.service.exception.ServiceException;
-import by.bsuir.movierating.service.inter.RatingService;
+import by.bsuir.movierating.service.RatingService;
 
 /**
  * Provides a business-logic with the Rating entity.

@@ -5,7 +5,7 @@ import by.bsuir.movierating.command.util.LanguageUtil;
 import by.bsuir.movierating.command.util.QueryUtil;
 import by.bsuir.movierating.service.exception.ServiceException;
 import by.bsuir.movierating.service.factory.ServiceFactory;
-import by.bsuir.movierating.service.inter.MovieService;
+import by.bsuir.movierating.service.MovieService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

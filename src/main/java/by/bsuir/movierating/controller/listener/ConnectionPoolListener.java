@@ -2,7 +2,7 @@ package by.bsuir.movierating.controller.listener;
 
 import by.bsuir.movierating.service.exception.ServiceException;
 import by.bsuir.movierating.service.factory.ServiceFactory;
-import by.bsuir.movierating.service.inter.PoolService;
+import by.bsuir.movierating.service.PoolService;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

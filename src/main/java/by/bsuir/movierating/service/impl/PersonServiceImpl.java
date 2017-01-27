@@ -8,7 +8,7 @@ import by.bsuir.movierating.domain.Genre;
 import by.bsuir.movierating.domain.Movie;
 import by.bsuir.movierating.domain.Person;
 import by.bsuir.movierating.service.exception.ServiceException;
-import by.bsuir.movierating.service.inter.PersonService;
+import by.bsuir.movierating.service.PersonService;
 
 import java.text.DateFormat;
 import java.text.ParseException;
