@@ -1,14 +1,20 @@
 package by.bsuir.movierating.dao.impl;
 
-import by.bsuir.movierating.dao.exception.DAOException;
 import by.bsuir.movierating.dao.UserDAO;
-import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 import by.bsuir.movierating.domain.User;
 import by.bsuir.movierating.domain.criteria.UserCriteria;
-import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -17,18 +23,19 @@ import java.util.List;
  * @author Kostevich Vladislav
  * @version 1.0
  */
+@Repository("userDao")
 public class MySQLUserDAO implements UserDAO {
     private static final String ADD_USER_QUERY = "INSERT INTO user " +
             "(email, password, first_name, last_name, date_of_registry, photo, rating, status, language_id) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES (:email, :password, :first_name, :last_name, :date_of_registry, :photo, :rating, :status, :language_id)";
     private static final String UPDATE_USER_QUERY = "UPDATE user " +
-            "SET email = ?, password = ?, first_name = ?, last_name = ?, date_of_registry = ?, " +
-            "photo = ?, rating = ?, status = ?, language_id = ? WHERE id = ?";
-    private static final String DELETE_USER_QUERY = "DELETE FROM user WHERE id = ?";
+            "SET email = :email, password = :password, first_name = :first_name, last_name = :last_name, date_of_registry = :date_of_registry, " +
+            "photo = :photo, rating = :rating, status = :status, language_id = :language_id WHERE id = :id";
+    private static final String DELETE_USER_QUERY = "DELETE FROM user WHERE id = :id";
     private static final String GET_ALL_USERS_QUERY = "SELECT * FROM user";
-    private static final String GET_USER_BY_ID_QUERY = "SELECT * FROM user WHERE id = ?";
-    private static final String GET_USER_BY_EMAIL_QUERY = "SELECT * FROM user WHERE email = ?";
-    private static final String GET_USERS_BY_STATUS_QUERY = "SELECT * FROM user WHERE status = ?";
+    private static final String GET_USER_BY_ID_QUERY = "SELECT * FROM user WHERE id = :id";
+    private static final String GET_USER_BY_EMAIL_QUERY = "SELECT * FROM user WHERE email = :email";
+    private static final String GET_USERS_BY_STATUS_QUERY = "SELECT * FROM user WHERE status = :status";
     private static final String GET_USERS_BY_CRITERIA_HEAD_QUERY = "SELECT * FROM user ";
     private static final String WHERE_CRITERIA = "WHERE";
     private static final String AND_CRITERIA = "AND";
@@ -53,201 +60,91 @@ public class MySQLUserDAO implements UserDAO {
     private static final String GET_USERS_COUNT_BY_CRITERIA_HEAD_QUERY = "SELECT COUNT(*) FROM (SELECT * FROM user ";
     private static final String GET_USERS_COUNT_BY_CRITERIA_TAIL_QUERY = ") AS c";
 
+    private static final String ID_COLUMN_NAME = "id";
+    private static final String EMAIL_COLUMN_NAME = "email";
+    private static final String PASSWORD_COLUMN_NAME = "password";
+    private static final String FIRST_NAME_COLUMN_NAME = "first_name";
+    private static final String LAST_NAME_COLUMN_NAME = "last_name";
+    private static final String DATE_OF_REGISTRY_COLUMN_NAME = "date_of_registry";
+    private static final String PHOTO_COLUMN_NAME = "photo";
+    private static final String RATING_COLUMN_NAME = "rating";
+    private static final String STATUS_COLUMN_NAME = "status";
+    private static final String LANGUAGE_ID_COLUMN_NAME = "language_id";
+
+    private NamedParameterJdbcTemplate jdbcTemplate;
+    private UserMapper userMapper = new UserMapper();
+    private KeyHolder keyHolder = new GeneratedKeyHolder();
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    }
+
     /**
      * Adds an user to the data storage.
      *
      * @param user an user object
-     * @throws DAOException
      */
     @Override
-    public void addUser(User user) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void addUser(User user)  {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue(EMAIL_COLUMN_NAME, user.getEmail())
+                .addValue(PASSWORD_COLUMN_NAME, user.getPassword())
+                .addValue(FIRST_NAME_COLUMN_NAME, user.getFirstName())
+                .addValue(LAST_NAME_COLUMN_NAME, user.getLastName())
+                .addValue(DATE_OF_REGISTRY_COLUMN_NAME, new Date(user.getDateOfRegistry().getTime()))
+                .addValue(PHOTO_COLUMN_NAME, user.getPhoto())
+                .addValue(RATING_COLUMN_NAME, user.getRating())
+                .addValue(STATUS_COLUMN_NAME, user.getStatus())
+                .addValue(LANGUAGE_ID_COLUMN_NAME, user.getLanguageId());
 
-            statement = connection.prepareStatement(ADD_USER_QUERY);
-            statement.setString(1, user.getEmail());
-            statement.setString(2, user.getPassword());
-            statement.setString(3, user.getFirstName());
-            statement.setString(4, user.getLastName());
-            statement.setDate(5, new Date(user.getDateOfRegistry().getTime()));
-            statement.setString(6, user.getPhoto());
-            statement.setInt(7, user.getRating());
-            statement.setString(8, user.getStatus());
-            statement.setString(9, user.getLanguageId());
+        jdbcTemplate.update(ADD_USER_QUERY, sqlParameterSource, keyHolder, new String[] {ID_COLUMN_NAME});
 
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when adding user", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        user.setId(keyHolder.getKey().intValue());
     }
 
     /**
      * Updates an user in the data storage.
      *
      * @param user an user object
-     * @throws DAOException
      */
     @Override
-    public void updateUser(User user) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void updateUser(User user) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue(EMAIL_COLUMN_NAME, user.getEmail())
+                .addValue(PASSWORD_COLUMN_NAME, user.getPassword())
+                .addValue(FIRST_NAME_COLUMN_NAME, user.getFirstName())
+                .addValue(LAST_NAME_COLUMN_NAME, user.getLastName())
+                .addValue(DATE_OF_REGISTRY_COLUMN_NAME, new Date(user.getDateOfRegistry().getTime()))
+                .addValue(PHOTO_COLUMN_NAME, user.getPhoto())
+                .addValue(RATING_COLUMN_NAME, user.getRating())
+                .addValue(STATUS_COLUMN_NAME, user.getStatus())
+                .addValue(LANGUAGE_ID_COLUMN_NAME, user.getLanguageId())
+                .addValue(ID_COLUMN_NAME, user.getId());
 
-            statement = connection.prepareStatement(UPDATE_USER_QUERY);
-            statement.setString(1, user.getEmail());
-            statement.setString(2, user.getPassword());
-            statement.setString(3, user.getFirstName());
-            statement.setString(4, user.getLastName());
-            statement.setDate(5, new Date(user.getDateOfRegistry().getTime()));
-            statement.setString(6, user.getPhoto());
-            statement.setInt(7, user.getRating());
-            statement.setString(8, user.getStatus());
-            statement.setString(9, user.getLanguageId());
-            statement.setInt(10, user.getId());
-
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when updating user", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        jdbcTemplate.update(UPDATE_USER_QUERY, sqlParameterSource);
     }
 
     /**
      * Deletes an user from the data storage.
      *
      * @param id an id of the deleting user
-     * @throws DAOException
      */
     @Override
-    public void deleteUser(int id) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void deleteUser(int id) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource(ID_COLUMN_NAME, id);
 
-            statement = connection.prepareStatement(DELETE_USER_QUERY);
-            statement.setInt(1, id);
-
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when deleting user", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        jdbcTemplate.update(DELETE_USER_QUERY, sqlParameterSource);
     }
 
     /**
      * Returns all the users from the data storage.
      *
      * @return all the users from
-     * @throws DAOException
      */
     @Override
-    public List<User> getAllUsers() throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
-
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(GET_ALL_USERS_QUERY);
-
-            List<User> allUsers = new ArrayList<>();
-            while (resultSet.next()){
-                User user = new User();
-                user.setId(resultSet.getInt(1));
-                user.setEmail(resultSet.getString(2));
-                user.setPassword(resultSet.getString(3));
-                user.setFirstName(resultSet.getString(4));
-                user.setLastName(resultSet.getString(5));
-                user.setDateOfRegistry(resultSet.getDate(6));
-                user.setPhoto(resultSet.getString(7));
-                user.setRating(resultSet.getInt(8));
-                user.setStatus(resultSet.getString(9));
-                user.setLanguageId(resultSet.getString(10));
-
-                allUsers.add(user);
-            }
-            return allUsers;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when getting user", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+    public List<User> getAllUsers() {
+        return jdbcTemplate.query(GET_ALL_USERS_QUERY, userMapper);
     }
 
     /**
@@ -255,56 +152,13 @@ public class MySQLUserDAO implements UserDAO {
      *
      * @param id an id of the needed user
      * @return an user by id
-     * @throws DAOException
      */
     @Override
-    public User getUserById(int id) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public User getUserById(int id) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource(ID_COLUMN_NAME, id);
 
-            statement = connection.prepareStatement(GET_USER_BY_ID_QUERY);
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-
-            User user = null;
-            if(resultSet.next()){
-                user = new User();
-                user.setId(resultSet.getInt(1));
-                user.setEmail(resultSet.getString(2));
-                user.setPassword(resultSet.getString(3));
-                user.setFirstName(resultSet.getString(4));
-                user.setLastName(resultSet.getString(5));
-                user.setDateOfRegistry(resultSet.getDate(6));
-                user.setPhoto(resultSet.getString(7));
-                user.setRating(resultSet.getInt(8));
-                user.setStatus(resultSet.getString(9));
-                user.setLanguageId(resultSet.getString(10));
-            }
-            return user;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when getting user", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        List<User> users = jdbcTemplate.query(GET_USER_BY_ID_QUERY, sqlParameterSource, userMapper);
+        return users.isEmpty() ? null : users.get(0);
     }
 
     /**
@@ -312,56 +166,13 @@ public class MySQLUserDAO implements UserDAO {
      *
      * @param email an email of the needed user
      * @return an user by email
-     * @throws DAOException
      */
     @Override
-    public User getUserByEmail(String email) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public User getUserByEmail(String email) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource(EMAIL_COLUMN_NAME, email);
 
-            statement = connection.prepareStatement(GET_USER_BY_EMAIL_QUERY);
-            statement.setString(1, email);
-            ResultSet resultSet = statement.executeQuery();
-
-            User user = null;
-            if(resultSet.next()){
-                user = new User();
-                user.setId(resultSet.getInt(1));
-                user.setEmail(resultSet.getString(2));
-                user.setPassword(resultSet.getString(3));
-                user.setFirstName(resultSet.getString(4));
-                user.setLastName(resultSet.getString(5));
-                user.setDateOfRegistry(resultSet.getDate(6));
-                user.setPhoto(resultSet.getString(7));
-                user.setRating(resultSet.getInt(8));
-                user.setStatus(resultSet.getString(9));
-                user.setLanguageId(resultSet.getString(10));
-            }
-            return user;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when getting user", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        List<User> users = jdbcTemplate.query(GET_USER_BY_EMAIL_QUERY, sqlParameterSource, userMapper);
+        return users.isEmpty() ? null : users.get(0);
     }
 
     /**
@@ -369,58 +180,12 @@ public class MySQLUserDAO implements UserDAO {
      *
      * @param status a status of the needed user
      * @return an users by the status
-     * @throws DAOException
      */
     @Override
-    public List<User> getUsersByStatus(String status) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public List<User> getUsersByStatus(String status) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource(STATUS_COLUMN_NAME, status);
 
-            statement = connection.prepareStatement(GET_USERS_BY_STATUS_QUERY);
-            statement.setString(1, status);
-            ResultSet resultSet = statement.executeQuery();
-
-            List<User> usersByStatus = new ArrayList<>();
-            while (resultSet.next()){
-                User user = new User();
-                user.setId(resultSet.getInt(1));
-                user.setEmail(resultSet.getString(2));
-                user.setPassword(resultSet.getString(3));
-                user.setFirstName(resultSet.getString(4));
-                user.setLastName(resultSet.getString(5));
-                user.setDateOfRegistry(resultSet.getDate(6));
-                user.setPhoto(resultSet.getString(7));
-                user.setRating(resultSet.getInt(8));
-                user.setStatus(resultSet.getString(9));
-                user.setLanguageId(resultSet.getString(10));
-
-                usersByStatus.add(user);
-            }
-            return usersByStatus;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when getting user", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        return jdbcTemplate.query(GET_USERS_BY_STATUS_QUERY, sqlParameterSource, userMapper);
     }
 
     /**
@@ -430,128 +195,81 @@ public class MySQLUserDAO implements UserDAO {
      * @param from a starting position in users list (starting from 0)
      * @param amount a needed amount of users
      * @return an users matching the criteria
-     * @throws DAOException
      */
     @Override
-    public List<User> getUsersByCriteria(UserCriteria criteria, int from, int amount) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
-
-            StringBuilder query = new StringBuilder(GET_USERS_BY_CRITERIA_HEAD_QUERY);
-            boolean atLeastOneWhereCriteria = false;
-            if(criteria.getEmail() != null){
-                query.append(GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_FIRST_PART);
-                query.append(criteria.getEmail());
-                query.append(GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_SECOND_PART);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getFirstName() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_FIRST_PART);
-                query.append(criteria.getFirstName());
-                query.append(GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_SECOND_PART);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getLastName() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_FIRST_PART);
-                query.append(criteria.getLastName());
-                query.append(GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_SECOND_PART);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getMinDateOfRegistry() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART);
-                query.append(criteria.getMinDateOfRegistry());
-                query.append(GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getMaxDateOfRegistry() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART);
-                query.append(criteria.getMaxDateOfRegistry());
-                query.append(GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getMinRating() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_MIN_RATING_CRITERIA_QUERY);
-                query.append(criteria.getMinRating());
-                query.append(SPACE_SEPARATOR);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getMaxRating() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_MAX_RATING_CRITERIA_QUERY);
-                query.append(criteria.getMaxRating());
-                query.append(SPACE_SEPARATOR);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getStatuses() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_STATUSES_LIST_CRITERIA_QUERY);
-                for(String status : criteria.getStatuses()){
-                    query.append(SINGLE_QUOTE);
-                    query.append(status);
-                    query.append(SINGLE_QUOTE);
-                    query.append(COMA_SEPARATOR);
-                }
-                query.deleteCharAt(query.length() - 1);
-                query.append(CLOSING_BRACKET);
-            }
-            if(amount != 0){
-                query.append(LIMIT_QUERY);
-                query.append(from);
-                query.append(COMA_SEPARATOR);
-                query.append(SPACE_SEPARATOR);
-                query.append(amount);
-                query.append(SPACE_SEPARATOR);
-            }
-
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query.toString());
-
-            List<User> users = new ArrayList<>();
-            while(resultSet.next()){
-                User user = new User();
-                user.setId(resultSet.getInt(1));
-                user.setEmail(resultSet.getString(2));
-                user.setPassword(resultSet.getString(3));
-                user.setFirstName(resultSet.getString(4));
-                user.setLastName(resultSet.getString(5));
-                user.setDateOfRegistry(resultSet.getDate(6));
-                user.setPhoto(resultSet.getString(7));
-                user.setRating(resultSet.getInt(8));
-                user.setStatus(resultSet.getString(9));
-                user.setLanguageId(resultSet.getString(10));
-
-                users.add(user);
-            }
-            return users;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("DAO layer: cannot get users by criteria", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+    public List<User> getUsersByCriteria(UserCriteria criteria, int from, int amount) {
+        StringBuilder query = new StringBuilder(GET_USERS_BY_CRITERIA_HEAD_QUERY);
+        boolean atLeastOneWhereCriteria = false;
+        if(criteria.getEmail() != null){
+            query.append(GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_FIRST_PART);
+            query.append(criteria.getEmail());
+            query.append(GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_SECOND_PART);
+            atLeastOneWhereCriteria = true;
         }
+        if(criteria.getFirstName() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_FIRST_PART);
+            query.append(criteria.getFirstName());
+            query.append(GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_SECOND_PART);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getLastName() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_FIRST_PART);
+            query.append(criteria.getLastName());
+            query.append(GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_SECOND_PART);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getMinDateOfRegistry() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART);
+            query.append(criteria.getMinDateOfRegistry());
+            query.append(GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getMaxDateOfRegistry() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART);
+            query.append(criteria.getMaxDateOfRegistry());
+            query.append(GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getMinRating() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_MIN_RATING_CRITERIA_QUERY);
+            query.append(criteria.getMinRating());
+            query.append(SPACE_SEPARATOR);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getMaxRating() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_MAX_RATING_CRITERIA_QUERY);
+            query.append(criteria.getMaxRating());
+            query.append(SPACE_SEPARATOR);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getStatuses() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_STATUSES_LIST_CRITERIA_QUERY);
+            for(String status : criteria.getStatuses()){
+                query.append(SINGLE_QUOTE);
+                query.append(status);
+                query.append(SINGLE_QUOTE);
+                query.append(COMA_SEPARATOR);
+            }
+            query.deleteCharAt(query.length() - 1);
+            query.append(CLOSING_BRACKET);
+        }
+        if(amount != 0){
+            query.append(LIMIT_QUERY);
+            query.append(from);
+            query.append(COMA_SEPARATOR);
+            query.append(SPACE_SEPARATOR);
+            query.append(amount);
+            query.append(SPACE_SEPARATOR);
+        }
+
+        return jdbcTemplate.query(query.toString(), userMapper);
     }
 
     /**
@@ -559,108 +277,91 @@ public class MySQLUserDAO implements UserDAO {
      *
      * @param criteria a UserCriteria object
      * @return an amount of users matching the criteria
-     * @throws DAOException
      */
     @Override
-    public int getUsersCountByCriteria(UserCriteria criteria) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public int getUsersCountByCriteria(UserCriteria criteria) {
+        StringBuilder query = new StringBuilder(GET_USERS_COUNT_BY_CRITERIA_HEAD_QUERY);
+        boolean atLeastOneWhereCriteria = false;
+        if(criteria.getEmail() != null){
+            query.append(GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_FIRST_PART);
+            query.append(criteria.getEmail());
+            query.append(GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_SECOND_PART);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getFirstName() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_FIRST_PART);
+            query.append(criteria.getFirstName());
+            query.append(GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_SECOND_PART);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getLastName() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_FIRST_PART);
+            query.append(criteria.getLastName());
+            query.append(GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_SECOND_PART);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getMinDateOfRegistry() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART);
+            query.append(criteria.getMinDateOfRegistry());
+            query.append(GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getMaxDateOfRegistry() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART);
+            query.append(criteria.getMaxDateOfRegistry());
+            query.append(GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getMinRating() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_MIN_RATING_CRITERIA_QUERY);
+            query.append(criteria.getMinRating());
+            query.append(SPACE_SEPARATOR);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getMaxRating() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_MAX_RATING_CRITERIA_QUERY);
+            query.append(criteria.getMaxRating());
+            query.append(SPACE_SEPARATOR);
+            atLeastOneWhereCriteria = true;
+        }
+        if(criteria.getStatuses() != null){
+            query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
+            query.append(GET_USERS_BY_CRITERIA_STATUSES_LIST_CRITERIA_QUERY);
+            for(String status : criteria.getStatuses()){
+                query.append(SINGLE_QUOTE);
+                query.append(status);
+                query.append(SINGLE_QUOTE);
+                query.append(COMA_SEPARATOR);
+            }
+            query.deleteCharAt(query.length() - 1);
+            query.append(CLOSING_BRACKET);
+        }
+        query.append(GET_USERS_COUNT_BY_CRITERIA_TAIL_QUERY);
 
-            StringBuilder query = new StringBuilder(GET_USERS_COUNT_BY_CRITERIA_HEAD_QUERY);
-            boolean atLeastOneWhereCriteria = false;
-            if(criteria.getEmail() != null){
-                query.append(GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_FIRST_PART);
-                query.append(criteria.getEmail());
-                query.append(GET_USERS_BY_CRITERIA_EMAIL_CRITERIA_QUERY_SECOND_PART);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getFirstName() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_FIRST_PART);
-                query.append(criteria.getFirstName());
-                query.append(GET_USERS_BY_CRITERIA_FIRST_NAME_CRITERIA_QUERY_SECOND_PART);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getLastName() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_FIRST_PART);
-                query.append(criteria.getLastName());
-                query.append(GET_USERS_BY_CRITERIA_LAST_NAME_CRITERIA_QUERY_SECOND_PART);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getMinDateOfRegistry() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART);
-                query.append(criteria.getMinDateOfRegistry());
-                query.append(GET_USERS_BY_CRITERIA_MIN_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getMaxDateOfRegistry() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_FIRST_PART);
-                query.append(criteria.getMaxDateOfRegistry());
-                query.append(GET_USERS_BY_CRITERIA_MAX_DATE_OF_REGISTRATION_CRITERIA_QUERY_SECOND_PART);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getMinRating() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_MIN_RATING_CRITERIA_QUERY);
-                query.append(criteria.getMinRating());
-                query.append(SPACE_SEPARATOR);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getMaxRating() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_MAX_RATING_CRITERIA_QUERY);
-                query.append(criteria.getMaxRating());
-                query.append(SPACE_SEPARATOR);
-                atLeastOneWhereCriteria = true;
-            }
-            if(criteria.getStatuses() != null){
-                query.append(atLeastOneWhereCriteria ? AND_CRITERIA : WHERE_CRITERIA);
-                query.append(GET_USERS_BY_CRITERIA_STATUSES_LIST_CRITERIA_QUERY);
-                for(String status : criteria.getStatuses()){
-                    query.append(SINGLE_QUOTE);
-                    query.append(status);
-                    query.append(SINGLE_QUOTE);
-                    query.append(COMA_SEPARATOR);
-                }
-                query.deleteCharAt(query.length() - 1);
-                query.append(CLOSING_BRACKET);
-            }
-            query.append(GET_USERS_COUNT_BY_CRITERIA_TAIL_QUERY);
+        return jdbcTemplate.queryForObject(query.toString(), new HashMap<>(), Integer.TYPE);
+    }
 
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query.toString());
-
-            int usersCount = 0;
-            if(resultSet.next()){
-                usersCount = resultSet.getInt(1);
-            }
-            return usersCount;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("DAO layer: cannot get users by criteria", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+    private class UserMapper implements RowMapper<User> {
+        @Override
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User user = new User();
+            user.setId(rs.getInt(ID_COLUMN_NAME));
+            user.setEmail(rs.getString(EMAIL_COLUMN_NAME));
+            user.setPassword(rs.getString(PASSWORD_COLUMN_NAME));
+            user.setFirstName(rs.getString(FIRST_NAME_COLUMN_NAME));
+            user.setLastName(rs.getString(LAST_NAME_COLUMN_NAME));
+            user.setDateOfRegistry(rs.getDate(DATE_OF_REGISTRY_COLUMN_NAME));
+            user.setPhoto(rs.getString(PHOTO_COLUMN_NAME));
+            user.setRating(rs.getInt(RATING_COLUMN_NAME));
+            user.setStatus(rs.getString(STATUS_COLUMN_NAME));
+            user.setLanguageId(rs.getString(LANGUAGE_ID_COLUMN_NAME));
+            return user;
         }
     }
 }
