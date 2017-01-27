@@ -1,11 +1,10 @@
 package by.bsuir.movierating.service.impl;
 
-import by.bsuir.movierating.dao.exception.DAOException;
-import by.bsuir.movierating.dao.factory.DAOFactory;
 import by.bsuir.movierating.dao.CountryDAO;
 import by.bsuir.movierating.domain.Country;
-import by.bsuir.movierating.service.exception.ServiceException;
 import by.bsuir.movierating.service.CountryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -15,8 +14,14 @@ import java.util.List;
  * @author Kostevich Vladislav
  * @version 1.0
  */
+@Service("countryService")
 public class CountryServiceImpl implements CountryService {
-    private static final int NAME_MAX_LENGTH = 45;
+    private CountryDAO countryDAO;
+
+    @Autowired
+    public void setCountryDAO(CountryDAO countryDAO) {
+        this.countryDAO = countryDAO;
+    }
 
     /**
      * Returns a countries ordered by a position number.
@@ -24,21 +29,10 @@ public class CountryServiceImpl implements CountryService {
      * @param amount a needed amount of countries
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a countries ordered by a position number
-     * @throws ServiceException
      */
     @Override
-    public List<Country> getTopPositionCountries(int amount, String languageId) throws ServiceException {
-        if(amount <= 0){
-            throw new ServiceException("Wrong amount value");
-        }
-
-        try {
-            CountryDAO countryDAO = DAOFactory.getInstance().getCountryDAO();
-            List<Country> countries = countryDAO.getTopPositionCountries(amount, languageId);
-            return countries;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get all countries", e);
-        }
+    public List<Country> getTopPositionCountries(int amount, String languageId) {
+        return countryDAO.getTopPositionCountries(amount, languageId);
     }
 
     /**
@@ -48,36 +42,20 @@ public class CountryServiceImpl implements CountryService {
      * @param amount a needed amount of countries
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a concrete amount of the countries from a concrete position
-     * @throws ServiceException
      */
     @Override
-    public List<Country> getCountries(int from, int amount, String languageId) throws ServiceException {
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            CountryDAO countryDAO = daoFactory.getCountryDAO();
-            List<Country> countries = countryDAO.getCountries(from, amount, languageId);
-            return countries;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get countries", e);
-        }
+    public List<Country> getCountries(int from, int amount, String languageId) {
+        return countryDAO.getCountries(from, amount, languageId);
     }
 
     /**
      * Returns a total amount of countries in the data storage.
      *
      * @return a total amount of countries in the data storage
-     * @throws ServiceException
      */
     @Override
-    public int getCountriesCount() throws ServiceException {
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            CountryDAO countryDAO = daoFactory.getCountryDAO();
-            int countriesCount = countryDAO.getCountriesCount();
-            return countriesCount;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get countries count", e);
-        }
+    public int getCountriesCount() {
+        return countryDAO.getCountriesCount();
     }
 
     /**
@@ -86,22 +64,10 @@ public class CountryServiceImpl implements CountryService {
      * @param id an id of a needed country
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a certain country
-     * @throws ServiceException
      */
     @Override
-    public Country getCountryById(int id, String languageId) throws ServiceException {
-        if(id <= 0){
-            throw new ServiceException("Wrong id for getting country");
-        }
-
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            CountryDAO countryDAO = daoFactory.getCountryDAO();
-            Country country = countryDAO.getCountryById(id, languageId);
-            return country;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get country by id", e);
-        }
+    public Country getCountryById(int id, String languageId) {
+        return countryDAO.getCountryById(id, languageId);
     }
 
     /**
@@ -109,26 +75,14 @@ public class CountryServiceImpl implements CountryService {
      *
      * @param name a name of the country
      * @param position a number of a position of the country
-     * @throws ServiceException
      */
     @Override
-    public void addCountry(String name, int position) throws ServiceException {
-        if(name.isEmpty() || name.length() > NAME_MAX_LENGTH || position <= 0){
-            throw new ServiceException("Wrong parameters for adding country");
-        }
+    public void addCountry(String name, int position) {
+        Country country = new Country();
+        country.setName(name);
+        country.setPosition(position);
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            CountryDAO countryDAO = daoFactory.getCountryDAO();
-
-            Country country = new Country();
-            country.setName(name);
-            country.setPosition(position);
-
-            countryDAO.addCountry(country);
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot add country", e);
-        }
+        countryDAO.addCountry(country);
     }
 
     /**
@@ -142,47 +96,24 @@ public class CountryServiceImpl implements CountryService {
      * @param name a new name of the country
      * @param position a new position number of the country
      * @param languageId a language id like 'EN', "RU' etc.
-     * @throws ServiceException
      */
     @Override
-    public void editCountry(int id, String name, int position, String languageId) throws ServiceException {
-        if(id <= 0 || name.isEmpty() || name.length() > NAME_MAX_LENGTH || position <= 0){
-            throw new ServiceException("Wrong parameters for editing country");
-        }
+    public void editCountry(int id, String name, int position, String languageId) {
+        Country country = new Country();
+        country.setId(id);
+        country.setName(name);
+        country.setPosition(position);
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            CountryDAO countryDAO = daoFactory.getCountryDAO();
-
-            Country country = new Country();
-            country.setId(id);
-            country.setName(name);
-            country.setPosition(position);
-
-            countryDAO.updateCountry(country, languageId);
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot edit country", e);
-        }
+        countryDAO.updateCountry(country, languageId);
     }
 
     /**
      * Deletes an existing country from the data storage (with all of the localizations).
      *
      * @param id an id of the deleting country
-     * @throws ServiceException
      */
     @Override
-    public void deleteCountry(int id) throws ServiceException {
-        if(id <= 0){
-            throw new ServiceException("Wrong id for deleting country");
-        }
-
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            CountryDAO countryDAO = daoFactory.getCountryDAO();
-            countryDAO.deleteCountry(id);
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot delete country", e);
-        }
+    public void deleteCountry(int id) {
+        countryDAO.deleteCountry(id);
     }
 }

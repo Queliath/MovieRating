@@ -21,8 +21,6 @@ import java.util.List;
  */
 @Service("commentService")
 public class CommentServiceImpl implements CommentService {
-    private static final int TITLE_MAX_LENGTH = 45;
-
     private UserDAO userDAO;
     private MovieDAO movieDAO;
     private CommentDAO commentDAO;
