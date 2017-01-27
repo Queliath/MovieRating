@@ -2,13 +2,16 @@ package by.bsuir.movierating.dao.impl;
 
 import by.bsuir.movierating.dao.GenreDAO;
 import by.bsuir.movierating.domain.Genre;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.List;
  * @author Kostevich Vladislav
  * @version 1.0
  */
+@Repository("genreDao")
 public class MySQLGenreDAO implements GenreDAO {
     private static final String ADD_GENRE_QUERY = "INSERT INTO genre " +
             "(name, position) VALUES (:name, :position)";
@@ -68,6 +72,11 @@ public class MySQLGenreDAO implements GenreDAO {
     private NamedParameterJdbcTemplate jdbcTemplate;
     private GenreMapper genreMapper = new GenreMapper();
     private KeyHolder keyHolder = new GeneratedKeyHolder();
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    }
 
     /**
      * Adds a genre to the data storage (in the default language).

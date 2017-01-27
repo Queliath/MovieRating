@@ -1,13 +1,13 @@
 package by.bsuir.movierating.dao.impl;
 
 import by.bsuir.movierating.dao.MovieCountryDAO;
-import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPoolException;
-import by.bsuir.movierating.dao.exception.DAOException;
-import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import javax.sql.DataSource;
 
 /**
  * Provides a DAO-logic for the relations between Movie and Country entities for the MySQL Database.
@@ -15,52 +15,35 @@ import java.sql.SQLException;
  * @author Kostevich Vladislav
  * @version 1.0
  */
+@Repository("movieCountryDao")
 public class MySQLMovieCountryDAO implements MovieCountryDAO {
     private static final String ADD_MOVIE_TO_COUNTRY_QUERY = "INSERT INTO movie_country " +
-            "(movie_id, country_id) VALUES (?, ?)";
-    private static final String DELETE_MOVIE_FORM_COUNTRY_QUERY = "DELETE FROM movie_country WHERE movie_id = ? AND country_id = ?";
+            "(movie_id, country_id) VALUES (:movie_id, :country_id)";
+    private static final String DELETE_MOVIE_FORM_COUNTRY_QUERY = "DELETE FROM movie_country WHERE movie_id = :movie_id AND country_id = :country_id";
+
+    private static final String MOVIE_ID_COLUMN_NAME = "movie_id";
+    private static final String COUNTRY_ID_COLUMN_NAME = "country_id";
+
+    private NamedParameterJdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    }
 
     /**
      * Adds a relation between the movie and the country.
      *
      * @param movieId an id of the movie
      * @param countryId an id of the country
-     * @throws DAOException
      */
     @Override
-    public void addMovieToCountry(int movieId, int countryId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void addMovieToCountry(int movieId, int countryId) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue(MOVIE_ID_COLUMN_NAME, movieId)
+                .addValue(COUNTRY_ID_COLUMN_NAME, countryId);
 
-            statement = connection.prepareStatement(ADD_MOVIE_TO_COUNTRY_QUERY);
-            statement.setInt(1, movieId);
-            statement.setInt(2, countryId);
-
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when adding movie to country", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        jdbcTemplate.update(ADD_MOVIE_TO_COUNTRY_QUERY, sqlParameterSource);
     }
 
     /**
@@ -68,41 +51,13 @@ public class MySQLMovieCountryDAO implements MovieCountryDAO {
      *
      * @param movieId an id of the movie
      * @param countryId an id of the country
-     * @throws DAOException
      */
     @Override
-    public void deleteMovieFromCountry(int movieId, int countryId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void deleteMovieFromCountry(int movieId, int countryId) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue(MOVIE_ID_COLUMN_NAME, movieId)
+                .addValue(COUNTRY_ID_COLUMN_NAME, countryId);
 
-            statement = connection.prepareStatement(DELETE_MOVIE_FORM_COUNTRY_QUERY);
-            statement.setInt(1, movieId);
-            statement.setInt(2, countryId);
-
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when deleting movie from country", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        jdbcTemplate.update(DELETE_MOVIE_FORM_COUNTRY_QUERY, sqlParameterSource);
     }
 }
