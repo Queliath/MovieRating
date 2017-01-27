@@ -1,14 +1,14 @@
 package by.bsuir.movierating.dao.impl;
 
-import by.bsuir.movierating.dao.exception.DAOException;
-import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 import by.bsuir.movierating.dao.MoviePersonRelationDAO;
-import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.sql.DataSource;
+import java.util.HashMap;
 
 /**
  * Provides a DAO-logic for the relations between Movie and Person entities for the MySQL Database.
@@ -16,13 +16,25 @@ import java.sql.SQLException;
  * @author Kostevich Vladislav
  * @version 1.0
  */
+@Repository("moviePersonRelationDao")
 public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
     private static final String ADD_MOVIE_TO_PERSON_QUERY = "INSERT INTO movie_person_relation " +
-            "(movie_id, person_id, relation_type) VALUES (?, ?, ?)";
+            "(movie_id, person_id, relation_type) VALUES (:movie_id, :person_id, :relation_type)";
     private static final String DELETE_MOVIE_FORM_PERSON_QUERY = "DELETE FROM movie_person_relation " +
-            "WHERE movie_id = ? AND person_id = ? AND relation_type = ?";
+            "WHERE movie_id = :movie_id AND person_id = :person_id AND relation_type = :relation_type";
     private static final String GET_MOVIES_TOTAL_BY_PERSON_QUERY = "SELECT COUNT(*) FROM " +
-            "(SELECT DISTINCT movie_id FROM movie_person_relation WHERE person_id = ?) AS c";
+            "(SELECT DISTINCT movie_id FROM movie_person_relation WHERE person_id = :person_id) AS c";
+
+    private static final String MOVIE_ID_COLUMN_NAME = "movie_id";
+    private static final String PERSON_ID_COLUMN_NAME = "person_id";
+    private static final String RELATION_TYPE_COLUMN_NAME = "relation_type";
+
+    private NamedParameterJdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    }
 
     /**
      * Adds a relation between the movie and the person.
@@ -30,43 +42,15 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
      * @param movieId an id of the movie
      * @param personId an id of the person
      * @param relationType an id of the relation type (role)
-     * @throws DAOException
      */
     @Override
-    public void addMovieToPersonWithRelation(int movieId, int personId, int relationType) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void addMovieToPersonWithRelation(int movieId, int personId, int relationType) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue(MOVIE_ID_COLUMN_NAME, movieId)
+                .addValue(PERSON_ID_COLUMN_NAME, personId)
+                .addValue(RELATION_TYPE_COLUMN_NAME, relationType);
 
-            statement = connection.prepareStatement(ADD_MOVIE_TO_PERSON_QUERY);
-            statement.setInt(1, movieId);
-            statement.setInt(2, personId);
-            statement.setInt(3, relationType);
-
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when adding movie to person with relation", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        jdbcTemplate.update(ADD_MOVIE_TO_PERSON_QUERY, sqlParameterSource);
     }
 
     /**
@@ -75,43 +59,15 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
      * @param movieId an id of the movie
      * @param personId an id of the person
      * @param relationType an id of the relation type (role)
-     * @throws DAOException
      */
     @Override
-    public void deleteMovieFromPersonWithRelation(int movieId, int personId, int relationType) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void deleteMovieFromPersonWithRelation(int movieId, int personId, int relationType) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue(MOVIE_ID_COLUMN_NAME, movieId)
+                .addValue(PERSON_ID_COLUMN_NAME, personId)
+                .addValue(RELATION_TYPE_COLUMN_NAME, relationType);
 
-            statement = connection.prepareStatement(DELETE_MOVIE_FORM_PERSON_QUERY);
-            statement.setInt(1, movieId);
-            statement.setInt(2, personId);
-            statement.setInt(3, relationType);
-
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when deleting movie from person with relation", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        jdbcTemplate.update(DELETE_MOVIE_FORM_PERSON_QUERY, sqlParameterSource);
     }
 
     /**
@@ -119,45 +75,11 @@ public class MySQLMoviePersonRelationDAO implements MoviePersonRelationDAO {
      *
      * @param personId an id of the person
      * @return an amount of movies in which this person took part
-     * @throws DAOException
      */
     @Override
-    public int getMoviesTotalByPerson(int personId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public int getMoviesTotalByPerson(int personId) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource(PERSON_ID_COLUMN_NAME, personId);
 
-            statement = connection.prepareStatement(GET_MOVIES_TOTAL_BY_PERSON_QUERY);
-            statement.setInt(1, personId);
-            ResultSet resultSet = statement.executeQuery();
-
-            int moviesTotal = 0;
-            if(resultSet.next()){
-                moviesTotal = resultSet.getInt(1);
-            }
-            return moviesTotal;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when getting movies total by person", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        return jdbcTemplate.queryForObject(GET_MOVIES_TOTAL_BY_PERSON_QUERY, new HashMap<>(), Integer.TYPE);
     }
 }

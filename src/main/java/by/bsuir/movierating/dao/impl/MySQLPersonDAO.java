@@ -1,13 +1,19 @@
 package by.bsuir.movierating.dao.impl;
 
 import by.bsuir.movierating.dao.PersonDAO;
-import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPoolException;
-import by.bsuir.movierating.dao.exception.DAOException;
-import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPool;
 import by.bsuir.movierating.domain.Person;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,36 +22,37 @@ import java.util.List;
  * @author Kostevich Vladislav
  * @version 1.0
  */
+@Repository("personDao")
 public class MySQLPersonDAO implements PersonDAO {
     private static final String ADD_PERSON_QUERY = "INSERT INTO person " +
-            "(name, date_of_birth, place_of_birth, photo) VALUES (?, ?, ?, ?)";
+            "(name, date_of_birth, place_of_birth, photo) VALUES (:name, :date_of_birth, :place_of_birth, :photo)";
     private static final String UPDATE_PERSON_QUERY = "UPDATE person " +
-            "SET name = ?, date_of_birth = ?, place_of_birth = ?, photo = ? WHERE id = ?";
+            "SET name = :name, date_of_birth = :date_of_birth, place_of_birth = :plcae_of_birth, photo = :photo WHERE id = :id";
     private static final String TPERSON_CHECK_QUERY = "SELECT id FROM tperson " +
-            "WHERE language_id = ? AND id = ?";
+            "WHERE language_id = :language_id AND id = :id";
     private static final String ADD_TPERSON_QUERY = "INSERT INTO tperson " +
-            "(language_id, id, name, place_of_birth) VALUES (?, ?, ?, ?)";
+            "(language_id, id, name, place_of_birth) VALUES (:language_id, :id, :name, :place_of_birth)";
     private static final String UPDATE_TPERSON_QUERY = "UPDATE tperson " +
-            "SET name = ?, place_of_birth = ? WHERE language_id = ? AND id = ?";
-    private static final String DELETE_PERSON_QUERY = "DELETE FROM person WHERE id = ?";
+            "SET name = :name, place_of_birth = :place_of_birth WHERE language_id = :language_id AND id = :id";
+    private static final String DELETE_PERSON_QUERY = "DELETE FROM person WHERE id = :id";
     private static final String GET_ALL_PERSONS_QUERY = "SELECT * FROM person";
     private static final String GET_ALL_PERSONS_NOT_DEFAULT_LANG_QUERY = "SELECT p.id, " +
             "coalesce(t.name, p.name), p.date_of_birth, coalesce(t.place_of_birth, p.place_of_birth), " +
-            "p.photo FROM person AS p LEFT JOIN (SELECT * FROM tperson WHERE language_id = ?) AS t " +
-            "USING(id) WHERE p.id = ?";
-    private static final String GET_PERSON_BY_ID_QUERY = "SELECT * FROM person WHERE id = ?";
+            "p.photo FROM person AS p LEFT JOIN (SELECT * FROM tperson WHERE language_id = :language_id) AS t " +
+            "USING(id)";
+    private static final String GET_PERSON_BY_ID_QUERY = "SELECT * FROM person WHERE id = :id";
     private static final String GET_PERSON_BY_ID_NOT_DEFAULT_LANG_QUERY = "SELECT p.id, " +
             "coalesce(t.name, p.name), p.date_of_birth, coalesce(t.place_of_birth, p.place_of_birth), " +
-            "p.photo FROM person AS p LEFT JOIN (SELECT * FROM tperson WHERE language_id = ?) AS t " +
-            "USING(id) WHERE p.id = ?";
+            "p.photo FROM person AS p LEFT JOIN (SELECT * FROM tperson WHERE language_id = :language_id) AS t " +
+            "USING(id) WHERE p.id = :id";
     private static final String GET_PERSONS_BY_MOVIE_QUERY = "SELECT person.* FROM person " +
             "INNER JOIN movie_person_relation ON person.id = movie_person_relation.person_id WHERE " +
-            "movie_person_relation.movie_id = ? AND movie_person_relation.relation_type = ?";
+            "movie_person_relation.movie_id = :movie_id AND movie_person_relation.relation_type = :relation_type";
     private static final String GET_PERSONS_BY_MOVIE_NOT_DEFAULT_LANG_QUERY = "SELECT p.id, coalesce(t.name, p.name), p.date_of_birth, " +
             "coalesce(t.place_of_birth, p.place_of_birth), p.photo FROM person AS p INNER JOIN " +
             "movie_person_relation AS mpr ON p.id = mpr.person_id LEFT JOIN " +
-            "(SELECT * FROM tperson WHERE language_id = ?) AS t USING(id) " +
-            "WHERE mpr.movie_id = ? AND mpr.relation_type = ?";
+            "(SELECT * FROM tperson WHERE language_id = :language_id) AS t USING(id) " +
+            "WHERE mpr.movie_id = :movie_id AND mpr.relation_type = :relation_type";
     private static final String GET_PERSONS_BY_CRITERIA_HEAD_QUERY = "SELECT DISTINCT p.* FROM person AS p ";
     private static final String GET_PERSONS_BY_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY = "SELECT DISTINCT p.id, coalesce(t.name, p.name), p.date_of_birth, " +
             "coalesce(t.place_of_birth, p.place_of_birth), p.photo FROM person AS p ";
@@ -62,50 +69,42 @@ public class MySQLPersonDAO implements PersonDAO {
     private static final String GET_PERSONS_COUNT_BY_CRITERIA_HEAD_QUERY = "SELECT COUNT(*) FROM (SELECT p.* FROM person AS p ";
     private static final String GET_PERSONS_COUNT_BY_CRITERIA_TAIL_QUERY = ") AS c";
 
+    private static final String ID_COLUMN_NAME = "id";
+    private static final String NAME_COLUMN_NAME = "name";
+    private static final String DATE_OF_BIRTH_COLUMN_NAME = "date_of_birth";
+    private static final String PLACE_OF_BIRTH_COLUMN_NAME = "place_of_birth";
+    private static final String PHOTO_COLUMN_NAME = "photo";
+    private static final String LANGUAGE_ID_COLUMN_NAME = "language_id";
+    private static final String MOVIE_ID_PARAM_NAME = "movie_id";
+    private static final String RELATION_TYPE_PARAM_NAME = "relation_type";
+
     private static final String DEFAULT_LANGUAGE_ID = "EN";
+
+    private NamedParameterJdbcTemplate jdbcTemplate;
+    private PersonMapper personMapper = new PersonMapper();
+    private KeyHolder keyHolder = new GeneratedKeyHolder();
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    }
 
     /**
      * Adds a person to the data storage (in the default language).
      *
      * @param person a person object
-     * @throws DAOException
      */
     @Override
-    public void addPerson(Person person) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void addPerson(Person person) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue(NAME_COLUMN_NAME, person.getName())
+                .addValue(DATE_OF_BIRTH_COLUMN_NAME, new Date(person.getDateOfBirth().getTime()))
+                .addValue(PLACE_OF_BIRTH_COLUMN_NAME, person.getPlaceOfBirth())
+                .addValue(PHOTO_COLUMN_NAME, person.getPhoto());
 
-            statement = connection.prepareStatement(ADD_PERSON_QUERY);
-            statement.setString(1, person.getName());
-            statement.setDate(2, new Date(person.getDateOfBirth().getTime()));
-            statement.setString(3, person.getPlaceOfBirth());
-            statement.setString(4, person.getPhoto());
+        jdbcTemplate.update(ADD_PERSON_QUERY, sqlParameterSource, keyHolder, new String[] {ID_COLUMN_NAME});
 
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when adding person", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        person.setId(keyHolder.getKey().intValue());
     }
 
     /**
@@ -117,65 +116,26 @@ public class MySQLPersonDAO implements PersonDAO {
      * if it doesn't exist then it will be added, otherwise a localization will be updated).
      * @param person a person object
      * @param languageId a language id like 'EN', "RU' etc.
-     * @throws DAOException
      */
     @Override
-    public void updatePerson(Person person, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void updatePerson(Person person, String languageId) {
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue(NAME_COLUMN_NAME, person.getName())
+                .addValue(PLACE_OF_BIRTH_COLUMN_NAME, person.getPlaceOfBirth())
+                .addValue(PHOTO_COLUMN_NAME, person.getPhoto())
+                .addValue(ID_COLUMN_NAME, person.getId());
 
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement(UPDATE_PERSON_QUERY);
-                statement.setString(1, person.getName());
-                statement.setDate(2, new Date(person.getDateOfBirth().getTime()));
-                statement.setString(3, person.getPlaceOfBirth());
-                statement.setString(4, person.getPhoto());
-                statement.setInt(5, person.getId());
-            }
-            else {
-                PreparedStatement checkStatement = connection.prepareStatement(TPERSON_CHECK_QUERY);
-                checkStatement.setString(1, languageId);
-                checkStatement.setInt(2, person.getId());
-                ResultSet resultSet = checkStatement.executeQuery();
-                if(resultSet.next()){
-                    statement = connection.prepareStatement(UPDATE_TPERSON_QUERY);
-                    statement.setString(1, person.getName());
-                    statement.setString(2, person.getPlaceOfBirth());
-                    statement.setString(3, languageId);
-                    statement.setInt(4, person.getId());
-                }
-                else {
-                    statement = connection.prepareStatement(ADD_TPERSON_QUERY);
-                    statement.setString(1, languageId);
-                    statement.setInt(2, person.getId());
-                    statement.setString(3, person.getName());
-                    statement.setString(4, person.getPlaceOfBirth());
-                }
-            }
-
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when updating person", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
+        if(languageId.equals(DEFAULT_LANGUAGE_ID)) {
+            jdbcTemplate.update(UPDATE_PERSON_QUERY, sqlParameterSource.addValue(DATE_OF_BIRTH_COLUMN_NAME, new Date(person.getDateOfBirth().getTime())));
+        } else {
+            SqlParameterSource testingSqlParameterSource = new MapSqlParameterSource()
+                    .addValue(ID_COLUMN_NAME, person.getId())
+                    .addValue(LANGUAGE_ID_COLUMN_NAME, languageId);
+            List<Person> persons = jdbcTemplate.query(TPERSON_CHECK_QUERY, testingSqlParameterSource, personMapper);
+            if(!persons.isEmpty()) {
+                jdbcTemplate.update(UPDATE_TPERSON_QUERY, sqlParameterSource.addValue(LANGUAGE_ID_COLUMN_NAME, languageId));
+            } else {
+                jdbcTemplate.update(ADD_TPERSON_QUERY, sqlParameterSource.addValue(LANGUAGE_ID_COLUMN_NAME, languageId));
             }
         }
     }
@@ -184,41 +144,12 @@ public class MySQLPersonDAO implements PersonDAO {
      * Deletes a person from the data storage (with all of the localizations).
      *
      * @param id an id of the deleting person
-     * @throws DAOException
      */
     @Override
-    public void deletePerson(int id) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void deletePerson(int id) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource(ID_COLUMN_NAME, id);
 
-            statement = connection.prepareStatement(DELETE_PERSON_QUERY);
-            statement.setInt(1, id);
-
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when deleting person", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        jdbcTemplate.update(DELETE_PERSON_QUERY, sqlParameterSource);
     }
 
     /**
@@ -226,64 +157,14 @@ public class MySQLPersonDAO implements PersonDAO {
      *
      * @param languageId a language id like 'EN', "RU' etc.
      * @return all the persons
-     * @throws DAOException
      */
     @Override
-    public List<Person> getAllPersons(String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        Statement statement = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
-
-            ResultSet resultSet = null;
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.createStatement();
-                resultSet = statement.executeQuery(GET_ALL_PERSONS_QUERY);
-            }
-            else {
-                preparedStatement = connection.prepareStatement(GET_ALL_PERSONS_NOT_DEFAULT_LANG_QUERY);
-                preparedStatement.setString(1, languageId);
-                resultSet = preparedStatement.executeQuery();
-            }
-
-            List<Person> allPersons = new ArrayList<>();
-            while (resultSet.next()){
-                Person person = new Person();
-                person.setId(resultSet.getInt(1));
-                person.setName(resultSet.getString(2));
-                person.setDateOfBirth(resultSet.getDate(3));
-                person.setPlaceOfBirth(resultSet.getString(4));
-                person.setPhoto(resultSet.getString(5));
-
-                allPersons.add(person);
-            }
-
-            return allPersons;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when getting all persons", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (preparedStatement != null){
-                    preparedStatement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+    public List<Person> getAllPersons(String languageId) {
+        if(languageId.equals(DEFAULT_LANGUAGE_ID)) {
+            return jdbcTemplate.query(GET_ALL_PERSONS_QUERY, personMapper);
+        } else {
+            SqlParameterSource sqlParameterSource = new MapSqlParameterSource(LANGUAGE_ID_COLUMN_NAME, languageId);
+            return jdbcTemplate.query(GET_ALL_PERSONS_NOT_DEFAULT_LANG_QUERY, sqlParameterSource, personMapper);
         }
     }
 
@@ -293,58 +174,19 @@ public class MySQLPersonDAO implements PersonDAO {
      * @param id an id of the needed person
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a person by id
-     * @throws DAOException
      */
     @Override
-    public Person getPersonById(int id, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public Person getPersonById(int id, String languageId) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource(ID_COLUMN_NAME, id);
 
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement(GET_PERSON_BY_ID_QUERY);
-                statement.setInt(1, id);
-            }
-            else {
-                statement = connection.prepareStatement(GET_PERSON_BY_ID_NOT_DEFAULT_LANG_QUERY);
-                statement.setString(1, languageId);
-                statement.setInt(2, id);
-            }
-            ResultSet resultSet = statement.executeQuery();
-
-            Person person = null;
-            if(resultSet.next()){
-                person = new Person();
-                person.setId(resultSet.getInt(1));
-                person.setName(resultSet.getString(2));
-                person.setDateOfBirth(resultSet.getDate(3));
-                person.setPlaceOfBirth(resultSet.getString(4));
-                person.setPhoto(resultSet.getString(5));
-            }
-            return person;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when getting all persons", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+        List<Person> persons;
+        if(languageId.equals(DEFAULT_LANGUAGE_ID)) {
+            persons = jdbcTemplate.query(GET_PERSON_BY_ID_QUERY, mapSqlParameterSource, personMapper);
+        } else {
+            persons = jdbcTemplate.query(GET_PERSON_BY_ID_NOT_DEFAULT_LANG_QUERY, mapSqlParameterSource.addValue(LANGUAGE_ID_COLUMN_NAME, languageId), personMapper);
         }
+
+        return persons.isEmpty() ? null : persons.get(0);
     }
 
     /**
@@ -354,62 +196,17 @@ public class MySQLPersonDAO implements PersonDAO {
      * @param relationType an id of the relation type (role)
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a persons which took part in the movie in the certain role
-     * @throws DAOException
      */
     @Override
-    public List<Person> getPersonsByMovieAndRelationType(int movieId, int relationType, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public List<Person> getPersonsByMovieAndRelationType(int movieId, int relationType, String languageId) {
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue(MOVIE_ID_PARAM_NAME, movieId)
+                .addValue(RELATION_TYPE_PARAM_NAME, relationType);
 
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement(GET_PERSONS_BY_MOVIE_QUERY);
-                statement.setInt(1, movieId);
-                statement.setInt(2, relationType);
-            }
-            else {
-                statement = connection.prepareStatement(GET_PERSONS_BY_MOVIE_NOT_DEFAULT_LANG_QUERY);
-                statement.setString(1, languageId);
-                statement.setInt(2, movieId);
-                statement.setInt(3, relationType);
-            }
-            ResultSet resultSet = statement.executeQuery();
-
-            List<Person> personsByMovieAndRelationType = new ArrayList<>();
-            while (resultSet.next()){
-                Person person = new Person();
-                person.setId(resultSet.getInt(1));
-                person.setName(resultSet.getString(2));
-                person.setDateOfBirth(resultSet.getDate(3));
-                person.setPlaceOfBirth(resultSet.getString(4));
-                person.setPhoto(resultSet.getString(5));
-
-                personsByMovieAndRelationType.add(person);
-            }
-
-            return personsByMovieAndRelationType;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when getting all persons", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+        if(languageId.equals(DEFAULT_LANGUAGE_ID)) {
+            return jdbcTemplate.query(GET_PERSONS_BY_MOVIE_QUERY, sqlParameterSource, personMapper);
+        } else {
+            return jdbcTemplate.query(GET_PERSONS_BY_MOVIE_NOT_DEFAULT_LANG_QUERY, sqlParameterSource.addValue(LANGUAGE_ID_COLUMN_NAME, languageId), personMapper);
         }
     }
 
@@ -421,91 +218,48 @@ public class MySQLPersonDAO implements PersonDAO {
      * @param amount a needed amount of persons
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a persons matching the criteria
-     * @throws DAOException
      */
     @Override
-    public List<Person> getPersonsByCriteria(String name, int from, int amount, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public List<Person> getPersonsByCriteria(String name, int from, int amount, String languageId) {
+        StringBuilder query = new StringBuilder();
+        if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+            query.append(GET_PERSONS_BY_CRITERIA_HEAD_QUERY);
+        }
+        else {
+            query.append(GET_PERSONS_BY_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY);
+        }
+        if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
+            query.append(GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_FIRST_PART);
+            query.append(languageId);
+            query.append(GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_SECOND_PART);
+        }
 
-            StringBuilder query = new StringBuilder();
+        boolean atLeastOneWhereCriteria = false;
+        if (name != null) {
             if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                query.append(GET_PERSONS_BY_CRITERIA_HEAD_QUERY);
+                query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_FIRST_PART);
+                query.append(name);
+                query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_SECOND_PART);
             }
             else {
-                query.append(GET_PERSONS_BY_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY);
+                query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_FIRST_PART);
+                query.append(name);
+                query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_SECOND_PART);
+                query.append(name);
+                query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_THIRD_PART);
             }
-            if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
-                query.append(GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_FIRST_PART);
-                query.append(languageId);
-                query.append(GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_SECOND_PART);
-            }
-
-            boolean atLeastOneWhereCriteria = false;
-            if (name != null) {
-                if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_FIRST_PART);
-                    query.append(name);
-                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_SECOND_PART);
-                }
-                else {
-                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_FIRST_PART);
-                    query.append(name);
-                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_SECOND_PART);
-                    query.append(name);
-                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_THIRD_PART);
-                }
-                atLeastOneWhereCriteria = true;
-            }
-            if(amount != 0){
-                query.append(LIMIT_QUERY);
-                query.append(from);
-                query.append(COMA_SEPARATOR);
-                query.append(SPACE_SEPARATOR);
-                query.append(amount);
-                query.append(SPACE_SEPARATOR);
-            }
-
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query.toString());
-
-            List<Person> persons = new ArrayList<>();
-            while (resultSet.next()){
-                Person person = new Person();
-                person.setId(resultSet.getInt(1));
-                person.setName(resultSet.getString(2));
-                person.setDateOfBirth(resultSet.getDate(3));
-                person.setPlaceOfBirth(resultSet.getString(4));
-                person.setPhoto(resultSet.getString(5));
-
-                persons.add(person);
-            }
-
-            return persons;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Cannot get persons by criteria", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+            atLeastOneWhereCriteria = true;
         }
+        if(amount != 0){
+            query.append(LIMIT_QUERY);
+            query.append(from);
+            query.append(COMA_SEPARATOR);
+            query.append(SPACE_SEPARATOR);
+            query.append(amount);
+            query.append(SPACE_SEPARATOR);
+        }
+
+        return jdbcTemplate.query(query.toString(), personMapper);
     }
 
     /**
@@ -514,70 +268,48 @@ public class MySQLPersonDAO implements PersonDAO {
      * @param name a person's name
      * @param languageId a language id like 'EN', "RU' etc.
      * @return an amount of persons matching the criteria
-     * @throws DAOException
      */
     @Override
-    public int getPersonsCountByCriteria(String name, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public int getPersonsCountByCriteria(String name, String languageId) {
+        StringBuilder query = new StringBuilder();
+        query.append(GET_PERSONS_COUNT_BY_CRITERIA_HEAD_QUERY);
+        if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
+            query.append(GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_FIRST_PART);
+            query.append(languageId);
+            query.append(GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_SECOND_PART);
+        }
 
-            StringBuilder query = new StringBuilder();
-            query.append(GET_PERSONS_COUNT_BY_CRITERIA_HEAD_QUERY);
-            if(!languageId.equals(DEFAULT_LANGUAGE_ID)){
-                query.append(GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_FIRST_PART);
-                query.append(languageId);
-                query.append(GET_PERSONS_BY_CRITERIA_TRANSLATE_JOIN_QUERY_SECOND_PART);
+        boolean atLeastOneWhereCriteria = false;
+        if (name != null) {
+            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
+                query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_FIRST_PART);
+                query.append(name);
+                query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_SECOND_PART);
             }
+            else {
+                query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_FIRST_PART);
+                query.append(name);
+                query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_SECOND_PART);
+                query.append(name);
+                query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_THIRD_PART);
+            }
+            atLeastOneWhereCriteria = true;
+        }
+        query.append(GET_PERSONS_COUNT_BY_CRITERIA_TAIL_QUERY);
 
-            boolean atLeastOneWhereCriteria = false;
-            if (name != null) {
-                if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_FIRST_PART);
-                    query.append(name);
-                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_QUERY_SECOND_PART);
-                }
-                else {
-                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_FIRST_PART);
-                    query.append(name);
-                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_SECOND_PART);
-                    query.append(name);
-                    query.append(GET_PERSONS_BY_CRITERIA_NAME_CRITERIA_NOT_DEFAULT_LANGUAGE_QUERY_THIRD_PART);
-                }
-                atLeastOneWhereCriteria = true;
-            }
-            query.append(GET_PERSONS_COUNT_BY_CRITERIA_TAIL_QUERY);
+        return jdbcTemplate.queryForObject(query.toString(), new HashMap<>(), Integer.TYPE);
+    }
 
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query.toString());
-
-            int personsCount = 0;
-            if(resultSet.next()){
-                personsCount = resultSet.getInt(1);
-            }
-            return personsCount;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Cannot get persons by criteria", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+    private class PersonMapper implements RowMapper<Person> {
+        @Override
+        public Person mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Person person = new Person();
+            person.setId(rs.getInt(ID_COLUMN_NAME));
+            person.setName(rs.getString(NAME_COLUMN_NAME));
+            person.setDateOfBirth(rs.getDate(DATE_OF_BIRTH_COLUMN_NAME));
+            person.setPlaceOfBirth(rs.getString(PLACE_OF_BIRTH_COLUMN_NAME));
+            person.setPhoto(rs.getString(PHOTO_COLUMN_NAME));
+            return person;
         }
     }
 
