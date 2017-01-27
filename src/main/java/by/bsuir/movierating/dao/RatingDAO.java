@@ -1,7 +1,6 @@
-package by.bsuir.movierating.dao.inter;
+package by.bsuir.movierating.dao;
 
 import by.bsuir.movierating.domain.Rating;
-import by.bsuir.movierating.dao.exception.DAOException;
 
 import java.util.List;
 
@@ -16,26 +15,23 @@ public interface RatingDAO {
      * Adds a rating to the data storage.
      *
      * @param rating a rating object
-     * @throws DAOException
      */
-    void addRating(Rating rating) throws DAOException;
+    void addRating(Rating rating);
 
     /**
      * Updates a rating in the data storage.
      *
      * @param rating a rating object
-     * @throws DAOException
      */
-    void updateRating(Rating rating) throws DAOException;
+    void updateRating(Rating rating);
 
     /**
      * Deletes a rating from the data storage.
      *
      * @param movieId an id of the movie to which the rating belongs
      * @param userId an id of the user to which the rating belongs
-     * @throws DAOException
      */
-    void deleteRating(int movieId, int userId) throws DAOException;
+    void deleteRating(int movieId, int userId);
 
     /**
      * Returns a rating belonging to the movie and the user.
@@ -43,25 +39,22 @@ public interface RatingDAO {
      * @param movieId an id of the movie
      * @param userId an id of the user
      * @return a rating belonging to the movie and the user
-     * @throws DAOException
      */
-    Rating getRatingByMovieAndUser(int movieId, int userId) throws DAOException;
+    Rating getRatingByMovieAndUser(int movieId, int userId);
 
     /**
      * Returns an average rating of the movie.
      *
      * @param movieId an id of the movie
      * @return an average rating of the movie
-     * @throws DAOException
      */
-    double getAverageRatingByMovie(int movieId) throws DAOException;
+    double getAverageRatingByMovie(int movieId);
 
     /**
      * Returns a ratings belonging to the user.
      *
      * @param userId an id of the user
      * @return a ratings belonging to the user
-     * @throws DAOException
      */
-    List<Rating> getRatingsByUser(int userId) throws DAOException;
+    List<Rating> getRatingsByUser(int userId);
 }

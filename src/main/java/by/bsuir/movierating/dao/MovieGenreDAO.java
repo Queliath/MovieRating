@@ -1,6 +1,4 @@
-package by.bsuir.movierating.dao.inter;
-
-import by.bsuir.movierating.dao.exception.DAOException;
+package by.bsuir.movierating.dao;
 
 /**
  * Provides a DAO-logic for the relations between Movie and Genre entities.
@@ -14,16 +12,14 @@ public interface MovieGenreDAO {
      *
      * @param movieId an id of the movie
      * @param genreId an id of the genre
-     * @throws DAOException
      */
-    void addMovieToGenre(int movieId, int genreId) throws DAOException;
+    void addMovieToGenre(int movieId, int genreId);
 
     /**
      * Deletes a relation between the movie and the genre from the data storage.
      *
      * @param movieId an id of the movie
      * @param genreId an id of the genre
-     * @throws DAOException
      */
-    void deleteMovieFromGenre(int movieId, int genreId) throws DAOException;
+    void deleteMovieFromGenre(int movieId, int genreId);
 }

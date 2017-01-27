@@ -1,6 +1,6 @@
-package by.bsuir.movierating.dao.impl.mysql;
+package by.bsuir.movierating.dao.impl;
 
-import by.bsuir.movierating.dao.inter.PersonDAO;
+import by.bsuir.movierating.dao.PersonDAO;
 import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 import by.bsuir.movierating.dao.exception.DAOException;
 import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPool;

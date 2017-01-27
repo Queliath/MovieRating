@@ -1,6 +1,4 @@
-package by.bsuir.movierating.dao.inter;
-
-import by.bsuir.movierating.dao.exception.DAOException;
+package by.bsuir.movierating.dao;
 
 /**
  * Provides a DAO-logic for the relations between Movie and Country entities.
@@ -14,16 +12,14 @@ public interface MovieCountryDAO {
      *
      * @param movieId an id of the movie
      * @param countryId an id of the country
-     * @throws DAOException
      */
-    void addMovieToCountry(int movieId, int countryId) throws DAOException;
+    void addMovieToCountry(int movieId, int countryId);
 
     /**
      * Deletes a relation between the movie and the country.
      *
      * @param movieId an id of the movie
      * @param countryId an id of the country
-     * @throws DAOException
      */
-    void deleteMovieFromCountry(int movieId, int countryId) throws DAOException;
+    void deleteMovieFromCountry(int movieId, int countryId);
 }

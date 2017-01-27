@@ -1,8 +1,8 @@
-package by.bsuir.movierating.dao.impl.mysql;
+package by.bsuir.movierating.dao.impl;
 
-import by.bsuir.movierating.dao.inter.MovieCountryDAO;
-import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 import by.bsuir.movierating.dao.exception.DAOException;
+import by.bsuir.movierating.dao.MovieGenreDAO;
+import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPool;
 
 import java.sql.Connection;
@@ -10,40 +10,40 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Provides a DAO-logic for the relations between Movie and Country entities for the MySQL Database.
+ * Provides a DAO-logic for the relations between Movie and Genre entities for the MySQL Database.
  *
  * @author Kostevich Vladislav
  * @version 1.0
  */
-public class MySQLMovieCountryDAO implements MovieCountryDAO {
-    private static final String ADD_MOVIE_TO_COUNTRY_QUERY = "INSERT INTO movie_country " +
-            "(movie_id, country_id) VALUES (?, ?)";
-    private static final String DELETE_MOVIE_FORM_COUNTRY_QUERY = "DELETE FROM movie_country WHERE movie_id = ? AND country_id = ?";
+public class MySQLMovieGenreDAO implements MovieGenreDAO {
+    private static final String ADD_MOVIE_TO_GENRE_QUERY = "INSERT INTO movie_genre " +
+            "(movie_id, genre_id) VALUES (?, ?)";
+    private static final String DELETE_MOVIE_FROM_GENRE_QUERY = "DELETE FROM movie_genre WHERE movie_id = ? AND genre_id = ?";
 
     /**
-     * Adds a relation between the movie and the country.
+     * Adds a relation between the movie and the genre to the data storage.
      *
      * @param movieId an id of the movie
-     * @param countryId an id of the country
+     * @param genreId an id of the genre
      * @throws DAOException
      */
     @Override
-    public void addMovieToCountry(int movieId, int countryId) throws DAOException {
+    public void addMovieToGenre(int movieId, int genreId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
 
-            statement = connection.prepareStatement(ADD_MOVIE_TO_COUNTRY_QUERY);
+            statement = connection.prepareStatement(ADD_MOVIE_TO_GENRE_QUERY);
             statement.setInt(1, movieId);
-            statement.setInt(2, countryId);
+            statement.setInt(2, genreId);
 
             statement.executeUpdate();
         } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when adding movie to country", e);
+            throw new DAOException("Exception in DAO layer when adding movie to genre", e);
         } finally {
             try {
                 if (statement != null) {
@@ -64,29 +64,29 @@ public class MySQLMovieCountryDAO implements MovieCountryDAO {
     }
 
     /**
-     * Deletes a relation between the movie and the country.
+     * Deletes a relation between the movie and the genre from the data storage.
      *
      * @param movieId an id of the movie
-     * @param countryId an id of the country
+     * @param genreId an id of the genre
      * @throws DAOException
      */
     @Override
-    public void deleteMovieFromCountry(int movieId, int countryId) throws DAOException {
+    public void deleteMovieFromGenre(int movieId, int genreId) throws DAOException {
         MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = mySQLConnectionPool.getConnection();
 
-            statement = connection.prepareStatement(DELETE_MOVIE_FORM_COUNTRY_QUERY);
+            statement = connection.prepareStatement(DELETE_MOVIE_FROM_GENRE_QUERY);
             statement.setInt(1, movieId);
-            statement.setInt(2, countryId);
+            statement.setInt(2, genreId);
 
             statement.executeUpdate();
         } catch (InterruptedException | MySQLConnectionPoolException e) {
             throw new DAOException("Cannot get a connection from Connection Pool", e);
         } catch (SQLException e) {
-            throw new DAOException("Exception in DAO layer when deleting movie from country", e);
+            throw new DAOException("Exception in DAO layer when deleting movie from genre", e);
         } finally {
             try {
                 if (statement != null) {

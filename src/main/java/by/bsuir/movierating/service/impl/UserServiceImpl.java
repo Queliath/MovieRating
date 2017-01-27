@@ -2,14 +2,14 @@ package by.bsuir.movierating.service.impl;
 
 import by.bsuir.movierating.dao.exception.DAOException;
 import by.bsuir.movierating.dao.factory.DAOFactory;
-import by.bsuir.movierating.dao.inter.MovieDAO;
-import by.bsuir.movierating.dao.inter.UserDAO;
+import by.bsuir.movierating.dao.MovieDAO;
+import by.bsuir.movierating.dao.UserDAO;
 import by.bsuir.movierating.domain.Comment;
 import by.bsuir.movierating.domain.Movie;
 import by.bsuir.movierating.domain.User;
 import by.bsuir.movierating.domain.criteria.UserCriteria;
 import by.bsuir.movierating.service.inter.UserService;
-import by.bsuir.movierating.dao.inter.CommentDAO;
+import by.bsuir.movierating.dao.CommentDAO;
 import by.bsuir.movierating.service.exception.ServiceException;
 import by.bsuir.movierating.service.exception.ServiceWrongEmailException;
 

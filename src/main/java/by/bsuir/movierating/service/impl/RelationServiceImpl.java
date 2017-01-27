@@ -1,10 +1,10 @@
 package by.bsuir.movierating.service.impl;
 
 import by.bsuir.movierating.dao.factory.DAOFactory;
-import by.bsuir.movierating.dao.inter.MovieCountryDAO;
-import by.bsuir.movierating.dao.inter.MovieGenreDAO;
+import by.bsuir.movierating.dao.MovieCountryDAO;
+import by.bsuir.movierating.dao.MovieGenreDAO;
 import by.bsuir.movierating.dao.exception.DAOException;
-import by.bsuir.movierating.dao.inter.MoviePersonRelationDAO;
+import by.bsuir.movierating.dao.MoviePersonRelationDAO;
 import by.bsuir.movierating.service.exception.ServiceException;
 import by.bsuir.movierating.service.inter.RelationService;
 

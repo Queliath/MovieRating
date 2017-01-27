@@ -1,7 +1,7 @@
-package by.bsuir.movierating.dao.impl.mysql;
+package by.bsuir.movierating.dao.impl;
 
 import by.bsuir.movierating.dao.exception.DAOException;
-import by.bsuir.movierating.dao.inter.MovieDAO;
+import by.bsuir.movierating.dao.MovieDAO;
 import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 import by.bsuir.movierating.domain.Movie;
 import by.bsuir.movierating.domain.criteria.MovieCriteria;

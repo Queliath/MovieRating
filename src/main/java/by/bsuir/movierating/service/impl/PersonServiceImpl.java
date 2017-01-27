@@ -1,8 +1,8 @@
 package by.bsuir.movierating.service.impl;
 
+import by.bsuir.movierating.dao.*;
 import by.bsuir.movierating.dao.exception.DAOException;
 import by.bsuir.movierating.dao.factory.DAOFactory;
-import by.bsuir.movierating.dao.inter.*;
 import by.bsuir.movierating.domain.Country;
 import by.bsuir.movierating.domain.Genre;
 import by.bsuir.movierating.domain.Movie;
