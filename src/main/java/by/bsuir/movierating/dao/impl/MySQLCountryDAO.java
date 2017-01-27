@@ -1,13 +1,19 @@
 package by.bsuir.movierating.dao.impl;
 
-import by.bsuir.movierating.dao.exception.DAOException;
 import by.bsuir.movierating.dao.CountryDAO;
-import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPoolException;
 import by.bsuir.movierating.domain.Country;
-import by.bsuir.movierating.dao.pool.mysql.MySQLConnectionPool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,85 +22,75 @@ import java.util.List;
  * @author Kostevich Vladislav
  * @version 1.0
  */
+@Repository("countryDao")
 public class MySQLCountryDAO implements CountryDAO {
     private static final String ADD_COUNTRY_QUERY = "INSERT INTO country " +
-            "(name, position) VALUES (?, ?)";
+            "(name, position) VALUES (:name, :position)";
     private static final String UPDATE_COUNTRY_QUERY = "UPDATE country " +
-            "SET name = ?, position = ? WHERE id = ?";
+            "SET name = :name, position = :position WHERE id = :id";
     private static final String TCOUNTRY_CHECK_QUERY = "SELECT id FROM tcountry " +
-            "WHERE language_id = ? AND id = ?";
+            "WHERE language_id = :language_id AND id = :id";
     private static final String ADD_TCOUNTRY_QUERY = "INSERT INTO tcountry " +
-            "(language_id, id, name) VALUES (?, ?, ?)";
+            "(language_id, id, name) VALUES (:language_id, :id, :name)";
     private static final String UPDATE_TCOUNTRY_QUERY = "UPDATE tcountry " +
-            "SET name = ? WHERE language_id = ? AND id = ?";
-    private static final String DELETE_COUNTRY_QUERY = "DELETE FROM country WHERE id = ?";
+            "SET name = :name WHERE language_id = :language_id AND id = :id";
+    private static final String DELETE_COUNTRY_QUERY = "DELETE FROM country WHERE id = :id";
     private static final String GET_ALL_COUNTRIES_QUERY = "SELECT * FROM country";
     private static final String GET_ALL_COUNTRIES_NOT_DEFAULT_LANG_QUERY = "SELECT c.id, " +
             "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
-            "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id)";
-    private static final String GET_COUNTRY_BY_ID_QUERY = "SELECT * FROM country WHERE id = ?";
+            "(SELECT * FROM tcountry WHERE language_id = :language_id) AS t USING(id)";
+    private static final String GET_COUNTRY_BY_ID_QUERY = "SELECT * FROM country WHERE id = :id";
     private static final String GET_COUNTRY_BY_ID_NOT_DEFAULT_LANG_QUERY = "SELECT c.id, " +
             "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
-            "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) WHERE c.id = ?";
+            "(SELECT * FROM tcountry WHERE language_id = :language_id) AS t USING(id) WHERE c.id = :id";
     private static final String GET_COUNTRIES_BY_MOVIE_QUERY = "SELECT country.* FROM country " +
             "INNER JOIN movie_country ON country.id = movie_country.country_id " +
-            "WHERE movie_country.movie_id = ?";
+            "WHERE movie_country.movie_id = :movie_id";
     private static final String GET_COUNTRIES_BY_MOVIE_NOT_DEFAULT_LANG_QUERY = "SELECT c.id, coalesce(t.name, c.name), " +
             " c.position FROM country AS c INNER JOIN movie_country AS mc ON c.id = mc.country_id " +
-            "LEFT JOIN (SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) WHERE mc.movie_id = ?";
+            "LEFT JOIN (SELECT * FROM tcountry WHERE language_id = :language_id) AS t USING(id) WHERE mc.movie_id = :movie_id";
     private static final String GET_TOP_POSITION_COUNTRIES_QUERY = "SELECT * FROM country ORDER BY position LIMIT ";
     private static final String GET_TOP_POSITION_COUNTRIES_NOT_DEFAULT_LANG_QUERY = "SELECT c.id, " +
             "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
-            "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) " +
+            "(SELECT * FROM tcountry WHERE language_id = :language_id) AS t USING(id) " +
             "ORDER BY c.position LIMIT ";
     private static final String GET_COUNTRIES_QUERY = "SELECT * FROM country LIMIT ";
     private static final String GET_COUNTRIES_NOT_DEFAULT_LANG_QUERY = "SELECT c.id, " +
             "coalesce(t.name, c.name), c.position FROM country AS c LEFT JOIN " +
-            "(SELECT * FROM tcountry WHERE language_id = ?) AS t USING(id) LIMIT ";
+            "(SELECT * FROM tcountry WHERE language_id = :language_id) AS t USING(id) LIMIT ";
     private static final String GET_COUNTRIES_COUNT_QUERY = "SELECT COUNT(*) FROM country";
 
+    private static final String ID_COLUMN_NAME = "id";
+    private static final String NAME_COLUMN_NAME = "name";
+    private static final String POSITION_COLUMN_NAME = "position";
+    private static final String LANGUAGE_ID_COLUMN_NAME = "language_id";
+    private static final String MOVIE_ID_PARAM_NAME = "movie_id";
+
     private static final String DEFAULT_LANGUAGE_ID = "EN";
+
+    private NamedParameterJdbcTemplate jdbcTemplate;
+    private CountryMapper countryMapper = new CountryMapper();
+    private KeyHolder keyHolder = new GeneratedKeyHolder();
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    }
 
     /**
      * Adds a country to the data storage (in the default language).
      *
      * @param country a country object
-     * @throws DAOException
      */
     @Override
-    public void addCountry(Country country) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void addCountry(Country country) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue(NAME_COLUMN_NAME, country.getName())
+                .addValue(POSITION_COLUMN_NAME, country.getPosition());
 
-            statement = connection.prepareStatement(ADD_COUNTRY_QUERY);
-            statement.setString(1, country.getName());
-            statement.setInt(2, country.getPosition());
+        jdbcTemplate.update(ADD_COUNTRY_QUERY, sqlParameterSource, keyHolder, new String[] {ID_COLUMN_NAME});
 
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when adding country", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        country.setId(keyHolder.getKey().intValue());
     }
 
     /**
@@ -106,61 +102,24 @@ public class MySQLCountryDAO implements CountryDAO {
      * if it doesn't exist then it will be added, otherwise a localization will be updated).
      * @param country a country object
      * @param languageId a language id like 'EN', "RU' etc.
-     * @throws DAOException
      */
     @Override
-    public void updateCountry(Country country, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void updateCountry(Country country, String languageId) {
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue(ID_COLUMN_NAME, country.getId())
+                .addValue(NAME_COLUMN_NAME, country.getName());
 
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement(UPDATE_COUNTRY_QUERY);
-                statement.setString(1, country.getName());
-                statement.setInt(2, country.getPosition());
-                statement.setInt(3, country.getId());
-            }
-            else {
-                PreparedStatement checkStatement = connection.prepareStatement(TCOUNTRY_CHECK_QUERY);
-                checkStatement.setString(1, languageId);
-                checkStatement.setInt(2, country.getId());
-                ResultSet resultSet = checkStatement.executeQuery();
-                if(resultSet.next()){
-                    statement = connection.prepareStatement(UPDATE_TCOUNTRY_QUERY);
-                    statement.setString(1, country.getName());
-                    statement.setString(2, languageId);
-                    statement.setInt(3, country.getId());
-                }
-                else {
-                    statement = connection.prepareStatement(ADD_TCOUNTRY_QUERY);
-                    statement.setString(1, languageId);
-                    statement.setInt(2, country.getId());
-                    statement.setString(3, country.getName());
-                }
-            }
-
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when updating country", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
+        if(languageId.equals(DEFAULT_LANGUAGE_ID)) {
+            jdbcTemplate.update(UPDATE_COUNTRY_QUERY, sqlParameterSource.addValue(POSITION_COLUMN_NAME, country.getPosition()));
+        } else {
+            SqlParameterSource testingSqlParameterSource = new MapSqlParameterSource()
+                    .addValue(LANGUAGE_ID_COLUMN_NAME, languageId)
+                    .addValue(ID_COLUMN_NAME, country.getId());
+            List<Country> countries = jdbcTemplate.query(TCOUNTRY_CHECK_QUERY, testingSqlParameterSource, countryMapper);
+            if(!countries.isEmpty()) {
+                jdbcTemplate.update(UPDATE_TCOUNTRY_QUERY, sqlParameterSource.addValue(LANGUAGE_ID_COLUMN_NAME, languageId));
+            } else {
+                jdbcTemplate.update(ADD_TCOUNTRY_QUERY, sqlParameterSource.addValue(LANGUAGE_ID_COLUMN_NAME, languageId));
             }
         }
     }
@@ -169,41 +128,12 @@ public class MySQLCountryDAO implements CountryDAO {
      * Deletes a country from the data storage (with all of the localizations).
      *
      * @param id an id of a deleting country
-     * @throws DAOException
      */
     @Override
-    public void deleteCountry(int id) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public void deleteCountry(int id) {
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource(ID_COLUMN_NAME, id);
 
-            statement = connection.prepareStatement(DELETE_COUNTRY_QUERY);
-            statement.setInt(1, id);
-
-            statement.executeUpdate();
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when deleting country", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
-        }
+        jdbcTemplate.update(DELETE_COUNTRY_QUERY, sqlParameterSource);
     }
 
     /**
@@ -211,62 +141,14 @@ public class MySQLCountryDAO implements CountryDAO {
      *
      * @param languageId a language id like 'EN', "RU' etc.
      * @return all the countries
-     * @throws DAOException
      */
     @Override
-    public List<Country> getAllCountries(String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        Statement statement = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
-
-            ResultSet resultSet = null;
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.createStatement();
-                resultSet = statement.executeQuery(GET_ALL_COUNTRIES_QUERY);
-            }
-            else {
-                preparedStatement = connection.prepareStatement(GET_ALL_COUNTRIES_NOT_DEFAULT_LANG_QUERY);
-                preparedStatement.setString(1, languageId);
-                resultSet = preparedStatement.executeQuery();
-            }
-
-            List<Country> allCountries = new ArrayList<>();
-            while (resultSet.next()){
-                Country country = new Country();
-                country.setId(resultSet.getInt(1));
-                country.setName(resultSet.getString(2));
-                country.setPosition(resultSet.getInt(3));
-
-                allCountries.add(country);
-            }
-
-            return allCountries;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when getting country", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if(preparedStatement != null){
-                    preparedStatement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+    public List<Country> getAllCountries(String languageId) {
+        if(languageId.equals(DEFAULT_LANGUAGE_ID)) {
+            return jdbcTemplate.query(GET_ALL_COUNTRIES_QUERY, countryMapper);
+        } else {
+            SqlParameterSource sqlParameterSource = new MapSqlParameterSource(LANGUAGE_ID_COLUMN_NAME, languageId);
+            return jdbcTemplate.query(GET_ALL_COUNTRIES_NOT_DEFAULT_LANG_QUERY, sqlParameterSource, countryMapper);
         }
     }
 
@@ -276,57 +158,19 @@ public class MySQLCountryDAO implements CountryDAO {
      * @param id an id of a needed country
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a country by id
-     * @throws DAOException
      */
     @Override
-    public Country getCountryById(int id, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public Country getCountryById(int id, String languageId) {
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource(ID_COLUMN_NAME, id);
 
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement(GET_COUNTRY_BY_ID_QUERY);
-                statement.setInt(1, id);
-            }
-            else {
-                statement = connection.prepareStatement(GET_COUNTRY_BY_ID_NOT_DEFAULT_LANG_QUERY);
-                statement.setString(1, languageId);
-                statement.setInt(2, id);
-            }
-            ResultSet resultSet = statement.executeQuery();
-
-            Country country = null;
-            if (resultSet.next()){
-                country = new Country();
-                country.setId(resultSet.getInt(1));
-                country.setName(resultSet.getString(2));
-                country.setPosition(resultSet.getInt(3));
-            }
-
-            return country;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when getting country", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+        List<Country> countries;
+        if(languageId.equals(DEFAULT_LANGUAGE_ID)) {
+            countries = jdbcTemplate.query(GET_COUNTRY_BY_ID_QUERY, sqlParameterSource, countryMapper);
+        } else {
+            countries = jdbcTemplate.query(GET_COUNTRY_BY_ID_NOT_DEFAULT_LANG_QUERY, sqlParameterSource.addValue(LANGUAGE_ID_COLUMN_NAME, languageId), countryMapper);
         }
+
+        return countries.isEmpty() ? null : countries.get(0);
     }
 
     /**
@@ -335,58 +179,15 @@ public class MySQLCountryDAO implements CountryDAO {
      * @param movieId an id of the movie
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a countries belonging to the movie
-     * @throws DAOException
      */
     @Override
-    public List<Country> getCountriesByMovie(int movieId, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public List<Country> getCountriesByMovie(int movieId, String languageId) {
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource(MOVIE_ID_PARAM_NAME, movieId);
 
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.prepareStatement(GET_COUNTRIES_BY_MOVIE_QUERY);
-                statement.setInt(1, movieId);
-            }
-            else {
-                statement = connection.prepareStatement(GET_COUNTRIES_BY_MOVIE_NOT_DEFAULT_LANG_QUERY);
-                statement.setString(1, languageId);
-                statement.setInt(2, movieId);
-            }
-            ResultSet resultSet = statement.executeQuery();
-
-            List<Country> countriesByMovie = new ArrayList<>();
-            while (resultSet.next()){
-                Country country = new Country();
-                country.setId(resultSet.getInt(1));
-                country.setName(resultSet.getString(2));
-                country.setPosition(resultSet.getInt(3));
-
-                countriesByMovie.add(country);
-            }
-
-            return countriesByMovie;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when getting country", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+        if(languageId.equals(DEFAULT_LANGUAGE_ID)) {
+            return jdbcTemplate.query(GET_COUNTRIES_BY_MOVIE_QUERY, sqlParameterSource, countryMapper);
+        } else {
+            return jdbcTemplate.query(GET_COUNTRIES_BY_MOVIE_NOT_DEFAULT_LANG_QUERY, sqlParameterSource.addValue(LANGUAGE_ID_COLUMN_NAME, languageId), countryMapper);
         }
     }
 
@@ -396,62 +197,14 @@ public class MySQLCountryDAO implements CountryDAO {
      * @param amount a needed amount of countries
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a countries ordered by a position number
-     * @throws DAOException
      */
     @Override
-    public List<Country> getTopPositionCountries(int amount, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        Statement statement = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
-
-            ResultSet resultSet = null;
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.createStatement();
-                resultSet = statement.executeQuery(GET_TOP_POSITION_COUNTRIES_QUERY + amount);
-            }
-            else {
-                preparedStatement = connection.prepareStatement(GET_TOP_POSITION_COUNTRIES_NOT_DEFAULT_LANG_QUERY + amount);
-                preparedStatement.setString(1, languageId);
-                resultSet = preparedStatement.executeQuery();
-            }
-
-            List<Country> allCountries = new ArrayList<>();
-            while (resultSet.next()){
-                Country country = new Country();
-                country.setId(resultSet.getInt(1));
-                country.setName(resultSet.getString(2));
-                country.setPosition(resultSet.getInt(3));
-
-                allCountries.add(country);
-            }
-
-            return allCountries;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when getting country", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if(preparedStatement != null){
-                    preparedStatement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+    public List<Country> getTopPositionCountries(int amount, String languageId) {
+        if(languageId.equals(DEFAULT_LANGUAGE_ID)) {
+            return jdbcTemplate.query(GET_TOP_POSITION_COUNTRIES_QUERY + amount, countryMapper);
+        } else {
+            SqlParameterSource sqlParameterSource = new MapSqlParameterSource(LANGUAGE_ID_COLUMN_NAME, languageId);
+            return jdbcTemplate.query(GET_TOP_POSITION_COUNTRIES_NOT_DEFAULT_LANG_QUERY + amount, sqlParameterSource, countryMapper);
         }
     }
 
@@ -462,62 +215,14 @@ public class MySQLCountryDAO implements CountryDAO {
      * @param amount a needed amount of countries
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a countries from data storage
-     * @throws DAOException
      */
     @Override
-    public List<Country> getCountries(int from, int amount, String languageId) throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        Statement statement = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
-
-            ResultSet resultSet = null;
-            if(languageId.equals(DEFAULT_LANGUAGE_ID)){
-                statement = connection.createStatement();
-                resultSet = statement.executeQuery(GET_COUNTRIES_QUERY + from + ", " + amount);
-            }
-            else {
-                preparedStatement = connection.prepareStatement(GET_COUNTRIES_NOT_DEFAULT_LANG_QUERY + from + ", " + amount);
-                preparedStatement.setString(1, languageId);
-                resultSet = preparedStatement.executeQuery();
-            }
-
-            List<Country> allCountries = new ArrayList<>();
-            while (resultSet.next()){
-                Country country = new Country();
-                country.setId(resultSet.getInt(1));
-                country.setName(resultSet.getString(2));
-                country.setPosition(resultSet.getInt(3));
-
-                allCountries.add(country);
-            }
-
-            return allCountries;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("Error in DAO layer when getting country", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (preparedStatement != null){
-                    preparedStatement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+    public List<Country> getCountries(int from, int amount, String languageId) {
+        if(languageId.equals(DEFAULT_LANGUAGE_ID)) {
+            return jdbcTemplate.query(GET_COUNTRIES_QUERY + from + ", " + amount, countryMapper);
+        } else {
+            SqlParameterSource sqlParameterSource = new MapSqlParameterSource(LANGUAGE_ID_COLUMN_NAME, languageId);
+            return jdbcTemplate.query(GET_COUNTRIES_NOT_DEFAULT_LANG_QUERY + from + ", " + amount, sqlParameterSource, countryMapper);
         }
     }
 
@@ -525,44 +230,20 @@ public class MySQLCountryDAO implements CountryDAO {
      * Returns an amount of countries in the data storage.
      *
      * @return an amount of countries in the data storage
-     * @throws DAOException
      */
     @Override
-    public int getCountriesCount() throws DAOException {
-        MySQLConnectionPool mySQLConnectionPool = MySQLConnectionPool.getInstance();
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = mySQLConnectionPool.getConnection();
+    public int getCountriesCount() {
+        return jdbcTemplate.queryForObject(GET_COUNTRIES_COUNT_QUERY, new HashMap<>(), Integer.TYPE);
+    }
 
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(GET_COUNTRIES_COUNT_QUERY);
-
-            int countriesCount = 0;
-            if(resultSet.next()){
-                countriesCount = resultSet.getInt(1);
-            }
-            return countriesCount;
-        } catch (InterruptedException | MySQLConnectionPoolException e) {
-            throw new DAOException("Cannot get a connection from Connection Pool", e);
-        } catch (SQLException e) {
-            throw new DAOException("DAO layer: cannot get countries count", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("Cannot free a connection from Connection Pool", e);
-            } finally {
-                if (connection != null){
-                    try {
-                        mySQLConnectionPool.freeConnection(connection);
-                    } catch (SQLException | MySQLConnectionPoolException e) {
-                        throw new DAOException("Cannot free a connection from Connection Pool", e);
-                    }
-                }
-            }
+    private class CountryMapper implements RowMapper<Country> {
+        @Override
+        public Country mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Country country = new Country();
+            country.setId(rs.getInt(ID_COLUMN_NAME));
+            country.setName(rs.getString(NAME_COLUMN_NAME));
+            country.setPosition(rs.getInt(POSITION_COLUMN_NAME));
+            return country;
         }
     }
 }
