@@ -1,12 +1,11 @@
 package by.bsuir.movierating.service.impl;
 
 import by.bsuir.movierating.dao.*;
-import by.bsuir.movierating.dao.exception.DAOException;
-import by.bsuir.movierating.dao.factory.DAOFactory;
 import by.bsuir.movierating.domain.*;
 import by.bsuir.movierating.domain.criteria.MovieCriteria;
 import by.bsuir.movierating.service.MovieService;
-import by.bsuir.movierating.service.exception.ServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -19,6 +18,7 @@ import java.util.List;
  * @author Kostevich Vladislav
  * @version 1.0
  */
+@Service("movieService")
 public class MovieServiceImpl implements MovieService {
     private static final int ACTOR = 1;
     private static final int DIRECTOR = 2;
@@ -31,8 +31,48 @@ public class MovieServiceImpl implements MovieService {
 
     private static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd";
 
-    private static final int NAME_MAX_LENGTH = 45;
-    private static final int IMAGE_MAX_LENGTH = 150;
+    private MovieDAO movieDAO;
+    private CountryDAO countryDAO;
+    private GenreDAO genreDAO;
+    private PersonDAO personDAO;
+    private CommentDAO commentDAO;
+    private RatingDAO ratingDAO;
+    private UserDAO userDAO;
+
+    @Autowired
+    public void setMovieDAO(MovieDAO movieDAO) {
+        this.movieDAO = movieDAO;
+    }
+
+    @Autowired
+    public void setCountryDAO(CountryDAO countryDAO) {
+        this.countryDAO = countryDAO;
+    }
+
+    @Autowired
+    public void setGenreDAO(GenreDAO genreDAO) {
+        this.genreDAO = genreDAO;
+    }
+
+    @Autowired
+    public void setPersonDAO(PersonDAO personDAO) {
+        this.personDAO = personDAO;
+    }
+
+    @Autowired
+    public void setCommentDAO(CommentDAO commentDAO) {
+        this.commentDAO = commentDAO;
+    }
+
+    @Autowired
+    public void setRatingDAO(RatingDAO ratingDAO) {
+        this.ratingDAO = ratingDAO;
+    }
+
+    @Autowired
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
     /**
      * Returns a recent added movies to the data storage.
@@ -40,40 +80,25 @@ public class MovieServiceImpl implements MovieService {
      * @param amount a needed amount of a movies
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a recent added movies
-     * @throws ServiceException
      */
     @Override
-    public List<Movie> getRecentAddedMovies(int amount, String languageId) throws ServiceException {
-        if(amount <= 0){
-            throw new ServiceException("Wrong amount value");
+    public List<Movie> getRecentAddedMovies(int amount, String languageId) {
+        List<Movie> movies = movieDAO.getRecentAddedMovies(amount, languageId);
+
+        for(Movie movie : movies){
+            List<Country> countries = countryDAO.getCountriesByMovie(movie.getId(), languageId);
+            movie.setCountries(countries);
+
+            List<Genre> genres = genreDAO.getGenresByMovie(movie.getId(), languageId);
+            movie.setGenres(genres);
+
+            List<Person> directors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), DIRECTOR, languageId);
+            movie.setDirectors(directors);
+
+            double averageRating = ratingDAO.getAverageRatingByMovie(movie.getId());
+            movie.setAverageRating(averageRating);
         }
-
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            MovieDAO movieDAO = daoFactory.getMovieDAO();
-            List<Movie> movies = movieDAO.getRecentAddedMovies(amount, languageId);
-
-            CountryDAO countryDAO = daoFactory.getCountryDAO();
-            GenreDAO genreDAO = daoFactory.getGenreDAO();
-            PersonDAO personDAO = daoFactory.getPersonDAO();
-            RatingDAO ratingDAO = daoFactory.getRatingDAO();
-            for(Movie movie : movies){
-                List<Country> countries = countryDAO.getCountriesByMovie(movie.getId(), languageId);
-                movie.setCountries(countries);
-
-                List<Genre> genres = genreDAO.getGenresByMovie(movie.getId(), languageId);
-                movie.setGenres(genres);
-
-                List<Person> directors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), DIRECTOR, languageId);
-                movie.setDirectors(directors);
-
-                double averageRating = ratingDAO.getAverageRatingByMovie(movie.getId());
-                movie.setAverageRating(averageRating);
-            }
-            return movies;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get all movies", e);
-        }
+        return movies;
     }
 
     /**
@@ -90,10 +115,9 @@ public class MovieServiceImpl implements MovieService {
      * @param amount a needed amount of a movies
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a movies matching the criteria
-     * @throws ServiceException
      */
     @Override
-    public List<Movie> getMoviesByCriteria(String name, int minYear, int maxYear, List<Integer> genreIds, List<Integer> countyIds, int minRating, int maxRating, int from, int amount, String languageId) throws ServiceException {
+    public List<Movie> getMoviesByCriteria(String name, int minYear, int maxYear, List<Integer> genreIds, List<Integer> countyIds, int minRating, int maxRating, int from, int amount, String languageId) {
         MovieCriteria criteria = new MovieCriteria();
         criteria.setName(name);
         criteria.setMinYear(minYear);
@@ -103,32 +127,22 @@ public class MovieServiceImpl implements MovieService {
         criteria.setMinRating(minRating);
         criteria.setMaxRating(maxRating);
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            MovieDAO movieDAO = daoFactory.getMovieDAO();
-            List<Movie> movies = movieDAO.getMoviesByCriteria(criteria, from, amount, languageId);
+        List<Movie> movies = movieDAO.getMoviesByCriteria(criteria, from, amount, languageId);
 
-            CountryDAO countryDAO = daoFactory.getCountryDAO();
-            GenreDAO genreDAO = daoFactory.getGenreDAO();
-            PersonDAO personDAO = daoFactory.getPersonDAO();
-            RatingDAO ratingDAO = daoFactory.getRatingDAO();
-            for(Movie movie : movies){
-                List<Country> countries = countryDAO.getCountriesByMovie(movie.getId(), languageId);
-                movie.setCountries(countries);
+        for(Movie movie : movies){
+            List<Country> countries = countryDAO.getCountriesByMovie(movie.getId(), languageId);
+            movie.setCountries(countries);
 
-                List<Genre> genres = genreDAO.getGenresByMovie(movie.getId(), languageId);
-                movie.setGenres(genres);
+            List<Genre> genres = genreDAO.getGenresByMovie(movie.getId(), languageId);
+            movie.setGenres(genres);
 
-                List<Person> directors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), DIRECTOR, languageId);
-                movie.setDirectors(directors);
+            List<Person> directors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), DIRECTOR, languageId);
+            movie.setDirectors(directors);
 
-                double averageRating = ratingDAO.getAverageRatingByMovie(movie.getId());
-                movie.setAverageRating(averageRating);
-            }
-            return movies;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get movies by criteria", e);
+            double averageRating = ratingDAO.getAverageRatingByMovie(movie.getId());
+            movie.setAverageRating(averageRating);
         }
+        return movies;
     }
 
     /**
@@ -143,10 +157,9 @@ public class MovieServiceImpl implements MovieService {
      * @param maxRating a max average rating of the movie criteria
      * @param languageId a language id like 'EN', "RU' etc.
      * @return an amount of the movies matching the criteria
-     * @throws ServiceException
      */
     @Override
-    public int getMoviesCountByCriteria(String name, int minYear, int maxYear, List<Integer> genreIds, List<Integer> countyIds, int minRating, int maxRating, String languageId) throws ServiceException {
+    public int getMoviesCountByCriteria(String name, int minYear, int maxYear, List<Integer> genreIds, List<Integer> countyIds, int minRating, int maxRating, String languageId) {
         MovieCriteria criteria = new MovieCriteria();
         criteria.setName(name);
         criteria.setMinYear(minYear);
@@ -156,14 +169,7 @@ public class MovieServiceImpl implements MovieService {
         criteria.setMinRating(minRating);
         criteria.setMaxRating(maxRating);
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            MovieDAO movieDAO = daoFactory.getMovieDAO();
-            int moviesCount = movieDAO.getMoviesCountByCriteria(criteria, languageId);
-            return moviesCount;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get movies count by criteria", e);
-        }
+        return movieDAO.getMoviesCountByCriteria(criteria, languageId);
     }
 
     /**
@@ -172,64 +178,47 @@ public class MovieServiceImpl implements MovieService {
      * @param id an id of a needed movie
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a certain movie
-     * @throws ServiceException
      */
     @Override
-    public Movie getMovieById(int id, String languageId) throws ServiceException {
-        if(id <= 0){
-            throw new ServiceException("Wrong id for getting movie");
-        }
+    public Movie getMovieById(int id, String languageId) {
+        Movie movie = movieDAO.getMovieById(id, languageId);
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            MovieDAO movieDAO = daoFactory.getMovieDAO();
-            Movie movie = movieDAO.getMovieById(id, languageId);
+        if(movie != null){
+            List<Country> countries = countryDAO.getCountriesByMovie(movie.getId(), languageId);
+            movie.setCountries(countries);
 
-            if(movie != null){
-                CountryDAO countryDAO = daoFactory.getCountryDAO();
-                List<Country> countries = countryDAO.getCountriesByMovie(movie.getId(), languageId);
-                movie.setCountries(countries);
+            List<Genre> genres = genreDAO.getGenresByMovie(movie.getId(), languageId);
+            movie.setGenres(genres);
 
-                GenreDAO genreDAO = daoFactory.getGenreDAO();
-                List<Genre> genres = genreDAO.getGenresByMovie(movie.getId(), languageId);
-                movie.setGenres(genres);
+            double averageRating = ratingDAO.getAverageRatingByMovie(movie.getId());
+            movie.setAverageRating(averageRating);
 
-                RatingDAO ratingDAO = daoFactory.getRatingDAO();
-                double averageRating = ratingDAO.getAverageRatingByMovie(movie.getId());
-                movie.setAverageRating(averageRating);
-
-                CommentDAO commentDAO = daoFactory.getCommentDAO();
-                List<Comment> comments = commentDAO.getCommentsByMovie(movie.getId(), languageId);
-                UserDAO userDAO = daoFactory.getUserDAO();
-                for(Comment comment : comments){
-                    User user = userDAO.getUserById(comment.getUserId());
-                    comment.setUser(user);
-                }
-                movie.setComments(comments.isEmpty() ? null : comments);
-
-                PersonDAO personDAO = daoFactory.getPersonDAO();
-                List<Person> actors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), ACTOR, languageId);
-                List<Person> directors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), DIRECTOR, languageId);
-                List<Person> producers = personDAO.getPersonsByMovieAndRelationType(movie.getId(), PRODUCER, languageId);
-                List<Person> writers = personDAO.getPersonsByMovieAndRelationType(movie.getId(), WRITER, languageId);
-                List<Person> operators = personDAO.getPersonsByMovieAndRelationType(movie.getId(), OPERATOR, languageId);
-                List<Person> painters = personDAO.getPersonsByMovieAndRelationType(movie.getId(), PAINTER, languageId);
-                List<Person> editors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), EDITOR, languageId);
-                List<Person> composers = personDAO.getPersonsByMovieAndRelationType(movie.getId(), COMPOSER, languageId);
-                movie.setActors(actors.isEmpty() ? null : actors);
-                movie.setDirectors(directors.isEmpty() ? null : directors);
-                movie.setProducers(producers.isEmpty() ? null : producers);
-                movie.setWriters(writers.isEmpty() ? null : writers);
-                movie.setOperators(operators.isEmpty() ? null : operators);
-                movie.setPainters(painters.isEmpty() ? null : painters);
-                movie.setEditors(editors.isEmpty() ? null : editors);
-                movie.setComposers(composers.isEmpty() ? null : composers);
+            List<Comment> comments = commentDAO.getCommentsByMovie(movie.getId(), languageId);
+            for(Comment comment : comments){
+                User user = userDAO.getUserById(comment.getUserId());
+                comment.setUser(user);
             }
+            movie.setComments(comments.isEmpty() ? null : comments);
 
-            return movie;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get movie by Id", e);
+            List<Person> actors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), ACTOR, languageId);
+            List<Person> directors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), DIRECTOR, languageId);
+            List<Person> producers = personDAO.getPersonsByMovieAndRelationType(movie.getId(), PRODUCER, languageId);
+            List<Person> writers = personDAO.getPersonsByMovieAndRelationType(movie.getId(), WRITER, languageId);
+            List<Person> operators = personDAO.getPersonsByMovieAndRelationType(movie.getId(), OPERATOR, languageId);
+            List<Person> painters = personDAO.getPersonsByMovieAndRelationType(movie.getId(), PAINTER, languageId);
+            List<Person> editors = personDAO.getPersonsByMovieAndRelationType(movie.getId(), EDITOR, languageId);
+            List<Person> composers = personDAO.getPersonsByMovieAndRelationType(movie.getId(), COMPOSER, languageId);
+            movie.setActors(actors.isEmpty() ? null : actors);
+            movie.setDirectors(directors.isEmpty() ? null : directors);
+            movie.setProducers(producers.isEmpty() ? null : producers);
+            movie.setWriters(writers.isEmpty() ? null : writers);
+            movie.setOperators(operators.isEmpty() ? null : operators);
+            movie.setPainters(painters.isEmpty() ? null : painters);
+            movie.setEditors(editors.isEmpty() ? null : editors);
+            movie.setComposers(composers.isEmpty() ? null : composers);
         }
+
+        return movie;
     }
 
     /**
@@ -243,20 +232,9 @@ public class MovieServiceImpl implements MovieService {
      * @param lasting a lasting of the movie (minute)
      * @param annotation an annotation of the movie
      * @param image an URL to the image of the movie
-     * @throws ServiceException
      */
     @Override
-    public void addMovie(String name, int year, String tagline, int budget, String premiere, int lasting, String annotation, String image) throws ServiceException {
-        if(name.isEmpty() || name.length() > NAME_MAX_LENGTH || year <= 0 || tagline.isEmpty() ||
-                budget <= 0 || premiere.isEmpty() || lasting <= 0 || annotation.isEmpty() || image.isEmpty() ||
-                image.length() > IMAGE_MAX_LENGTH){
-            throw new ServiceException("Wrong parameters for adding movie");
-        }
-
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            MovieDAO movieDAO = daoFactory.getMovieDAO();
-
+    public void addMovie(String name, int year, String tagline, int budget, String premiere, int lasting, String annotation, String image) throws ParseException {
             Movie movie = new Movie();
             movie.setName(name);
             movie.setYear(year);
@@ -269,9 +247,6 @@ public class MovieServiceImpl implements MovieService {
             movie.setImage(image);
 
             movieDAO.addMovie(movie);
-        } catch (DAOException | ParseException e) {
-            throw new ServiceException("Service layer: cannot add a movie", e);
-        }
     }
 
     /**
@@ -291,56 +266,31 @@ public class MovieServiceImpl implements MovieService {
      * @param annotation a new annotation of the movie
      * @param image a URL to the new image of the movie
      * @param languageId a language id like 'EN', "RU' etc.
-     * @throws ServiceException
      */
     @Override
-    public void editMovie(int id, String name, int year, String tagline, int budget, String premiere, int lasting, String annotation, String image, String languageId) throws ServiceException {
-        if(id <= 0 || name.isEmpty() || name.length() > NAME_MAX_LENGTH || year <= 0 || tagline.isEmpty() ||
-                budget <= 0 || premiere.isEmpty() || lasting <= 0 || annotation.isEmpty() || image.isEmpty() ||
-                image.length() > IMAGE_MAX_LENGTH){
-            throw new ServiceException("Wrong parameters for editing movie");
-        }
+    public void editMovie(int id, String name, int year, String tagline, int budget, String premiere, int lasting, String annotation, String image, String languageId) throws ParseException {
+        Movie movie = new Movie();
+        movie.setId(id);
+        movie.setName(name);
+        movie.setYear(year);
+        movie.setTagline(tagline);
+        movie.setBudget(budget);
+        DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+        movie.setPremiere(dateFormat.parse(premiere));
+        movie.setLasting(lasting);
+        movie.setAnnotation(annotation);
+        movie.setImage(image);
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            MovieDAO movieDAO = daoFactory.getMovieDAO();
-
-            Movie movie = new Movie();
-            movie.setId(id);
-            movie.setName(name);
-            movie.setYear(year);
-            movie.setTagline(tagline);
-            movie.setBudget(budget);
-            DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
-            movie.setPremiere(dateFormat.parse(premiere));
-            movie.setLasting(lasting);
-            movie.setAnnotation(annotation);
-            movie.setImage(image);
-
-            movieDAO.updateMovie(movie, languageId);
-        } catch (DAOException | ParseException e) {
-            throw new ServiceException("Service layer: cannot edit a movie", e);
-        }
+        movieDAO.updateMovie(movie, languageId);
     }
 
     /**
      * Deletes an existing movie from the data storage (with all of the localizations).
      *
      * @param id an id of the deleting movie
-     * @throws ServiceException
      */
     @Override
-    public void deleteMovie(int id) throws ServiceException {
-        if(id <= 0){
-            throw new ServiceException("Wrong id for deleting movie");
-        }
-
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            MovieDAO movieDAO = daoFactory.getMovieDAO();
-            movieDAO.deleteMovie(id);
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot delete movie", e);
-        }
+    public void deleteMovie(int id) {
+        movieDAO.deleteMovie(id);
     }
 }

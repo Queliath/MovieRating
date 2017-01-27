@@ -2,6 +2,7 @@ package by.bsuir.movierating.service;
 
 import by.bsuir.movierating.domain.Movie;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -77,7 +78,7 @@ public interface MovieService {
      * @param image an URL to the image of the movie
      */
     void addMovie(String name, int year, String tagline, int budget, String premiere, int lasting,
-                  String annotation, String image);
+                  String annotation, String image) throws ParseException;
 
     /**
      * Edits an already existing movie or adds/edits a localization of a movie.
@@ -98,7 +99,7 @@ public interface MovieService {
      * @param languageId a language id like 'EN', "RU' etc.
      */
     void editMovie(int id, String name, int year, String tagline, int budget, String premiere, int lasting,
-                   String annotation, String image, String languageId);
+                   String annotation, String image, String languageId) throws ParseException;
 
     /**
      * Deletes an existing movie from the data storage (with all of the localizations).

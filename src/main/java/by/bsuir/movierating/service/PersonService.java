@@ -2,6 +2,7 @@ package by.bsuir.movierating.service;
 
 import by.bsuir.movierating.domain.Person;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -48,7 +49,7 @@ public interface PersonService {
      * @param placeOfBirth a place of a birth of the person
      * @param photo a URL to the photo of the person
      */
-    void addPerson(String name, String dateOfBirth, String placeOfBirth, String photo);
+    void addPerson(String name, String dateOfBirth, String placeOfBirth, String photo) throws ParseException;
 
     /**
      * Edits an already existing person or adds/edits a localization of a person.
@@ -65,7 +66,7 @@ public interface PersonService {
      * @param languageId a language id like 'EN', "RU' etc.
      */
     void editPerson(int id, String name, String dateOfBirth, String placeOfBirth, String photo,
-                    String languageId);
+                    String languageId) throws ParseException;
 
     /**
      * Deletes an existing person from the data storage (with all of the localizations).

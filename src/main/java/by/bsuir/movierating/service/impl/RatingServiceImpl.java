@@ -1,11 +1,10 @@
 package by.bsuir.movierating.service.impl;
 
-import by.bsuir.movierating.dao.exception.DAOException;
-import by.bsuir.movierating.dao.factory.DAOFactory;
 import by.bsuir.movierating.dao.RatingDAO;
 import by.bsuir.movierating.domain.Rating;
-import by.bsuir.movierating.service.exception.ServiceException;
 import by.bsuir.movierating.service.RatingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Provides a business-logic with the Rating entity.
@@ -13,9 +12,14 @@ import by.bsuir.movierating.service.RatingService;
  * @author Kostevich Vladislav
  * @version 1.0
  */
+@Service("ratingService")
 public class RatingServiceImpl implements RatingService {
-    private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 10;
+    private RatingDAO ratingDAO;
+
+    @Autowired
+    public void setRatingDAO(RatingDAO ratingDAO) {
+        this.ratingDAO = ratingDAO;
+    }
 
     /**
      * Returns a value of the rating belonging to the movie and to the user (if exists).
@@ -23,18 +27,11 @@ public class RatingServiceImpl implements RatingService {
      * @param movieId an id of the movie
      * @param userId an id of the user
      * @return a value of the rating
-     * @throws ServiceException
      */
     @Override
-    public int getRatingValueByMovieAndUser(int movieId, int userId) throws ServiceException {
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            RatingDAO ratingDAO = daoFactory.getRatingDAO();
-            Rating rating = ratingDAO.getRatingByMovieAndUser(movieId, userId);
-            return (rating == null) ? -1 : rating.getValue();
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get rating by movie and user", e);
-        }
+    public int getRatingValueByMovieAndUser(int movieId, int userId) {
+        Rating rating = ratingDAO.getRatingByMovieAndUser(movieId, userId);
+        return (rating == null) ? -1 : rating.getValue();
     }
 
     /**
@@ -43,41 +40,19 @@ public class RatingServiceImpl implements RatingService {
      * @param value a value of the rating
      * @param movieId an id of the movie to which the rating belongs
      * @param userId an id of the user to which the rating belongs
-     * @throws ServiceException
      */
     @Override
-    public void addRating(int value, int movieId, int userId) throws ServiceException {
-        if(value < MIN_VALUE || value > MAX_VALUE || movieId <= 0 || userId <= 0){
-            throw new ServiceException("Wrong parameters for adding rating");
-        }
+    public void addRating(int value, int movieId, int userId) {
+        Rating rating = new Rating();
+        rating.setValue(value);
+        rating.setMovieId(movieId);
+        rating.setUserId(userId);
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            RatingDAO ratingDAO = daoFactory.getRatingDAO();
-
-            Rating rating = new Rating();
-            rating.setValue(value);
-            rating.setMovieId(movieId);
-            rating.setUserId(userId);
-
-            ratingDAO.addRating(rating);
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot add rating", e);
-        }
+        ratingDAO.addRating(rating);
     }
 
     @Override
-    public void deleteRating(int movieId, int userId) throws ServiceException {
-        if(movieId <= 0 || userId <= 0){
-            throw new ServiceException("Wrong parameters for deleting movie");
-        }
-
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            RatingDAO ratingDAO = daoFactory.getRatingDAO();
-            ratingDAO.deleteRating(movieId, userId);
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot delete a rating", e);
-        }
+    public void deleteRating(int movieId, int userId) {
+        ratingDAO.deleteRating(movieId, userId);
     }
 }

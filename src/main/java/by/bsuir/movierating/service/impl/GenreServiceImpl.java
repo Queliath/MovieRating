@@ -1,11 +1,10 @@
 package by.bsuir.movierating.service.impl;
 
-import by.bsuir.movierating.dao.exception.DAOException;
-import by.bsuir.movierating.dao.factory.DAOFactory;
 import by.bsuir.movierating.dao.GenreDAO;
 import by.bsuir.movierating.domain.Genre;
-import by.bsuir.movierating.service.exception.ServiceException;
 import by.bsuir.movierating.service.GenreService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -15,8 +14,14 @@ import java.util.List;
  * @author Kostevich Vladislav
  * @version 1.0
  */
+@Service("genreService")
 public class GenreServiceImpl implements GenreService {
-    private static final int NAME_MAX_LENGTH = 45;
+    private GenreDAO genreDAO;
+
+    @Autowired
+    public void setGenreDAO(GenreDAO genreDAO) {
+        this.genreDAO = genreDAO;
+    }
 
     /**
      * Returns a genres ordered by a position number.
@@ -24,21 +29,10 @@ public class GenreServiceImpl implements GenreService {
      * @param amount a needed amount of a genres
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a genres ordered by a position number
-     * @throws ServiceException
      */
     @Override
-    public List<Genre> getTopPositionGenres(int amount, String languageId) throws ServiceException {
-        if(amount <= 0){
-            throw new ServiceException("Wrong amount value");
-        }
-
-        try {
-            GenreDAO genreDAO = DAOFactory.getInstance().getGenreDAO();
-            List<Genre> genres = genreDAO.getTopPositionGenres(amount, languageId);
-            return genres;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get all genres", e);
-        }
+    public List<Genre> getTopPositionGenres(int amount, String languageId) {
+        return genreDAO.getTopPositionGenres(amount, languageId);
     }
 
     /**
@@ -48,36 +42,20 @@ public class GenreServiceImpl implements GenreService {
      * @param amount a needed amount of a genres
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a concrete amount of a genres from a concrete position
-     * @throws ServiceException
      */
     @Override
-    public List<Genre> getGenres(int from, int amount, String languageId) throws ServiceException {
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            GenreDAO genreDAO = daoFactory.getGenreDAO();
-            List<Genre> genres = genreDAO.getGenres(from, amount, languageId);
-            return genres;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get genres", e);
-        }
+    public List<Genre> getGenres(int from, int amount, String languageId) {
+        return genreDAO.getGenres(from, amount, languageId);
     }
 
     /**
      * Returns a total amount of a genres in the data storage.
      *
      * @return a total amount of a genres
-     * @throws ServiceException
      */
     @Override
-    public int getGenresCount() throws ServiceException {
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            GenreDAO genreDAO = daoFactory.getGenreDAO();
-            int genresCount = genreDAO.getGenresCount();
-            return genresCount;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get genres count", e);
-        }
+    public int getGenresCount() {
+        return genreDAO.getGenresCount();
     }
 
     /**
@@ -86,22 +64,10 @@ public class GenreServiceImpl implements GenreService {
      * @param id an id of a needed genre
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a certain genre
-     * @throws ServiceException
      */
     @Override
-    public Genre getGenreById(int id, String languageId) throws ServiceException {
-        if(id <= 0){
-            throw new ServiceException("Wrong id for getting genre");
-        }
-
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            GenreDAO genreDAO = daoFactory.getGenreDAO();
-            Genre genre = genreDAO.getGenreById(id, languageId);
-            return genre;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get genre by id", e);
-        }
+    public Genre getGenreById(int id, String languageId) {
+        return genreDAO.getGenreById(id, languageId);
     }
 
     /**
@@ -109,26 +75,14 @@ public class GenreServiceImpl implements GenreService {
      *
      * @param name a name of the genre
      * @param position a number of a position of the genre
-     * @throws ServiceException
      */
     @Override
-    public void addGenre(String name, int position) throws ServiceException {
-        if(name.isEmpty() || name.length() > NAME_MAX_LENGTH || position <= 0){
-            throw new ServiceException("Wrong parameters for adding genre");
-        }
+    public void addGenre(String name, int position) {
+        Genre genre = new Genre();
+        genre.setName(name);
+        genre.setPosition(position);
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            GenreDAO genreDAO = daoFactory.getGenreDAO();
-
-            Genre genre = new Genre();
-            genre.setName(name);
-            genre.setPosition(position);
-
-            genreDAO.addGenre(genre);
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get genre by id", e);
-        }
+        genreDAO.addGenre(genre);
     }
 
     /**
@@ -142,47 +96,24 @@ public class GenreServiceImpl implements GenreService {
      * @param name a new name of the genre
      * @param position a new position number of the genre
      * @param languageId a language id like 'EN', "RU' etc.
-     * @throws ServiceException
      */
     @Override
-    public void editGenre(int id, String name, int position, String languageId) throws ServiceException {
-        if(id <= 0 || name.isEmpty() || name.length() > NAME_MAX_LENGTH || position <= 0){
-            throw new ServiceException("Wrong parameters for editing genre");
-        }
+    public void editGenre(int id, String name, int position, String languageId) {
+        Genre genre = new Genre();
+        genre.setId(id);
+        genre.setName(name);
+        genre.setPosition(position);
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            GenreDAO genreDAO = daoFactory.getGenreDAO();
-
-            Genre genre = new Genre();
-            genre.setId(id);
-            genre.setName(name);
-            genre.setPosition(position);
-
-            genreDAO.updateGenre(genre, languageId);
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get genre by id", e);
-        }
+        genreDAO.updateGenre(genre, languageId);
     }
 
     /**
      * Deletes an existing genre from the data storage (with all of the localizations).
      *
      * @param id an id of the deleting genre
-     * @throws ServiceException
      */
     @Override
-    public void deleteGenre(int id) throws ServiceException {
-        if(id <= 0){
-            throw new ServiceException("Wrong id for deleting genre");
-        }
-
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            GenreDAO genreDAO = daoFactory.getGenreDAO();
-            genreDAO.deleteGenre(id);
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot delete genre", e);
-        }
+    public void deleteGenre(int id) {
+        genreDAO.deleteGenre(id);
     }
 }

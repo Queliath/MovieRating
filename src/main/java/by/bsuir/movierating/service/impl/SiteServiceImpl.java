@@ -1,13 +1,11 @@
 package by.bsuir.movierating.service.impl;
 
-import by.bsuir.movierating.dao.factory.DAOFactory;
 import by.bsuir.movierating.dao.UserDAO;
 import by.bsuir.movierating.domain.User;
-import by.bsuir.movierating.service.exception.ServiceWrongPasswordException;
+import by.bsuir.movierating.exception.UserInputException;
 import by.bsuir.movierating.service.SiteService;
-import by.bsuir.movierating.dao.exception.DAOException;
-import by.bsuir.movierating.service.exception.ServiceException;
-import by.bsuir.movierating.service.exception.ServiceWrongEmailException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
@@ -17,13 +15,16 @@ import java.util.Date;
  * @author Kostevich Vladislav
  * @version 1.0
  */
+@Service("siteService")
 public class SiteServiceImpl implements SiteService {
     private static final String DEFAULT_USER_STATUS = "normal";
 
-    private static final int EMAIL_MAX_LENGTH = 45;
-    private static final int PASSWORD_MAX_LENGTH = 45;
-    private static final int FIRST_NAME_MAX_LENGTH = 25;
-    private static final int LAST_NAME_MAX_LENGTH = 25;
+    private UserDAO userDAO;
+
+    @Autowired
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
     /**
      * Checks if a user with this email and password can login to the system.
@@ -31,30 +32,17 @@ public class SiteServiceImpl implements SiteService {
      * @param email an email of the user
      * @param password a password of the user
      * @return user object if login success
-     * @throws ServiceWrongEmailException if there is no user with this email
-     * @throws ServiceWrongPasswordException if the password is wrong
-     * @throws ServiceException
      */
     @Override
-    public User login(String email, String password) throws ServiceWrongEmailException, ServiceWrongPasswordException, ServiceException {
-        if(email.isEmpty() || email.length() > EMAIL_MAX_LENGTH || password.isEmpty() || password.length() > PASSWORD_MAX_LENGTH){
-            throw new ServiceException("Wrong parameters for login");
+    public User login(String email, String password) {
+        User user = userDAO.getUserByEmail(email);
+        if(user == null){
+            throw new UserInputException("Wrong email");
         }
-
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            UserDAO userDAO = daoFactory.getUserDAO();
-            User user = userDAO.getUserByEmail(email);
-            if(user == null){
-                throw new ServiceWrongEmailException("Wrong email");
-            }
-            if(!user.getPassword().equals(password)){
-                throw new ServiceWrongPasswordException("Wrong password");
-            }
-            return user;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot make a login operation", e);
+        if(!user.getPassword().equals(password)){
+            throw new UserInputException("Wrong password");
         }
+        return user;
     }
 
     /**
@@ -66,39 +54,25 @@ public class SiteServiceImpl implements SiteService {
      * @param lastName a last name of the user
      * @param languageId an id of the language of the user
      * @return new user object if registry success
-     * @throws ServiceWrongEmailException if there is already existing user with this email
-     * @throws ServiceException
      */
     @Override
-    public User registration(String email, String password, String firstName, String lastName, String languageId) throws ServiceWrongEmailException, ServiceException {
-        if(email.isEmpty() || email.length() > EMAIL_MAX_LENGTH || password.isEmpty() || password.length() > PASSWORD_MAX_LENGTH ||
-                firstName.isEmpty() || firstName.length() > FIRST_NAME_MAX_LENGTH || lastName.isEmpty() || lastName.length() > LAST_NAME_MAX_LENGTH){
-            throw new ServiceException("Wrong parameters for registration");
+    public User registration(String email, String password, String firstName, String lastName, String languageId) {
+        User userWithThisEmail = userDAO.getUserByEmail(email);
+        if(userWithThisEmail != null){
+            throw new UserInputException("Wrong email");
         }
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            UserDAO userDAO = daoFactory.getUserDAO();
+        User newUser = new User();
+        newUser.setEmail(email);
+        newUser.setPassword(password);
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setDateOfRegistry(new Date());
+        newUser.setStatus(DEFAULT_USER_STATUS);
+        newUser.setLanguageId(languageId);
 
-            User userWithThisEmail = userDAO.getUserByEmail(email);
-            if(userWithThisEmail != null){
-                throw new ServiceWrongEmailException("Wrong email");
-            }
+        userDAO.addUser(newUser);
 
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setPassword(password);
-            newUser.setFirstName(firstName);
-            newUser.setLastName(lastName);
-            newUser.setDateOfRegistry(new Date());
-            newUser.setStatus(DEFAULT_USER_STATUS);
-            newUser.setLanguageId(languageId);
-
-            userDAO.addUser(newUser);
-
-            return newUser;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot make a registration", e);
-        }
+        return newUser;
     }
 }

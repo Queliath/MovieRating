@@ -1,17 +1,16 @@
 package by.bsuir.movierating.service.impl;
 
-import by.bsuir.movierating.dao.exception.DAOException;
-import by.bsuir.movierating.dao.factory.DAOFactory;
 import by.bsuir.movierating.dao.MovieDAO;
 import by.bsuir.movierating.dao.UserDAO;
 import by.bsuir.movierating.domain.Comment;
 import by.bsuir.movierating.domain.Movie;
 import by.bsuir.movierating.domain.User;
 import by.bsuir.movierating.domain.criteria.UserCriteria;
+import by.bsuir.movierating.exception.UserInputException;
 import by.bsuir.movierating.service.UserService;
 import by.bsuir.movierating.dao.CommentDAO;
-import by.bsuir.movierating.service.exception.ServiceException;
-import by.bsuir.movierating.service.exception.ServiceWrongEmailException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -21,12 +20,26 @@ import java.util.List;
  * @author Kostevich Vladislav
  * @version 1.0
  */
+@Service("userService")
 public class UserServiceImpl implements UserService {
-    private static final int EMAIL_MAX_LENGTH = 45;
-    private static final int PASSWORD_MAX_LENGTH = 45;
-    private static final int FIRST_NAME_MAX_LENGTH = 25;
-    private static final int LAST_NAME_MAX_LENGTH = 25;
-    private static final int PHOTO_MAX_LENGTH = 150;
+    private UserDAO userDAO;
+    private MovieDAO movieDAO;
+    private CommentDAO commentDAO;
+
+    @Autowired
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    @Autowired
+    public void setMovieDAO(MovieDAO movieDAO) {
+        this.movieDAO = movieDAO;
+    }
+
+    @Autowired
+    public void setCommentDAO(CommentDAO commentDAO) {
+        this.commentDAO = commentDAO;
+    }
 
     /**
      * Returns a certain user by id.
@@ -34,35 +47,22 @@ public class UserServiceImpl implements UserService {
      * @param id an id of a needed user
      * @param languageId a language id like 'EN', "RU' etc.
      * @return a certain user
-     * @throws ServiceException
      */
     @Override
-    public User getUserById(int id, String languageId) throws ServiceException {
-        if(id <= 0){
-            throw new ServiceException("Wrong id for getting user");
-        }
+    public User getUserById(int id, String languageId) {
+        User user = userDAO.getUserById(id);
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            UserDAO userDAO = daoFactory.getUserDAO();
-            User user = userDAO.getUserById(id);
+        if(user != null){
+            List<Comment> comments = commentDAO.getCommentsByUser(id, languageId);
+            user.setComments(comments.isEmpty() ? null : comments);
 
-            if(user != null){
-                CommentDAO commentDAO = daoFactory.getCommentDAO();
-                List<Comment> comments = commentDAO.getCommentsByUser(id, languageId);
-                user.setComments(comments.isEmpty() ? null : comments);
-
-                MovieDAO movieDAO = daoFactory.getMovieDAO();
-                for(Comment comment : comments){
-                    Movie movie = movieDAO.getMovieById(comment.getMovieId(), languageId);
-                    comment.setMovie(movie);
-                }
+            for(Comment comment : comments){
+                Movie movie = movieDAO.getMovieById(comment.getMovieId(), languageId);
+                comment.setMovie(movie);
             }
-
-            return user;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get user by id", e);
         }
+
+        return user;
     }
 
     /**
@@ -75,38 +75,23 @@ public class UserServiceImpl implements UserService {
      * @param lastName a new last name of the user
      * @param photo a URL to the new photo of the user
      * @param languageId an id of the new language of the user
-     * @throws ServiceWrongEmailException if there is already existing user with email like the new email of the editing user
-     * @throws ServiceException
      */
     @Override
-    public void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo, String languageId) throws ServiceWrongEmailException, ServiceException {
-        if(id <= 0 || email.isEmpty() || email.length() > EMAIL_MAX_LENGTH || password.isEmpty() ||
-                password.length() > PASSWORD_MAX_LENGTH || firstName.isEmpty() || firstName.length() > FIRST_NAME_MAX_LENGTH ||
-                lastName.isEmpty() || lastName.length() > LAST_NAME_MAX_LENGTH || photo.isEmpty() || photo.length() > PHOTO_MAX_LENGTH){
-            throw new ServiceException("Wrong parameters for editing user main inf");
+    public void editUserMainInf(int id, String email, String password, String firstName, String lastName, String photo, String languageId) {
+        User userWithThisEmail = userDAO.getUserByEmail(email);
+        if(userWithThisEmail != null && userWithThisEmail.getId() != id){
+            throw new UserInputException("Wrong email");
         }
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            UserDAO userDAO = daoFactory.getUserDAO();
+        User user = userDAO.getUserById(id);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setPhoto(photo);
+        user.setLanguageId(languageId);
 
-            User userWithThisEmail = userDAO.getUserByEmail(email);
-            if(userWithThisEmail != null && userWithThisEmail.getId() != id){
-                throw new ServiceWrongEmailException("Wrong email");
-            }
-
-            User user = userDAO.getUserById(id);
-            user.setEmail(email);
-            user.setPassword(password);
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setPhoto(photo);
-            user.setLanguageId(languageId);
-
-            userDAO.updateUser(user);
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot edit user main inf", e);
-        }
+        userDAO.updateUser(user);
     }
 
     /**
@@ -115,47 +100,24 @@ public class UserServiceImpl implements UserService {
      * @param id an id of a needed user
      * @param rating a new rating of the user
      * @param status a new status of the user
-     * @throws ServiceException
      */
     @Override
-    public void editUserSecondInf(int id, int rating, String status) throws ServiceException {
-        if(id <= 0 || status.isEmpty()){
-            throw new ServiceException("Wrong parameters for editing user second inf");
-        }
+    public void editUserSecondInf(int id, int rating, String status) {
+        User user = userDAO.getUserById(id);
+        user.setRating(rating);
+        user.setStatus(status);
 
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            UserDAO userDAO = daoFactory.getUserDAO();
-
-            User user = userDAO.getUserById(id);
-            user.setRating(rating);
-            user.setStatus(status);
-
-            userDAO.updateUser(user);
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot edit user main inf", e);
-        }
+        userDAO.updateUser(user);
     }
 
     /**
      * Deletes existing user from the data storage.
      *
      * @param id an id of the deleting user
-     * @throws ServiceException
      */
     @Override
-    public void deleteUser(int id) throws ServiceException {
-        if(id <= 0){
-            throw new ServiceException("Wrong id for deleting user");
-        }
-
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            UserDAO userDAO = daoFactory.getUserDAO();
-            userDAO.deleteUser(id);
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot delete user", e);
-        }
+    public void deleteUser(int id) {
+        userDAO.deleteUser(id);
     }
 
     /**
@@ -170,29 +132,20 @@ public class UserServiceImpl implements UserService {
      * @param maxRating a max rating of the user criteria
      * @param statuses a list of possible statuses of the user criteria
      * @return an amount of the users matching the criteria
-     * @throws ServiceException
      */
     @Override
-    public int getUsersCountByCriteria(String email, String firstName, String lastName, String minDateOfRegistry, String maxDateOfRegistry, Integer minRating, Integer maxRating, List<String> statuses) throws ServiceException {
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            UserDAO userDAO = daoFactory.getUserDAO();
+    public int getUsersCountByCriteria(String email, String firstName, String lastName, String minDateOfRegistry, String maxDateOfRegistry, Integer minRating, Integer maxRating, List<String> statuses) {
+        UserCriteria criteria = new UserCriteria();
+        criteria.setEmail(email);
+        criteria.setFirstName(firstName);
+        criteria.setLastName(lastName);
+        criteria.setMinDateOfRegistry(minDateOfRegistry);
+        criteria.setMaxDateOfRegistry(maxDateOfRegistry);
+        criteria.setMinRating(minRating);
+        criteria.setMaxRating(maxRating);
+        criteria.setStatuses(statuses);
 
-            UserCriteria criteria = new UserCriteria();
-            criteria.setEmail(email);
-            criteria.setFirstName(firstName);
-            criteria.setLastName(lastName);
-            criteria.setMinDateOfRegistry(minDateOfRegistry);
-            criteria.setMaxDateOfRegistry(maxDateOfRegistry);
-            criteria.setMinRating(minRating);
-            criteria.setMaxRating(maxRating);
-            criteria.setStatuses(statuses);
-
-            int usersCount = userDAO.getUsersCountByCriteria(criteria);
-            return usersCount;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get users count by criteria", e);
-        }
+        return userDAO.getUsersCountByCriteria(criteria);
     }
 
     /**
@@ -209,28 +162,19 @@ public class UserServiceImpl implements UserService {
      * @param from a starting position in the users list (starting from 0)
      * @param amount a needed amount of the users
      * @return a users matching the criteria
-     * @throws ServiceException
      */
     @Override
-    public List<User> getUsersByCriteria(String email, String firstName, String lastName, String minDateOfRegistry, String maxDateOfRegistry, Integer minRating, Integer maxRating, List<String> statuses, int from, int amount) throws ServiceException {
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            UserDAO userDAO = daoFactory.getUserDAO();
+    public List<User> getUsersByCriteria(String email, String firstName, String lastName, String minDateOfRegistry, String maxDateOfRegistry, Integer minRating, Integer maxRating, List<String> statuses, int from, int amount) {
+        UserCriteria criteria = new UserCriteria();
+        criteria.setEmail(email);
+        criteria.setFirstName(firstName);
+        criteria.setLastName(lastName);
+        criteria.setMinDateOfRegistry(minDateOfRegistry);
+        criteria.setMaxDateOfRegistry(maxDateOfRegistry);
+        criteria.setMinRating(minRating);
+        criteria.setMaxRating(maxRating);
+        criteria.setStatuses(statuses);
 
-            UserCriteria criteria = new UserCriteria();
-            criteria.setEmail(email);
-            criteria.setFirstName(firstName);
-            criteria.setLastName(lastName);
-            criteria.setMinDateOfRegistry(minDateOfRegistry);
-            criteria.setMaxDateOfRegistry(maxDateOfRegistry);
-            criteria.setMinRating(minRating);
-            criteria.setMaxRating(maxRating);
-            criteria.setStatuses(statuses);
-
-            List<User> users = userDAO.getUsersByCriteria(criteria, from, amount);
-            return users;
-        } catch (DAOException e) {
-            throw new ServiceException("Service layer: cannot get users by criteria", e);
-        }
+        return userDAO.getUsersByCriteria(criteria, from, amount);
     }
 }
