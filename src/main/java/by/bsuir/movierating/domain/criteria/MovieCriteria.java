@@ -2,9 +2,6 @@ package by.bsuir.movierating.domain.criteria;
 
 import java.util.List;
 
-/**
- * Created by Владислав on 19.07.2016.
- */
 public class MovieCriteria {
     private String name;
     private int minYear;
@@ -13,19 +10,8 @@ public class MovieCriteria {
     private List<Integer> countryIds;
     private int minRating;
     private int maxRating;
-
-    public MovieCriteria() {
-    }
-
-    public MovieCriteria(String name, int minYear, int maxYear, List<Integer> genreIds, List<Integer> countryIds, int minRating, int maxRating) {
-        this.name = name;
-        this.minYear = minYear;
-        this.maxYear = maxYear;
-        this.genreIds = genreIds;
-        this.countryIds = countryIds;
-        this.minRating = minRating;
-        this.maxRating = maxRating;
-    }
+    private int from;
+    private int amount;
 
     public String getName() {
         return name;
@@ -83,6 +69,22 @@ public class MovieCriteria {
         this.maxRating = maxRating;
     }
 
+    public int getFrom() {
+        return from;
+    }
+
+    public void setFrom(int from) {
+        this.from = from;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -94,11 +96,12 @@ public class MovieCriteria {
         if (maxYear != that.maxYear) return false;
         if (minRating != that.minRating) return false;
         if (maxRating != that.maxRating) return false;
+        if (from != that.from) return false;
+        if (amount != that.amount) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (genreIds != null ? !genreIds.equals(that.genreIds) : that.genreIds != null) return false;
-        if (countryIds != null ? !countryIds.equals(that.countryIds) : that.countryIds != null) return false;
+        return !(countryIds != null ? !countryIds.equals(that.countryIds) : that.countryIds != null);
 
-        return true;
     }
 
     @Override
@@ -110,6 +113,8 @@ public class MovieCriteria {
         result = 31 * result + (countryIds != null ? countryIds.hashCode() : 0);
         result = 31 * result + minRating;
         result = 31 * result + maxRating;
+        result = 31 * result + from;
+        result = 31 * result + amount;
         return result;
     }
 
@@ -123,6 +128,8 @@ public class MovieCriteria {
                 ", countryIds=" + countryIds +
                 ", minRating=" + minRating +
                 ", maxRating=" + maxRating +
+                ", from=" + from +
+                ", amount=" + amount +
                 '}';
     }
 }
